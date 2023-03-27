@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 =begin
 要件:
-- -mで月を、-yで年を指定できる
+- -mで月を、-yで年を指定できる　
 - ただし、-yのみ指定して一年分のカレンダーを表示する機能の実装は不要
 - 引数を指定しない場合は、今月・今年のカレンダーが表示される
 - macに入っているcalコマンドと同じ見た目になっている
@@ -16,7 +16,6 @@
 =end
 
 require "date"
-require 'enumerator'
 require 'optparse'
 
 def text_color(text, color) #文字の色の変更
@@ -102,8 +101,9 @@ def check_year(year, text) #年オプションの例外処理
 end
 
 #main
-result_month = check_month(ARGV.getopts("m:")["m"]) #-m 月オプションの入力と例外処理
-result_year = check_year(ARGV[0], result_month[:e]) #年オプションの入力と例外処理
+option = ARGV.getopts("m:", "y:")
+result_month = check_month(option["m"]) #-m 月オプションの入力と例外処理
+result_year = check_year(option["y"], result_month[:e]) #年オプションの入力と例外処理
 
 if result_year[:e] == nil
     print_month(result_year[:y], result_month[:m])
