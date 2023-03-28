@@ -43,6 +43,7 @@
 require 'debug'
 
 
+
 input_data = [
 '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5',
 '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,X,X,X',
@@ -61,7 +62,7 @@ score = 0
 sum_count = []
 previous_pin = 0
 throw_count = []
-times = 0
+frame = 0
 max_frame = 10
 
 input_array = input.gsub('X', full_pin.to_s).split(',').map{ |elem| elem.to_i }
@@ -69,27 +70,26 @@ input_array = input.gsub('X', full_pin.to_s).split(',').map{ |elem| elem.to_i }
 input_array.each_with_index{ |pin, index|
 
         throw_count.push(pin)
-        if (throw_count[0] == full_pin && times < max_frame)
-            times += 1
-        elsif times < 10
-            times += 0.5
+        if (throw_count[0] == full_pin && frame < max_frame)
+            frame += 1
+        elsif frame < max_frame
+            frame += 0.5
         end
 
         sum_count.reject!{|elem| elem <= 0}
-        score += sum_count.size * pin
-        score += pin
-        sum_count.map!{|elem| elem - 1}
+        score += (sum_count.size + 1) * pin
+        sum_count.map!{|elem| elem - 1 if elem > 0}
 
-        if (throw_count[0] == full_pin && times < max_frame)
+        if (throw_count[0] == full_pin && frame < max_frame)
             sum_count.push(2)
 
-        elsif (throw_count.sum == full_pin && times < max_frame)
+        elsif (throw_count.sum == full_pin && frame < max_frame)
             sum_count.push(1)
         end
 
         throw_count = [] if (throw_count.size > 1 || pin == full_pin)
 
-        # puts "#{times}回目: #{pin}倒して合計#{score} 次の#{sum_count.size}分足される" if times%1 == 0
+        # puts "#{times}回目: #{pin}倒して合計は#{score} （#{sum_count.size}個分追加で足された）" if times%1 == 0
         # p sum_count
 }
 
