@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 def fizz(num)
     "Fizz" if num%3 == 0
 end
