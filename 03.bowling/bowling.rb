@@ -13,29 +13,26 @@ max_frame = 10
 input_array = input.gsub('X', full_pin.to_s).split(',').map(&:to_i) # X->10に置換
 
 input_array.each do |pin|
-	pins_frame_array.push(pin)
-	if pins_frame_array[0] == full_pin && frame < max_frame # 前フレームがmax_frame以下の時にストライク
-		frame += 1 # ストライクの時は1フレーム追加
-	elsif frame < max_frame
-		frame += 0.5 # ストライク以外の時は半フレーム追加
-	end
+  pins_frame_array.push(pin)
+  if pins_frame_array[0] == full_pin && frame < max_frame # 前フレームがmax_frame以下の時にストライク判定
+    frame += 1 # ストライクの時は1フレーム追加
+  elsif frame < max_frame
+    frame += 0.5 # ストライク以外の時は半フレーム追加
+  end
 
-	add_array.reject!{|elem| elem <= 0}
-	score += (add_array.size + 1) * pin
-	add_array.map!{|elem| elem - 1 if elem > 0}
+  add_array.reject! { |elem| elem <= 0 }
+  score += (add_array.size + 1) * pin
+  add_array.map! { |elem| elem - 1 if elem.positive? }
 
-	if pins_frame_array[0] == full_pin && frame < max_frame # 現フレームがmax_frame以下の時にストライク
-		add_array.push(2) # 2回分点数追加
-	elsif pins_frame_array.sum == full_pin && frame < max_frame # 現フレームがmax_frame以下の時にスペア
-		add_array.push(1) # 1回分点数追加
-	end
+  if pins_frame_array[0] == full_pin && frame < max_frame # 現フレームがmax_frame以下の時にストライク判定
+    add_array.push(2) # 2回分点数追加
+  elsif pins_frame_array.sum == full_pin && frame < max_frame # 現フレームがmax_frame以下の時にスペア判定
+    add_array.push(1) # 1回分点数追加
+  end
 
-	pins_frame_array = [] if pins_frame_array.size > 1 || pin == full_pin # 2回投げるかストライクを取ると1フレーム中の倒したピンはリセット
+  pins_frame_array = [] if pins_frame_array.size > 1 || pin == full_pin # 2回投げるかストライクを取ると1フレーム中の倒したピンはリセット
 
-	# puts "#{frame}回目: #{pin}倒して合計は#{score} （#{add_array.size}個分追加で足された）" if frame%1 == 0
+  # puts "#{frame}回目: #{pin}倒して合計は#{score} （#{add_array.size}個分追加で足された）" if frame%1 == 0
 end
 
 puts score
-    
-
-
