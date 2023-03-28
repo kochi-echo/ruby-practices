@@ -51,8 +51,7 @@ end
 
 full_pin = 10
 
-input = '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5'
-# input = ARGV[0]
+input = ARGV[0]
 input_array = input.gsub('X', full_pin.to_s).split(',').map(&:to_i) # X->10に置換
 
 score_data = CalScore.new
