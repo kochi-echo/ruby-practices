@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+# require 'debug'
+
 def fizz(num)
     "Fizz" if num%3 == 0
 end
@@ -17,4 +19,5 @@ def fizzbuzz(max_count)
     }
 end
 
+# binding.break
 fizzbuzz(20)
