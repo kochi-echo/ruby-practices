@@ -16,18 +16,21 @@ class CalScore
 
 	def update_score(pin)
 		@pins_frame_array.push(pin)
-		if @pins_frame_array[0] == @max_pin && @frame_num < @max_frame # 前フレームがmax_frame以下の時にストライク判定
-			@frame_num += 1 # ストライクの時は1フレーム追加
-		elsif @frame_num < @max_frame
-			@frame_num += 0.5 # ストライク以外の時は半フレーム追加
-		end
-
+		update_frame()
 		add_score(pin)
 		update_add_array()
 
 		@pins_frame_array = [] if @pins_frame_array.size > 1 || pin == @max_pin # 2回投げるかストライクを取ると1フレーム中の倒したピンはリセット
 
   	puts "#{@frame_num}回目: #{pin}倒して合計は#{@sum_score} （#{@add_array.size}個分追加で足された）" if @frame_num%1 == 0
+	end
+
+	def update_frame
+		if @pins_frame_array[0] == @max_pin && @frame_num < @max_frame # 前フレームがmax_frame以下の時にストライク判定
+			@frame_num += 1 # ストライクの時は1フレーム追加
+		elsif @frame_num < @max_frame
+			@frame_num += 0.5 # ストライク以外の時は半フレーム追加
+		end
 	end
 
 	def add_score(pin)
