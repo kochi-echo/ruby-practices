@@ -22,7 +22,7 @@ class CalScore
 
     @pins_frame_array = [] if @pins_frame_array.size > 1 || pin == @max_pin # 2回投げるかストライクを取ると1フレーム中の倒したピンはリセット
 
-    puts "#{@frame_num}回目: #{pin}倒して合計は#{@sum_score} （#{@add_array.size}個分追加で足された）" if @frame_num % 1 == 0
+    # puts "#{@frame_num}回目: #{pin}倒して合計は#{@sum_score} （#{@add_array.size}個分追加で足された）" if @frame_num % 1 == 0
   end
 
   def update_frame
