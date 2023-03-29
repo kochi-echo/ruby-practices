@@ -87,7 +87,7 @@ def check_month(month) #月オプションの例外処理
     elsif month.to_i < 1 || month.to_i >12 #規定外の入力時の対応
         text = "calendar: #{month.to_i} is neither a month number (1..12) nor a name "
     end
-    {m: month.to_i, e: text}
+    return month.to_i, text
 end
 
 def check_year(year, text) #年オプションの例外処理
@@ -96,16 +96,16 @@ def check_year(year, text) #年オプションの例外処理
     elsif year.to_i < 1 || year.to_i > 9999 #規定外の入力時の対応
         text = "calendar: year `#{year.to_i}' not in range 1..9999"
     end
-    {y: year.to_i, e: text}
+    return year.to_i, text
 end
 
 #main
 option = ARGV.getopts("m:", "y:")
-result_month = check_month(option["m"]) #-m 月オプションの入力と例外処理
-result_year = check_year(option["y"], result_month[:e]) #年オプションの入力と例外処理
+result_month, errot_text = check_month(option["m"]) #-m 月オプションの入力と例外処理
+result_year, error_text = check_year(option["y"], errot_text) #年オプションの入力と例外処理
 
-if result_year[:e] == nil
-    print_month(result_year[:y], result_month[:m])
+if error_text == nil
+    print_month(result_year, result_month)
 else
-    puts result_year[:e]
+    puts result_year
 end
