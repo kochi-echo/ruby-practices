@@ -1,23 +1,19 @@
 #!/usr/bin/env ruby
-# require 'debug'
+# frozen_string_literal: true
 
 def fizz(num)
-    "Fizz" if num%3 == 0
+  'Fizz' if (num % 3).zero?
 end
 
 def buzz(num)
-    "Buzz" if num%5 == 0
+  'Buzz' if (num % 5).zero?
 end
 
 def fizzbuzz(max_count)
-    (1..max_count).each{ | n |
-        if (fizz(n) || buzz(n)) != nil
-            puts ("#{fizz(n)}#{buzz(n)}")
-        else
-            puts n
-        end
-    }
+  (1..max_count).each do |n|
+    fizzbuzz_string = "#{fizz(n)}#{buzz(n)}"
+    puts fizzbuzz_string.empty? ? n : fizzbuzz_string
+  end
 end
 
-# binding.break
 fizzbuzz(20)
