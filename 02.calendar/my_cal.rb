@@ -54,21 +54,15 @@ def print_calender(year, month) # 1ヶ月のカレンダーを表示
 end
 
 def year_in_range?(year)
-  if year >= YEAR_MIN && year <= YEAR_MAX
-    return true
-  else
-    puts "#{year}年は#{YEAR_MIN}〜#{YEAR_MAX}の範囲外です。"
-    return false
-  end
+  return true if year >= YEAR_MIN && year <= YEAR_MAX
+  puts "#{year}年は#{YEAR_MIN}〜#{YEAR_MAX}の範囲外です。"
+  false
 end
 
 def month_in_range?(month)
-  if month >= MONTH_MIN && month <= MONTH_MAX
-    return true
-  else
-    puts "#{month}月は#{MONTH_MIN}〜#{MONTH_MAX}の範囲外です。"
-    return false
-  end
+  return true if month >= MONTH_MIN && month <= MONTH_MAX
+  puts "#{month}月は#{MONTH_MIN}〜#{MONTH_MAX}の範囲外です。"
+  false
 end
 
 # main
