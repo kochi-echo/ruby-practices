@@ -54,23 +54,23 @@ def days_alignment(first, last, normal, invert) # 初日から最終日までを
   days_array = (['  '] * first.cwday) + days_alignment_array # 初日の曜日を合わせる
 end
 
-def calc_month_days(year, month, normal, invert) # 1ヶ月の日にちを算出し、一週間ごとに区切って出力
-  first_date = Date.new(year, month, 1)
-  last_date = Date.new(year, month, -1)
-  week_enum = days_alignment(first_date, last_date, normal, invert).each_slice(7)
+def print_month_year(year, month) # 月と年を表示
+  year_month_str = "#{month}月 #{year}年".center(WIDTH_CALENDER) + "\n"
+  year_month_str.gsub!(/\d+/) { |str| color_text(str, NORMAL_COLOR) } # 数字だけ色変更
+  print year_month_str
 end
 
-def print_month(year, month) # 1ヶ月のカレンダーを表示
-  normal_color = '38;5;208' # オレンジ
-  invert_color = '7' # 白
-  dayofweek_jp_array = %w[日 月 火 水 木 金 土]
-
-  length_dayofweek = length_2byte(dayofweek_jp_array.join(' ')) # 月の表示を真ん中に持ってくるために列の数を計算
-  print_month_year(year, month, length_dayofweek, normal_color)
-  print(dayofweek_jp_array.join(' ') + "\n")
-
-  week_enum = calc_month_days(year, month, normal_color, invert_color)
+def print_days(year, month) # 1ヶ月の日にちを算出し、一週間ごとに区切って表示
+  first_date = Date.new(year, month, 1)
+  last_date = Date.new(year, month, -1)
+  week_enum = align_days(first_date, last_date).each_slice(7)
   (1..week_enum.size).each { print week_enum.next.join(' ') + "\n" }
+end
+
+def print_calender(year, month) # 1ヶ月のカレンダーを表示
+  print_month_year(year, month)
+  print(DAYOFWEEK_JP_ARRAY.join(' ') + "\n")
+  print_days(year, month)
 end
 
 def year_in_range?(year)
