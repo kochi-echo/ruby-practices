@@ -118,3 +118,7 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# git.gitignore ****************************
+_git
+git-completion.bash
