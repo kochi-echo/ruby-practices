@@ -3,6 +3,16 @@
 require 'date'
 require 'optparse'
 
+NORMAL_COLOR = '38;5;208' # オレンジ
+INVERT_COLOR = '7' # 白
+DAYOFWEEK_JP_ARRAY = %w[日 月 火 水 木 金 土]
+MONTH_MIN = 1
+MONTH_MAX = 12
+YEAR_MIN = 1970
+YEAR_MAX = 2100
+WIDTH_1DAY = 2
+WIDTH_CALENDER = 20
+
 def text_color(text, color) # 文字の色の変更
   "\033[" + color + "m#{text}\033[0m"
 end
