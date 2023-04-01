@@ -73,32 +73,28 @@ def print_month(year, month) # 1ヶ月のカレンダーを表示
   (1..week_enum.size).each { print week_enum.next.join(' ') + "\n" }
 end
 
-def check_month(month) # 月オプションの例外処理
-  if month.nil? # 未入力時の対応
-    month = Date.today.month
-    text = nil
-  elsif month.to_i < 1 || month.to_i > 12 # 規定外の入力時の対応
-    text = "calendar: #{month.to_i} is neither a month number (1..12) nor a name "
+def year_in_range?(year)
+  if year >= YEAR_MIN && year <= YEAR_MAX
+    return true
+  else
+    puts "#{year}年は#{YEAR_MIN}〜#{YEAR_MAX}の範囲外です。"
+    return false
   end
-  [month.to_i, text]
 end
 
-def check_year(year, text) # 年オプションの例外処理
-  if year.nil? # 未入力時の対応
-    year = Date.today.year
-  elsif year.to_i < 1 || year.to_i > 9999 # 規定外の入力時の対応
-    text = "calendar: year `#{year.to_i}' not in range 1..9999"
+def month_in_range?(month)
+  if month >= MONTH_MIN && month <= MONTH_MAX
+    return true
+  else
+    puts "#{month}月は#{MONTH_MIN}〜#{MONTH_MAX}の範囲外です。"
+    return false
   end
-  [year.to_i, text]
 end
 
 # main
-option = ARGV.getopts('m:', 'y:')
-result_month, errot_text = check_month(option['m']) #-m 月オプションの入力と例外処理
-result_year, error_text = check_year(option['y'], errot_text) # 年オプションの入力と例外処理
-
-if error_text.nil?
-  print_month(result_year, result_month)
-else
-  puts result_year
-end
+option_y_m = ARGV.getopts('y:', 'm:')
+year = option_y_m['y'].nil? ? Date.today.year : option_y_m['y'].to_i
+month = option_y_m['m'].nil? ? Date.today.month : option_y_m['m'].to_i
+bool_year_range = year_in_range?(year)
+bool_month_range = month_in_range?(month)
+print_calender(year, month) if bool_year_range && bool_month_range
