@@ -13,20 +13,17 @@ YEAR_MAX = 2100
 WIDTH_1DAY = 2
 WIDTH_CALENDER = 20
 
-def text_color(text, color) # 文字の色の変更
+def color_text(text, color) # 文字の色の変更
   "\033[" + color + "m#{text}\033[0m"
 end
 
-def length_2byte(str_2byte) # 漢字を2文字と計算し長さを求める
-  len = 0
-  str_2byte.each_char do |char|
-    len += if char.bytesize == 1
-             1
-           else
-             2
-           end
+def color_days(date) # 日にの調整をして、日にちの文字列を出力する
+  day = date.day.to_s.rjust(WIDTH_1DAY)
+  if date == Date.today # 今日の日付は色を反転する
+    color_text(day, INVERT_COLOR)
+  else
+    color_text(day, NORMAL_COLOR)
   end
-  len
 end
 
 def print_month_year(year, month, length, color) # 月と年を表示
