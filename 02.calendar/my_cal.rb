@@ -26,32 +26,12 @@ def color_days(date) # 日にの調整をして、日にちの文字列を出力
   end
 end
 
-def print_month_year(year, month, length, color) # 月と年を表示
-  year_month_str = "#{month}月 #{year}年".center(length) + "\n"
-  text_center = year_month_str.center(length)
-  text_center.gsub!(/\d+/) { |str| text_color(str, color) } # 数字だけ色変更
-  print text_center
-end
-
-def date_adjust(date, normal, invert) # 日にの調整をして、日にちの文字列を出力する
-  day = if date.day < 10 # 日にちが一桁だと他の数字と位置がズレるので修正
-          " #{date.day}"
-        else
-          date.day
-        end
-  if date == Date.today # 今日の日付は色を反転する
-    text_color(day, invert)
-  else
-    text_color(day, normal)
+def align_days(first, last) # 初日から最終日までを算出し、日にちの配列を出力する
+  dates_array = (first..last).to_a
+  days_colored = dates_array.map do |date|
+    color_days(date)
   end
-end
-
-def days_alignment(first, last, normal, invert) # 初日から最終日までを算出し、日にちの配列を出力する
-  days_array_origin = (first..last).to_a
-  days_alignment_array = days_array_origin.map do |date|
-    date_adjust(date, normal, invert)
-  end
-  days_array = (['  '] * first.cwday) + days_alignment_array # 初日の曜日を合わせる
+  (['  '] * first.wday) + days_colored # 初日の曜日を合わせる
 end
 
 def print_month_year(year, month) # 月と年を表示
