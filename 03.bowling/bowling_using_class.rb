@@ -10,7 +10,7 @@ class Frame
     @previous_frame = previous_frame
   end
 
-  def score_method()
+  def score()
     @points.sum + score_spare + score_strike
   end
 
@@ -47,7 +47,7 @@ def calculate_score(pins)
   previous_frame = nil
   pins.each_slice(2) do |pins|
     frame = Frame.new(pins, previous_frame)
-    score += frame.score_method
+    score += frame.score
     previous_frame = frame
   end
   score
