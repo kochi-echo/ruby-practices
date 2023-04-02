@@ -34,33 +34,40 @@ class TestReversi < Minitest::Test
   def test_spare_score_method
     previous_frame = Frame.new([1,9])
     frame = Frame.new([3,4],previous_frame)
-    assert_equal frame.score_method, 10
+    assert_equal 10, frame.score_method
   end
 
   def test_strike_score_method
     previous_frame = Frame.new([10])
     frame = Frame.new([3,4],previous_frame)
-    assert_equal frame.score_method, 14
+    assert_equal 14, frame.score_method
   end
 
-  def test_frames
+  def test_calc_normal_score
     all_pins = [1,2,3,4]
-    assert_equal calculate_score(all_pins), 10
+    assert_equal 10, calculate_score(all_pins)
     all_pins = [1,2,3]
-    assert_equal calculate_score(all_pins), 6
+    assert_equal 6, calculate_score(all_pins)
   end
 
   def test_calc_spare_score
     all_pins = [1,9,3,4]
-    assert_equal calculate_score(all_pins), 20
+    assert_equal 20, calculate_score(all_pins)
     all_pins = [1,9,3]
-    assert_equal calculate_score(all_pins), 16
+    assert_equal 16, calculate_score(all_pins)
   end
 
   def test_calc_strike_score
-    all_pins = [1,9,3,4]
-    assert_equal calculate_score(all_pins), 20
-    all_pins = [1,9,3]
-    assert_equal calculate_score(all_pins), 16
+    all_pins = [10,3,4]
+    assert_equal 24, calculate_score(all_pins)
+    all_pins = [10,3]
+    assert_equal 16, calculate_score(all_pins)
+  end
+
+  def test_separate_frame
+    all_pins = [1,2,3,4]
+    assert_equal [[1,2],[3,4]], separate_frame(all_pins)
+    all_pins = [1,2,3]
+    assert_equal [[1,2],[3]], separate_frame(all_pins)
   end
 end

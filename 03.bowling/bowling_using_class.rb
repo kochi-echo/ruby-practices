@@ -42,10 +42,36 @@ class Frame
 
 end
 
+class AllFrame
+
+
+end
+
+
+def separate_frame(pins)
+  all_frame = []
+  pins_1frame = []
+
+  pins.each do |pin|
+    pins_1frame << pin
+
+    if pins_1frame[0] == 10 || pins_1frame.size == 2
+      all_frame << pins_1frame
+      pins_1frame = []
+    end
+  end
+
+  all_frame << pins_1frame unless pins_1frame.empty?
+
+  all_frame
+end
+
+
+
 def calculate_score(pins)
   score = 0
   previous_frame = nil
-  pins.each_slice(2) do |pins|
+  separate_frame(pins).each do |pins|
     frame = Frame.new(pins, previous_frame)
     score += frame.score
     previous_frame = frame
@@ -53,14 +79,6 @@ def calculate_score(pins)
   score
 end
 
-# def calculate_score(input_array)
-#   input_array.each do ||
-#     frame = Frame.new([1, 0])
-#     score += frame.score_method
-#   end
-
-#   score
-# end
 
 # input = ARGV[0]
 
