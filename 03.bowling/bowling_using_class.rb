@@ -5,7 +5,6 @@ MAX_PIN = 10
 MAX_FRAME = 10
 
 class Frame
-  attr_reader :points
   def initialize(points, previous_frame = nil)
     @points = points
     @previous_frame = previous_frame
@@ -16,8 +15,8 @@ class Frame
   end
 
   def score_spare
-    return 0 if @previous_frame.nil? || @previous_frame.points.size == 1
-    if @previous_frame.points.sum == 10
+    return 0 if @previous_frame.nil?
+    if @previous_frame.spare?
       @points[0]
     else
       0
@@ -26,11 +25,19 @@ class Frame
 
   def score_strike
     return 0 if @previous_frame.nil?
-    if @previous_frame.points[0] == 10
+    if @previous_frame.strike?
       @points.sum
     else
       0
     end
+  end
+
+  def spare?
+    @points.sum == 10 && @points.size == 2
+  end
+
+  def strike?
+    @points[0] == 10
   end
 
 end

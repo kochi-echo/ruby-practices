@@ -13,6 +13,24 @@ class TestReversi < Minitest::Test
     assert_equal frame.score_method, 3
   end
 
+  def test_spare
+    frame = Frame.new([3,4])
+    assert_equal false, frame.spare?
+    frame = Frame.new([2,8])
+    assert_equal true, frame.spare?
+    frame = Frame.new([10])
+    assert_equal false, frame.spare?
+  end
+
+  def test_strike
+    frame = Frame.new([3,4])
+    assert_equal false, frame.strike?
+    frame = Frame.new([2,8])
+    assert_equal false, frame.strike?
+    frame = Frame.new([10])
+    assert_equal true, frame.strike?
+  end
+
   def test_spare_score_method
     previous_frame = Frame.new([1,9])
     frame = Frame.new([3,4],previous_frame)
@@ -22,7 +40,6 @@ class TestReversi < Minitest::Test
   def test_strike_score_method
     previous_frame = Frame.new([10])
     frame = Frame.new([3,4],previous_frame)
-    # debugger
     assert_equal frame.score_method, 14
   end
 
