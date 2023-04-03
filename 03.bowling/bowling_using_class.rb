@@ -42,13 +42,11 @@ class Frame
   def strike?
     @points.size == BASIC_SIZE_1FRAME - 1 && @points[0] == MAX_PIN
   end
-
 end
 
 def pin_data2int(input)
   input.gsub('X', MAX_PIN.to_s).split(',').map(&:to_i) # X->10に置換
 end
-
 
 def separate_frame(pins)
   all_frame = []
@@ -56,7 +54,7 @@ def separate_frame(pins)
 
   pins.each do |pin|
     pins_1frame << pin
-    maxsize_1frame = all_frame.size >= MAX_FRAME - 1 ? 3: 2
+    maxsize_1frame = all_frame.size >= MAX_FRAME - 1 ? 3 : 2
 
     if (pins_1frame[0] == 10 && all_frame.size < MAX_FRAME - 1) || pins_1frame.size == maxsize_1frame
       all_frame << pins_1frame
@@ -67,8 +65,6 @@ def separate_frame(pins)
   all_frame << pins_1frame unless pins_1frame.empty?
   all_frame
 end
-
-
 
 def calculate_score(all_pins)
   score = 0
@@ -84,7 +80,6 @@ def calculate_score(all_pins)
 
   score
 end
-
 
 input = ARGV[0]
 

@@ -22,8 +22,8 @@ def calculate_score(input_array)
     elsif pins_1frame_array.sum == MAX_PIN
       frame += 0.5 if frame < MAX_FRAME
       add_extra_array.push(1) if frame < MAX_FRAME # 1回分点数追加
-    else
-      frame += 0.5 if frame < MAX_FRAME
+    elsif frame < MAX_FRAME
+      frame += 0.5
     end
 
     pins_1frame_array = [] if pins_1frame_array.size > 1 || pins_1frame_array[0] == MAX_PIN # 2回投げるかストライクを取ると1フレーム中の倒したピンはリセット
