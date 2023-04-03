@@ -18,7 +18,7 @@ class Frame
 
   def score_spare
     if !@previous_frame.nil? && @previous_frame.spare?
-      @points[0]
+      @points[0] # スペアなら1フレームの一投目だけを追加で加算
     else
       0
     end
@@ -26,9 +26,9 @@ class Frame
 
   def score_strike
     if !@previous_frame.nil? && @previous_frame.strike?
-      sum = @points[0]
-      sum += @points[1] if @points.size >= BASIC_SIZE_1FRAME
-      sum += @points[0] if !@pre_previous_frame.nil? && @pre_previous_frame.strike?
+      sum = @points[0] # 前のフレームがストライクならまずは1フレームの一投目だけを追加で加算
+      sum += @points[1] if @points.size >= BASIC_SIZE_1FRAME # ストライクまたは半フレーム（フレームの途中）以外なら2投目を追加で加算
+      sum += @points[0] if !@pre_previous_frame.nil? && @pre_previous_frame.strike? # 前と2個前がストライクなら更に1投目を追加で加算
       sum
     else
       0
@@ -49,20 +49,20 @@ def pin_data2int(input)
 end
 
 def separate_frame(pins)
-  all_frame = []
-  pins_1frame = []
+  all_frame = [] # 全フレームの倒したピンの数の配列（１フレームごとに入れ子の配列になっている）
+  pins_1frame = [] # 1フレームの倒したピンの数の配列
 
   pins.each do |pin|
     pins_1frame << pin
-    maxsize_1frame = all_frame.size >= MAX_FRAME - 1 ? 3 : 2
+    maxsize_1frame = all_frame.size >= MAX_FRAME - 1 ? BASIC_SIZE_1FRAME + 1 : BASIC_SIZE_1FRAME # 最後のフレームはBASIC_SIZE_1FRAME + 1投げられる
 
-    if (pins_1frame[0] == 10 && all_frame.size < MAX_FRAME - 1) || pins_1frame.size == maxsize_1frame
-      all_frame << pins_1frame
+    if (pins_1frame[0] == 10 && all_frame.size < MAX_FRAME - 1) || pins_1frame.size >= maxsize_1frame
+      all_frame << pins_1frame # MAX_FRAME - 1フレームまではストライク一個で1フレーム、それ以外はmaxsize_1frameになるまで今のフレームの点数はall_frameには追加されない
       pins_1frame = []
     end
   end
 
-  all_frame << pins_1frame unless pins_1frame.empty?
+  all_frame << pins_1frame unless pins_1frame.empty? # 現在の投球がフレームの途中だった場合、半端な投球をall_frameに追加する
   all_frame
 end
 
@@ -81,6 +81,7 @@ def calculate_score(all_pins)
   score
 end
 
+# ******** main *********
 input = ARGV[0]
 
 unless input.nil?
