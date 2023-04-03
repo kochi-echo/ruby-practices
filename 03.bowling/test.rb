@@ -1,8 +1,8 @@
+#!/usr/bin/env ruby
 # frozen_string_literal: true
 
 require 'minitest/autorun'
-require_relative 'bowling_using_class'
-require 'debug'
+require_relative 'bowling'
 
 INPUT_SAMPLE_DATA = [
   '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5',
@@ -11,11 +11,11 @@ INPUT_SAMPLE_DATA = [
   '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,X,0,0',
   '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,X,1,8',
   'X,X,X,X,X,X,X,X,X,X,X,X'
-]
+].freeze
 
-OUTPUT_SAMPLE_DATA = [139, 164, 107, 134, 144, 300]
+OUTPUT_SAMPLE_DATA = [139, 164, 107, 134, 144, 300].freeze
 
-class TestBowling < Minitest::Test
+class TestFrameMethod < Minitest::Test
   def test_score
     frame = Frame.new([1, 0])
     assert_equal frame.score, 1
@@ -57,7 +57,9 @@ class TestBowling < Minitest::Test
     frame = Frame.new([3, 4], previous_frame)
     assert_equal 7, frame.score_strike
   end
+end
 
+class TestSmallScoreCalculation < Minitest::Test
   def test_calc_normal_score
     all_pins = [1, 2, 3, 4]
     assert_equal 10, calculate_score(all_pins)
@@ -93,7 +95,9 @@ class TestBowling < Minitest::Test
     all_pins = [1, 2, 3]
     assert_equal [[1, 2], [3]], separate_frame(all_pins)
   end
+end
 
+class TestSampleCalculation < Minitest::Test
   def test_pin_data2int
     input_array = pin_data2int('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5')
     assert_equal [6, 3, 9, 0, 0, 3, 8, 2, 7, 3, 10, 9, 1, 8, 0, 10, 6, 4, 5], input_array
@@ -134,7 +138,6 @@ class TestBowling < Minitest::Test
     assert_equal OUTPUT_SAMPLE_DATA[index], calculate_score(input_array)
     index = 2
     input_array = pin_data2int(INPUT_SAMPLE_DATA[index])
-    pp separate_frame(input_array)
     assert_equal OUTPUT_SAMPLE_DATA[index], calculate_score(input_array)
     index = 3
     input_array = pin_data2int(INPUT_SAMPLE_DATA[index])
