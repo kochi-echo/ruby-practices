@@ -3,6 +3,7 @@
 
 MAX_PIN = 10
 MAX_FRAME = 10
+BASIC_SIZE_1FRAME = 2
 
 class Frame
   def initialize(points, previous_frame = nil, pre_previous_frame = nil)
@@ -12,52 +13,40 @@ class Frame
   end
 
   def score
-    pp score_strike_2past if score_strike_2past.nil?
-    # debugger if score_strike_2past.nil?
-    @points.sum + score_spare + score_strike_2past
+    @points.sum + score_spare + score_strike
   end
 
   def score_spare
-    return 0 if @previous_frame.nil?
-    if @previous_frame.spare?
+    if !@previous_frame.nil? && @previous_frame.spare?
       @points[0]
     else
       0
     end
   end
 
-  def score_strike_2past
-    return 0 if @previous_frame.nil?
-    sum = score_strike(@previous_frame)
-    if @pre_previous_frame.present? && @previous_frame.strike?
-      sum = sum + score_strike(@pre_previous_frame)
-    else
+  def score_strike
+    if !@previous_frame.nil? && @previous_frame.strike?
+      sum = @points[0]
+      sum += @points[1] if @points.size >= BASIC_SIZE_1FRAME
+      sum += @points[0] if !@pre_previous_frame.nil? && @pre_previous_frame.strike?
       sum
-    end
-  end
-
-  def score_strike(frame)
-    return 0 if frame.nil?
-    if frame.strike?
-      @points.sum
     else
       0
     end
   end
 
   def spare?
-    @points.sum == 10 && @points.size == 2
+    @points.size == BASIC_SIZE_1FRAME && @points.sum == MAX_PIN
   end
 
   def strike?
-    @points[0] == 10
+    @points.size == BASIC_SIZE_1FRAME - 1 && @points[0] == MAX_PIN
   end
 
 end
 
-class AllFrame
-
-
+def pin_data2int(input)
+  input.gsub('X', MAX_PIN.to_s).split(',').map(&:to_i) # X->10に置換
 end
 
 
@@ -67,15 +56,15 @@ def separate_frame(pins)
 
   pins.each do |pin|
     pins_1frame << pin
+    maxsize_1frame = all_frame.size >= MAX_FRAME - 1 ? 3: 2
 
-    if pins_1frame[0] == 10 || pins_1frame.size == 2
+    if (pins_1frame[0] == 10 && all_frame.size < MAX_FRAME - 1) || pins_1frame.size == maxsize_1frame
       all_frame << pins_1frame
       pins_1frame = []
     end
   end
 
   all_frame << pins_1frame unless pins_1frame.empty?
-
   all_frame
 end
 
@@ -97,9 +86,9 @@ def calculate_score(all_pins)
 end
 
 
-# input = ARGV[0]
+input = ARGV[0]
 
-# unless input.nil?
-#   input_array = input.gsub('X', MAX_PIN.to_s).split(',').map(&:to_i) # X->10に置換
-#   puts calculate_score(input_array)
-# end
+unless input.nil?
+  input_array = pin_data2int(input)
+  puts calculate_score(input_array)
+end
