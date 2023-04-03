@@ -31,7 +31,7 @@ def align_days(first, last) # 初日から最終日までを算出し、日に�
   days_colored = dates_array.map do |date|
     color_days(date)
   end
-  (['  '] * first.wday) + days_colored # 初日の曜日を合わせる
+  ([' ' * WIDTH_1DAY] * first.wday) + days_colored # 初日の曜日を合わせる
 end
 
 def print_month_year(year, month) # 月と年を表示
@@ -67,8 +67,12 @@ end
 
 # main
 option_y_m = ARGV.getopts('y:', 'm:')
-year = option_y_m['y'].nil? ? Date.today.year : option_y_m['y'].to_i
-month = option_y_m['m'].nil? ? Date.today.month : option_y_m['m'].to_i
+
+y = option_y_m['y']
+m = option_y_m['m']
+year = y.nil? ? Date.today.year : y.to_i
+month = m.nil? ? Date.today.month : m.to_i
+
 bool_year_range = year_in_range?(year)
 bool_month_range = month_in_range?(month)
 print_calender(year, month) if bool_year_range && bool_month_range
