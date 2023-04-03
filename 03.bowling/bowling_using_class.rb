@@ -5,13 +5,16 @@ MAX_PIN = 10
 MAX_FRAME = 10
 
 class Frame
-  def initialize(points, previous_frame = nil)
+  def initialize(points, previous_frame = nil, pre_previous_frame = nil)
     @points = points
     @previous_frame = previous_frame
+    @pre_previous_frame = pre_previous_frame
   end
 
-  def score()
-    @points.sum + score_spare + score_strike
+  def score
+    pp score_strike_2past if score_strike_2past.nil?
+    # debugger if score_strike_2past.nil?
+    @points.sum + score_spare + score_strike_2past
   end
 
   def score_spare
@@ -23,9 +26,19 @@ class Frame
     end
   end
 
-  def score_strike
+  def score_strike_2past
     return 0 if @previous_frame.nil?
-    if @previous_frame.strike?
+    sum = score_strike(@previous_frame)
+    if @pre_previous_frame.present? && @previous_frame.strike?
+      sum = sum + score_strike(@pre_previous_frame)
+    else
+      sum
+    end
+  end
+
+  def score_strike(frame)
+    return 0 if frame.nil?
+    if frame.strike?
       @points.sum
     else
       0
@@ -68,14 +81,18 @@ end
 
 
 
-def calculate_score(pins)
+def calculate_score(all_pins)
   score = 0
   previous_frame = nil
-  separate_frame(pins).each do |pins|
-    frame = Frame.new(pins, previous_frame)
+  pre_previous_frame = nil
+
+  separate_frame(all_pins).each do |pins|
+    frame = Frame.new(pins, previous_frame, pre_previous_frame)
     score += frame.score
+    pre_previous_frame = previous_frame
     previous_frame = frame
   end
+
   score
 end
 

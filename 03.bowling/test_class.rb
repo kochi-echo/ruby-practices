@@ -4,9 +4,8 @@ require 'minitest/autorun'
 require_relative 'bowling_using_class.rb'
 require 'debug'
 
-class TestReversi < Minitest::Test
+class TestBowling < Minitest::Test
   def test_score
-    previous_frame = Frame.new([1,9])
     frame = Frame.new([1, 0])
     assert_equal frame.score, 1
     frame = Frame.new([3])
@@ -31,16 +30,16 @@ class TestReversi < Minitest::Test
     assert_equal true, frame.strike?
   end
 
-  def test_spare_score_method
+  def test_score_spare
     previous_frame = Frame.new([1,9])
     frame = Frame.new([3,4],previous_frame)
-    assert_equal 10, frame.score_method
+    assert_equal 3, frame.score_spare
   end
 
-  def test_strike_score_method
+  def test_score_strike
     previous_frame = Frame.new([10])
     frame = Frame.new([3,4],previous_frame)
-    assert_equal 14, frame.score_method
+    assert_equal 7, frame.score_strike_2past
   end
 
   def test_calc_normal_score
@@ -62,6 +61,12 @@ class TestReversi < Minitest::Test
     assert_equal 24, calculate_score(all_pins)
     all_pins = [10,3]
     assert_equal 16, calculate_score(all_pins)
+    all_pins = [10,2,3,10,2,3]
+    assert_equal 40, calculate_score(all_pins)
+    all_pins = [10,10,10,2,3]
+    assert_equal 35 + 20 + 15 + 5, calculate_score(all_pins)
+    all_pins = [10,10,10,2]
+    assert_equal 32 + 20 + 12 + 2, calculate_score(all_pins)
   end
 
   def test_separate_frame
