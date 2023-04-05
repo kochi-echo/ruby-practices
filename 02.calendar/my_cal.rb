@@ -35,23 +35,22 @@ def align_days(first, last)
   ([' ' * WIDTH_1DAY] * first.wday) + days_colored # 初日の曜日を合わせる
 end
 
-def print_month_year(year, month)
+def year_month2text(year, month)
   year_month_text = "#{"#{month}月 #{year}年".center(WIDTH_CALENDER)}\n"
   year_month_text.gsub!(/\d+/) { |str| color_text(str, NORMAL_COLOR) } # 数字だけ色変更
-  print year_month_text
 end
 
-def print_days(year, month)
+def days2weeks(year, month)
   first_date = Date.new(year, month, 1)
   last_date = Date.new(year, month, -1)
-  days_weeks = align_days(first_date, last_date).each_slice(7)
-  (1..days_weeks.size).each { print "#{days_weeks.next.join(' ')}\n" }
+  weeks = align_days(first_date, last_date).each_slice(7)
 end
 
 def print_calender(year, month)
-  print_month_year(year, month)
+  print year_month2text(year, month)
   print("#{DAY_OF_WEEKS.join(' ')}\n")
-  print_days(year, month)
+  weeks = days2weeks(year, month)
+  (1..weeks.size).each { print "#{weeks.next.join(' ')}\n" }
 end
 
 def year_in_range?(year)
@@ -72,10 +71,9 @@ def month_in_range?(month)
   end
 end
 
-def convert_input_month_year(option_y_m)
+def convert_input2month_year(option_y_m)
   option_y = option_y_m['y']
   option_m = option_y_m['m']
-
   year = option_y.nil? ? Date.today.year : option_y.to_i
   month = option_m.nil? ? Date.today.month : option_m.to_i
   [year, month]
@@ -88,5 +86,5 @@ def validation_year_month_in_range?(year, month)
 end
 
 option_y_m = ARGV.getopts('y:', 'm:')
-year, month = convert_input_month_year(option_y_m)
+year, month = convert_input2month_year(option_y_m)
 print_calender(year, month) if validation_year_month_in_range?(year, month)
