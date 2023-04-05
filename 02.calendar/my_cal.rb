@@ -43,7 +43,7 @@ end
 def days2weeks(year, month)
   first_date = Date.new(year, month, 1)
   last_date = Date.new(year, month, -1)
-  weeks = align_days(first_date, last_date).each_slice(7)
+  align_days(first_date, last_date).each_slice(7)
 end
 
 def print_calender(year, month)
