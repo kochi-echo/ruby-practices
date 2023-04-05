@@ -6,7 +6,7 @@ require 'optparse'
 
 NORMAL_COLOR = '38;5;208' # オレンジ
 INVERT_COLOR = '7' # 白
-DAYOFWEEK_JP_ARRAY = %w[日 月 火 水 木 金 土].freeze
+DAY_OF_WEEKS = %w[日 月 火 水 木 金 土].freeze
 MONTH_MIN = 1
 MONTH_MAX = 12
 YEAR_MIN = 1970
@@ -14,12 +14,10 @@ YEAR_MAX = 2100
 WIDTH_1DAY = 2
 WIDTH_CALENDER = 20
 
-# 文字の色の変更
 def color_text(text, color)
   "\e[#{color}m#{text}\033[0m"
 end
 
-# 日にの調整をして、日にちの文字列を出力する
 def color_days(date)
   day = date.day.to_s.rjust(WIDTH_1DAY)
   if date == Date.today # 今日の日付は色を反転する
@@ -29,59 +27,66 @@ def color_days(date)
   end
 end
 
-# 初日から最終日までを算出し、日にちの配列を出力する
 def align_days(first, last)
-  dates_array = (first..last).to_a
-  days_colored = dates_array.map do |date|
+  dates = (first..last).to_a
+  days_colored = dates.map do |date|
     color_days(date)
   end
   ([' ' * WIDTH_1DAY] * first.wday) + days_colored # 初日の曜日を合わせる
 end
 
-# 月と年を表示
 def print_month_year(year, month)
-  year_month_str = "#{"#{month}月 #{year}年".center(WIDTH_CALENDER)}\n"
-  year_month_str.gsub!(/\d+/) { |str| color_text(str, NORMAL_COLOR) } # 数字だけ色変更
-  print year_month_str
+  year_month_text = "#{"#{month}月 #{year}年".center(WIDTH_CALENDER)}\n"
+  year_month_text.gsub!(/\d+/) { |str| color_text(str, NORMAL_COLOR) } # 数字だけ色変更
+  print year_month_text
 end
 
-# 1ヶ月の日にちを算出し、一週間ごとに区切って表示
 def print_days(year, month)
   first_date = Date.new(year, month, 1)
   last_date = Date.new(year, month, -1)
-  week_enum = align_days(first_date, last_date).each_slice(7)
-  (1..week_enum.size).each { print "#{week_enum.next.join(' ')}\n" }
+  days_weeks = align_days(first_date, last_date).each_slice(7)
+  (1..days_weeks.size).each { print "#{days_weeks.next.join(' ')}\n" }
 end
 
-# 1ヶ月のカレンダーを表示
 def print_calender(year, month)
   print_month_year(year, month)
-  print("#{DAYOFWEEK_JP_ARRAY.join(' ')}\n")
+  print("#{DAY_OF_WEEKS.join(' ')}\n")
   print_days(year, month)
 end
 
 def year_in_range?(year)
-  return true if year >= YEAR_MIN && year <= YEAR_MAX
-
-  puts "#{year}年は#{YEAR_MIN}〜#{YEAR_MAX}の範囲外です。"
-  false
+  if (YEAR_MIN..YEAR_MAX).cover?(year)
+    true
+  else
+    puts "#{year}年は規定値#{YEAR_MIN}〜#{YEAR_MAX}年の範囲外です。"
+    false
+  end
 end
 
 def month_in_range?(month)
-  return true if month >= MONTH_MIN && month <= MONTH_MAX
-
-  puts "#{month}月は#{MONTH_MIN}〜#{MONTH_MAX}の範囲外です。"
-  false
+  if (MONTH_MIN..MONTH_MAX).cover?(month)
+    true
+  else
+    puts "#{month}月は規定値#{MONTH_MIN}〜#{MONTH_MAX}の範囲外です。"
+    false
+  end
 end
 
-# main
+def convert_input_month_year(option_y_m)
+  option_y = option_y_m['y']
+  option_m = option_y_m['m']
+
+  year = option_y.nil? ? Date.today.year : option_y.to_i
+  month = option_m.nil? ? Date.today.month : option_m.to_i
+  [year, month]
+end
+
+def validation_year_month_in_range?(year, month)
+  result_year_in_range = year_in_range?(year)
+  result_month_in_range = month_in_range?(month)
+  result_year_in_range && result_month_in_range
+end
+
 option_y_m = ARGV.getopts('y:', 'm:')
-
-y = option_y_m['y']
-m = option_y_m['m']
-year = y.nil? ? Date.today.year : y.to_i
-month = m.nil? ? Date.today.month : m.to_i
-
-bool_year_range = year_in_range?(year)
-bool_month_range = month_in_range?(month)
-print_calender(year, month) if bool_year_range && bool_month_range
+year, month = convert_input_month_year(option_y_m)
+print_calender(year, month) if validation_year_month_in_range?(year, month)
