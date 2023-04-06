@@ -40,7 +40,7 @@ def convert_year_month2text(year, month)
   year_month_text.gsub!(/\d+/) { |str| color_text(str, NORMAL_COLOR) } # 数字だけ色変更
 end
 
-def days2weeks(year, month)
+def convert_days2weeks(year, month)
   first_date = Date.new(year, month, 1)
   last_date = Date.new(year, month, -1)
   align_days(first_date, last_date).each_slice(7)
@@ -49,7 +49,7 @@ end
 def print_calender(year, month)
   print convert_year_month2text(year, month)
   print("#{DAY_OF_WEEKS.join(' ')}\n")
-  weeks = days2weeks(year, month)
+  weeks = convert_days2weeks(year, month)
   (1..weeks.size).each { print "#{weeks.next.join(' ')}\n" }
 end
 

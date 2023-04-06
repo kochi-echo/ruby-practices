@@ -72,7 +72,7 @@ class TestTodayCalender < Minitest::Test
   end
 
   def test_days2weeks
-    weeks = days2weeks(TODAY_YEAR, TODAY_MONTH)
+    weeks = convert_days2weeks(TODAY_YEAR, TODAY_MONTH)
     (1..weeks.size).map { weeks.next }
   end
 end
@@ -92,7 +92,7 @@ class TestSample1DateCalender < Minitest::Test
   end
 
   def test_days2weeks
-    weeks = days2weeks(SAMPLE1_YEAR, SAMPLE1_MONTH)
+    weeks = convert_days2weeks(SAMPLE1_YEAR, SAMPLE1_MONTH)
     calc_weeeks = (1..weeks.size).map { weeks.next }
     sample1_weeks = weeks2color(SAMPLE1_DAYS, Date.today.day)
     assert_equal sample1_weeks, calc_weeeks
@@ -107,7 +107,7 @@ class TestSample2DateCalender < Minitest::Test
   end
 
   def test_days2weeks
-    weeks = days2weeks(SAMPLE2_YEAR, SAMPLE2_MONTH)
+    weeks = convert_days2weeks(SAMPLE2_YEAR, SAMPLE2_MONTH)
     calc_weeeks = (1..weeks.size).map { weeks.next }
     sample2_weeks = weeks2color(SAMPLE2_DAYS, nil)
     assert_equal sample2_weeks, calc_weeeks
