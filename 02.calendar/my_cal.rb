@@ -35,7 +35,7 @@ def align_days(first, last)
   ([' ' * WIDTH_1DAY] * first.wday) + days_colored # 初日の曜日を合わせる
 end
 
-def year_month2text(year, month)
+def convert_year_month2text(year, month)
   year_month_text = "#{"#{month}月 #{year}年".center(WIDTH_CALENDER)}\n"
   year_month_text.gsub!(/\d+/) { |str| color_text(str, NORMAL_COLOR) } # 数字だけ色変更
 end
