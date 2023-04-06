@@ -47,7 +47,7 @@ def days2weeks(year, month)
 end
 
 def print_calender(year, month)
-  print year_month2text(year, month)
+  print convert_year_month2text(year, month)
   print("#{DAY_OF_WEEKS.join(' ')}\n")
   weeks = days2weeks(year, month)
   (1..weeks.size).each { print "#{weeks.next.join(' ')}\n" }

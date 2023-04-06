@@ -66,8 +66,8 @@ class TestTodayCalender < Minitest::Test
   end
 
   def test_year_month2text
-    year_month_text = year_month2text(TODAY_YEAR, TODAY_MONTH)
-    output_text = %r{\e\[#{NORMAL_COLOR}m#{TODAY_MONTH}\e\[0m月 \e\[#{NORMAL_COLOR}m#{TODAY_YEAR}\e\[0m年}
+    year_month_text = convert_year_month2text(TODAY_YEAR, TODAY_MONTH)
+    output_text = /\e\[#{NORMAL_COLOR}m#{TODAY_MONTH}\e\[0m月 \e\[#{NORMAL_COLOR}m#{TODAY_YEAR}\e\[0m年/
     assert_match(output_text, year_month_text)
   end
 
@@ -86,8 +86,8 @@ class TestSample1DateCalender < Minitest::Test
   end
 
   def test_year_month2text
-    year_month_text = year_month2text(SAMPLE1_YEAR, SAMPLE1_MONTH)
-    output_text = %r{\e\[#{NORMAL_COLOR}m#{SAMPLE1_MONTH}\e\[0m月 \e\[#{NORMAL_COLOR}m#{SAMPLE1_YEAR}\e\[0m年}
+    year_month_text = convert_year_month2text(SAMPLE1_YEAR, SAMPLE1_MONTH)
+    output_text = /\e\[#{NORMAL_COLOR}m#{SAMPLE1_MONTH}\e\[0m月 \e\[#{NORMAL_COLOR}m#{SAMPLE1_YEAR}\e\[0m年/
     assert_match(output_text, year_month_text)
   end
 
@@ -101,8 +101,8 @@ end
 
 class TestSample2DateCalender < Minitest::Test
   def test_year_month2text
-    year_month_text = year_month2text(SAMPLE2_YEAR, SAMPLE2_MONTH)
-    output_text = %r{\e\[#{NORMAL_COLOR}m#{SAMPLE2_MONTH}\e\[0m月 \e\[#{NORMAL_COLOR}m#{SAMPLE2_YEAR}\e\[0m年}
+    year_month_text = convert_year_month2text(SAMPLE2_YEAR, SAMPLE2_MONTH)
+    output_text = /\e\[#{NORMAL_COLOR}m#{SAMPLE2_MONTH}\e\[0m月 \e\[#{NORMAL_COLOR}m#{SAMPLE2_YEAR}\e\[0m年/
     assert_match(output_text, year_month_text)
   end
 
