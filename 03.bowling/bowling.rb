@@ -50,19 +50,19 @@ end
 
 def separate_frame(pins)
   all_frames = [] # 全フレームの倒したピンの数の配列（１フレームごとに入れ子の配列になっている）
-  pins_1frames = [] # 1フレームの倒したピンの数の配列
+  pins_1frame = []
 
   pins.each do |pin|
-    pins_1frames << pin
+    pins_1frame << pin
     maxsize_1frame = all_frames.size >= MAX_FRAME - 1 ? BASIC_SIZE_1FRAME + 1 : BASIC_SIZE_1FRAME # 最後のフレームはBASIC_SIZE_1FRAME + 1投げられる
 
-    if (pins_1frames[0] == 10 && all_frames.size < MAX_FRAME - 1) || pins_1frames.size >= maxsize_1frame
-      all_frames << pins_1frames # MAX_FRAME - 1フレームまではストライク一個で1フレーム、それ以外はmaxsize_1frameになるまで今のフレームの点数はall_framesには追加されない
-      pins_1frames = []
+    if (pins_1frame[0] == 10 && all_frames.size < MAX_FRAME - 1) || pins_1frame.size >= maxsize_1frame
+      all_frames << pins_1frame # MAX_FRAME - 1フレームまではストライク一個で1フレーム、それ以外はmaxsize_1frameになるまで今のフレームの点数はall_framesには追加されない
+      pins_1frame = []
     end
   end
 
-  all_frames << pins_1frames unless pins_1frames.empty? # 現在の投球がフレームの途中だった場合、半端な投球をall_framesに追加する
+  all_frames << pins_1frame unless pins_1frame.empty? # 現在の投球がフレームの途中だった場合、半端な投球をall_framesに追加する
   all_frames
 end
 
