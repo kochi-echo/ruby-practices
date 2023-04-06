@@ -67,11 +67,8 @@ class TestTodayCalender < Minitest::Test
 
   def test_year_month2text
     year_month_text = year_month2text(TODAY_YEAR, TODAY_MONTH)
-    assert_match(/#{TODAY_MONTH}/, year_month_text)
-    assert_match(/#{TODAY_YEAR}/, year_month_text)
-    assert_equal year_month_text.center(WIDTH_CALENDER), year_month_text
-    assert_match(/\e\[38;5;208m#{TODAY_MONTH}\033\[0m/, year_month_text)
-    assert_match(/\e\[38;5;208m#{TODAY_YEAR}\033\[0m/, year_month_text)
+    output_text = %r{\e\[#{NORMAL_COLOR}m#{TODAY_MONTH}\e\[0m月 \e\[#{NORMAL_COLOR}m#{TODAY_YEAR}\e\[0m年}
+    assert_match(output_text, year_month_text)
   end
 
   def test_days2weeks
@@ -90,29 +87,23 @@ class TestSample1DateCalender < Minitest::Test
 
   def test_year_month2text
     year_month_text = year_month2text(SAMPLE1_YEAR, SAMPLE1_MONTH)
-    assert_match(/#{SAMPLE1_MONTH}/, year_month_text)
-    assert_match(/#{SAMPLE1_YEAR}/, year_month_text)
-    assert_equal year_month_text.center(WIDTH_CALENDER), year_month_text
-    assert_match(/\e\[38;5;208m#{SAMPLE1_MONTH}\033\[0m/, year_month_text)
-    assert_match(/\e\[38;5;208m#{SAMPLE1_YEAR}\033\[0m/, year_month_text)
+    output_text = %r{\e\[#{NORMAL_COLOR}m#{SAMPLE1_MONTH}\e\[0m月 \e\[#{NORMAL_COLOR}m#{SAMPLE1_YEAR}\e\[0m年}
+    assert_match(output_text, year_month_text)
   end
 
   def test_days2weeks
     weeks = days2weeks(SAMPLE1_YEAR, SAMPLE1_MONTH)
     calc_weeeks = (1..weeks.size).map { weeks.next }
     sample1_weeks = weeks2color(SAMPLE1_DAYS, Date.today.day)
-    ssert_equal sample1_weeks, calc_weeeks
+    assert_equal sample1_weeks, calc_weeeks
   end
 end
 
 class TestSample2DateCalender < Minitest::Test
   def test_year_month2text
     year_month_text = year_month2text(SAMPLE2_YEAR, SAMPLE2_MONTH)
-    assert_match(/#{SAMPLE2_MONTH}/, year_month_text)
-    assert_match(/#{SAMPLE2_YEAR}/, year_month_text)
-    assert_equal year_month_text.center(WIDTH_CALENDER), year_month_text
-    assert_match(/\e\[38;5;208m#{SAMPLE2_MONTH}\033\[0m/, year_month_text)
-    assert_match(/\e\[38;5;208m#{SAMPLE2_YEAR}\033\[0m/, year_month_text)
+    output_text = %r{\e\[#{NORMAL_COLOR}m#{SAMPLE2_MONTH}\e\[0m月 \e\[#{NORMAL_COLOR}m#{SAMPLE2_YEAR}\e\[0m年}
+    assert_match(output_text, year_month_text)
   end
 
   def test_days2weeks
