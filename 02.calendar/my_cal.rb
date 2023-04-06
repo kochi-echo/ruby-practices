@@ -37,7 +37,7 @@ end
 
 def convert_year_month2text(year, month)
   year_month_text = "#{"#{month}月 #{year}年".center(WIDTH_CALENDER)}\n"
-  year_month_text.gsub!(/\d+/) { |str| color_text(str, NORMAL_COLOR) } # 数字だけ色変更
+  year_month_text.gsub!(/\d+/) { |str| color_text(str, NORMAL_COLOR) }
 end
 
 def convert_days2weeks(year, month)
