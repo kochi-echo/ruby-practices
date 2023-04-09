@@ -3,6 +3,7 @@
 
 require 'minitest/autorun'
 require_relative 'bowling'
+require 'debug'
 
 INPUT_SAMPLES = [
   '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5',
@@ -94,6 +95,11 @@ class TestSmallScoreCalculation < Minitest::Test
     assert_equal [[1, 2], [3, 4]], separate_frame(all_pins)
     all_pins = [1, 2, 3]
     assert_equal [[1, 2], [3]], separate_frame(all_pins)
+    all_pins = [1, 2, 10, 4, 5]
+    # debugger
+    assert_equal [[1, 2],[10], [4, 5]], separate_frame(all_pins)
+    all_pins = [6,3,9,0,0,3,8,2,7,3,10,9,1,8,0,10,6,4,5]
+    assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10], [9, 1], [8, 0], [10],[6,4,5]], separate_frame(all_pins)
   end
 end
 
