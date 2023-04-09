@@ -104,55 +104,55 @@ class TestSmallScoreCalculation < Minitest::Test
 end
 
 class TestSampleCalculation < Minitest::Test
-  def test_pin_data2int
-    input_points = pin_data2int('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5')
+  def test_pins_str_to_int
+    input_points = pins_str_to_int('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5')
     assert_equal [6, 3, 9, 0, 0, 3, 8, 2, 7, 3, 10, 9, 1, 8, 0, 10, 6, 4, 5], input_points
   end
 
   def test_data1_scrore
     index = 0
-    input_points = pin_data2int('6,3,9,0,0,3,8,2')
+    input_points = pins_str_to_int('6,3,9,0,0,3,8,2')
     assert_equal [6, 3, 9, 0, 0, 3, 8, 2].sum, calculate_score(input_points)
-    input_points = pin_data2int('6,3,9,0,0,3,8,2,7,3,X')
+    input_points = pins_str_to_int('6,3,9,0,0,3,8,2,7,3,X')
     assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10]].flatten.sum + 7 + 10, calculate_score(input_points)
-    input_points = pin_data2int('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0')
+    input_points = pins_str_to_int('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0')
     assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10], [9, 1], [8, 0]].flatten.sum + 7 + 10 + 10 + 8, calculate_score(input_points)
-    input_points = pin_data2int('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X')
+    input_points = pins_str_to_int('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X')
     assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10], [9, 1], [8, 0], [10]].flatten.sum + 7 + 10 + 10 + 8, calculate_score(input_points)
-    input_points = pin_data2int('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5')
+    input_points = pins_str_to_int('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5')
     assert_equal OUTPUT_SAMPLES[index], calculate_score(input_points)
   end
 
   def test_data2_scrore
     index = 2
-    input_points = pin_data2int('0,10,1,5,0,0,0,0')
+    input_points = pins_str_to_int('0,10,1,5,0,0,0,0')
     assert_equal [0, 10, 1, 5, 0, 0, 0, 0].sum + 1, calculate_score(input_points)
-    input_points = pin_data2int('0,10,1,5,0,0,0,0,X,X,X,5')
+    input_points = pins_str_to_int('0,10,1,5,0,0,0,0,X,X,X,5')
     assert_equal [0, 10, 1, 5, 0, 0, 0, 0, 10, 10, 10, 5].sum + 1 + [10, 10].sum + [10, 5].sum + 5, calculate_score(input_points)
-    input_points = pin_data2int('0,10,1,5,0,0,0,0,X,X,X,5,1')
+    input_points = pins_str_to_int('0,10,1,5,0,0,0,0,X,X,X,5,1')
     assert_equal [0, 10, 1, 5, 0, 0, 0, 0, 10, 10, 10, 5, 1].sum + 1 + [10, 10].sum + [10, 5].sum + [5, 1].sum, calculate_score(input_points)
-    input_points = pin_data2int('0,10,1,5,0,0,0,0,X,X,X,5,1,8,1,0,4')
+    input_points = pins_str_to_int('0,10,1,5,0,0,0,0,X,X,X,5,1,8,1,0,4')
     assert_equal OUTPUT_SAMPLES[index], calculate_score(input_points)
   end
 
   def test_all_score
     index = 0
-    input_points = pin_data2int(INPUT_SAMPLES[index])
+    input_points = pins_str_to_int(INPUT_SAMPLES[index])
     assert_equal OUTPUT_SAMPLES[index], calculate_score(input_points)
     index = 1
-    input_points = pin_data2int(INPUT_SAMPLES[index])
+    input_points = pins_str_to_int(INPUT_SAMPLES[index])
     assert_equal OUTPUT_SAMPLES[index], calculate_score(input_points)
     index = 2
-    input_points = pin_data2int(INPUT_SAMPLES[index])
+    input_points = pins_str_to_int(INPUT_SAMPLES[index])
     assert_equal OUTPUT_SAMPLES[index], calculate_score(input_points)
     index = 3
-    input_points = pin_data2int(INPUT_SAMPLES[index])
+    input_points = pins_str_to_int(INPUT_SAMPLES[index])
     assert_equal OUTPUT_SAMPLES[index], calculate_score(input_points)
     index = 4
-    input_points = pin_data2int(INPUT_SAMPLES[index])
+    input_points = pins_str_to_int(INPUT_SAMPLES[index])
     assert_equal OUTPUT_SAMPLES[index], calculate_score(input_points)
     index = 5
-    input_points = pin_data2int(INPUT_SAMPLES[index])
+    input_points = pins_str_to_int(INPUT_SAMPLES[index])
     assert_equal OUTPUT_SAMPLES[index], calculate_score(input_points)
   end
 end

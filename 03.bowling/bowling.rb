@@ -43,22 +43,19 @@ class Frame
   end
 end
 
-def pin_data2int(input)
+def pins_str_to_int(input)
   input.gsub('X', MAX_PIN.to_s).split(',').map(&:to_i) # X->10に置換
 end
 
-def separate_frame(pins)
-  pins.inject([]) do |pairs, pin|
-    if pairs.size == 0 || pairs.size < MAX_FRAME && (pairs.last&.size >= BASIC_SIZE_1FRAME || pairs.last&.last == MAX_PIN )
+def separate_frame(all_pins)
+  all_pins.each_with_object([]) do |pin, pairs|
+    if pairs.empty? || pairs.size < MAX_FRAME && ( pairs.last.size >= BASIC_SIZE_1FRAME || pairs.last.last >= MAX_PIN )
       pairs << [pin]
     else
       pairs.last << pin
     end
-    pairs
   end
 end
-
-
 
 def calculate_score(all_pins)
   score = 0
@@ -77,6 +74,6 @@ end
 
 input = ARGV[0]
 unless input.nil?
-  input_array = pin_data2int(input)
-  puts calculate_score(input_array)
+  all_pins = pins_str_to_int(input)
+  puts calculate_score(all_pins)
 end
