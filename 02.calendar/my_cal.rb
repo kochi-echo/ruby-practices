@@ -79,7 +79,7 @@ def convert_input2month_year(option_y_m)
   [year, month]
 end
 
-def validation_year_month_in_range?(year, month)
+def year_and_month_in_range?(year, month)
   result_year_in_range = year_in_range?(year)
   result_month_in_range = month_in_range?(month)
   result_year_in_range && result_month_in_range
@@ -87,4 +87,4 @@ end
 
 option_y_m = ARGV.getopts('y:', 'm:')
 year, month = convert_input2month_year(option_y_m)
-print_calender(year, month) if validation_year_month_in_range?(year, month)
+print_calender(year, month) if year_and_month_in_range?(year, month)
