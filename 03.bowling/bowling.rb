@@ -49,7 +49,7 @@ end
 
 def separate_frame(all_pins)
   all_pins.each_with_object([]) do |pin, pairs|
-    if pairs.empty? || pairs.size < MAX_FRAME && ( pairs.last.size >= BASIC_SIZE_1FRAME || pairs.last.last >= MAX_PIN )
+    if pairs.empty? || pairs.size < MAX_FRAME && (pairs.last.size >= BASIC_SIZE_1FRAME || pairs.last.last >= MAX_PIN)
       pairs << [pin]
     else
       pairs.last << pin
@@ -58,18 +58,15 @@ def separate_frame(all_pins)
 end
 
 def calculate_score(all_pins)
-  score = 0
   previous_frame = nil
   pre_previous_frame = nil
 
-  separate_frame(all_pins).each do |pins|
+  separate_frame(all_pins).sum do |pins|
     frame = Frame.new(pins, previous_frame, pre_previous_frame)
-    score += frame.score
     pre_previous_frame = previous_frame
     previous_frame = frame
+    frame.score
   end
-
-  score
 end
 
 input = ARGV[0]
