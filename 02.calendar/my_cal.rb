@@ -35,21 +35,21 @@ def align_days(first, last)
   ([' ' * WIDTH_1DAY] * first.wday) + days_colored # 初日の曜日を合わせる
 end
 
-def convert_year_month2text(year, month)
+def convert_year_month_to_text(year, month)
   year_month_text = "#{"#{month}月 #{year}年".center(WIDTH_CALENDER)}\n"
   year_month_text.gsub!(/\d+/) { |str| color_text(str, NORMAL_COLOR) }
 end
 
-def convert_days2weeks(year, month)
+def convert_days_to_weeks(year, month)
   first_date = Date.new(year, month, 1)
   last_date = Date.new(year, month, -1)
   align_days(first_date, last_date).each_slice(7)
 end
 
 def print_calender(year, month)
-  print convert_year_month2text(year, month)
+  print convert_year_month_to_text(year, month)
   print("#{DAY_OF_WEEKS.join(' ')}\n")
-  weeks = convert_days2weeks(year, month)
+  weeks = convert_days_to_weeks(year, month)
   (1..weeks.size).each { print "#{weeks.next.join(' ')}\n" }
 end
 
@@ -71,7 +71,7 @@ def month_in_range?(month)
   end
 end
 
-def convert_input2month_year(option_y_m)
+def convert_input_to_month_year(option_y_m)
   option_y = option_y_m['y']
   option_m = option_y_m['m']
   year = option_y.nil? ? Date.today.year : option_y.to_i
@@ -86,5 +86,5 @@ def year_and_month_in_range?(year, month)
 end
 
 option_y_m = ARGV.getopts('y:', 'm:')
-year, month = convert_input2month_year(option_y_m)
+year, month = convert_input_to_month_year(option_y_m)
 print_calender(year, month) if year_and_month_in_range?(year, month)
