@@ -6,7 +6,7 @@ require 'optparse'
 
 NORMAL_COLOR = '38;5;208' # オレンジ
 INVERT_COLOR = '7' # 白
-DAY_OF_WEEKS = %w[日 月 火 水 木 金 土].freeze
+DAY_OF_WEEKS_TEXT = "日 月 火 水 木 金 土\n".freeze
 MONTH_MIN = 1
 MONTH_MAX = 12
 YEAR_MIN = 1970
@@ -36,7 +36,7 @@ def align_days(first, last)
 end
 
 def year_month_to_text(year, month)
-  year_month_text = "#{"#{month}月 #{year}年".center(WIDTH_CALENDER)}\n"
+  year_month_text = "#{month}月 #{year}年".center(WIDTH_CALENDER) + "\n"
   year_month_text.gsub!(/\d+/) { |str| color_text(str, NORMAL_COLOR) }
 end
 
@@ -46,9 +46,9 @@ def days_to_weeks(year, month)
   align_days(first_date, last_date).each_slice(7)
 end
 
-def print_calender(year, month)
+def print_calendar(year, month)
   print year_month_to_text(year, month)
-  print("#{DAY_OF_WEEKS.join(' ')}\n")
+  print(DAY_OF_WEEKS_TEXT)
   weeks = days_to_weeks(year, month)
   (1..weeks.size).each { print "#{weeks.next.join(' ')}\n" }
 end
@@ -66,7 +66,7 @@ def month_in_range?(month)
   if (MONTH_MIN..MONTH_MAX).cover?(month)
     true
   else
-    puts "#{month}月は規定値#{MONTH_MIN}〜#{MONTH_MAX}の範囲外です。"
+    puts "#{month}月は規定値#{MONTH_MIN}〜#{MONTH_MAX}月の範囲外です。"
     false
   end
 end
@@ -87,4 +87,4 @@ end
 
 option_y_m = ARGV.getopts('y:', 'm:')
 year, month = input_to_year_and_month(option_y_m)
-print_calender(year, month) if year_and_month_in_range?(year, month)
+print_calendar(year, month) if year_and_month_in_range?(year, month)
