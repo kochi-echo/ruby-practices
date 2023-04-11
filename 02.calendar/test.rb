@@ -83,7 +83,7 @@ class TestPrintCalendar < Minitest::Test
     month = SAMPLE1_MONTH
     days_text = SAMPLE1_DAYS_TEXT.map do |week|
       week.map do |day|
-        day.gsub(/(\s|^)\d+/) { "\e[#{NORMAL_COLOR}m#{day.rjust(WIDTH_1DAY)}\033[0m" }
+        day == '  ' ? day : "\e[#{NORMAL_COLOR}m#{day}\033[0m"
       end.join(' ')
     end.join("\n")
     assert_output(
@@ -97,7 +97,7 @@ class TestPrintCalendar < Minitest::Test
     month = SAMPLE2_MONTH
     days_text = SAMPLE2_DAYS_TEXT.map do |week|
       week.map do |day|
-        day.gsub(/(\s|^)\d+/) { "\e[#{NORMAL_COLOR}m#{day.rjust(WIDTH_1DAY)}\033[0m" }
+        day == '  ' ? day : "\e[#{NORMAL_COLOR}m#{day}\033[0m"
       end.join(' ')
     end.join("\n")
     assert_output(
