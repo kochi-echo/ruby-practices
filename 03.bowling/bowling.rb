@@ -49,7 +49,7 @@ end
 
 def separate_frame(all_pins)
   all_pins.each_with_object([]) do |pin, pairs|
-    if pairs.empty? || pairs.size < MAX_FRAME && (pairs.last.size >= BASIC_SIZE_1FRAME || pairs.last.last >= MAX_PIN)
+    if pairs.empty? || pairs.size < MAX_FRAME && (pairs.last&.size >= BASIC_SIZE_1FRAME || pairs.last&.last >= MAX_PIN)
       pairs << [pin]
     else
       pairs.last << pin
