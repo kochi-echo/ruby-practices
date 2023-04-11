@@ -45,7 +45,7 @@ class TestYearAndMonthInRange < Minitest::Test
     assert year_and_month_in_range?(YEAR_MAX, MONTH_MAX)
   end
 
-  def test_input_out_of_range
+  def test_month_out_range
     year = YEAR_MIN - 1
     month = MONTH_MIN
     refute year_and_month_in_range?(year, month)
@@ -54,6 +54,9 @@ class TestYearAndMonthInRange < Minitest::Test
     month = MONTH_MIN - 1
     refute year_and_month_in_range?(year, month)
     assert_output("#{month}月は規定値#{MONTH_MIN}〜#{MONTH_MAX}月の範囲外です。\n") { year_and_month_in_range?(year, month) }
+  end
+
+  def test_year_out_range
     year = YEAR_MAX + 1
     month = MONTH_MAX
     refute year_and_month_in_range?(year, month)
@@ -62,11 +65,14 @@ class TestYearAndMonthInRange < Minitest::Test
     month = MONTH_MAX + 1
     refute year_and_month_in_range?(year, month)
     assert_output("#{month}月は規定値#{MONTH_MIN}〜#{MONTH_MAX}月の範囲外です。\n") { year_and_month_in_range?(year, month) }
+  end
+
+  def test_month_and_year_out_range
     year = YEAR_MAX + 1
     month = MONTH_MAX + 1
     refute year_and_month_in_range?(year, month)
     assert_output(
-      "#{year}年は規定値#{YEAR_MIN}〜#{YEAR_MAX}年の範囲外です。\n" +
+      "#{year}年は規定値#{YEAR_MIN}〜#{YEAR_MAX}年の範囲外です。\n" \
       "#{month}月は規定値#{MONTH_MIN}〜#{MONTH_MAX}月の範囲外です。\n"
     ) { year_and_month_in_range?(year, month) }
   end
@@ -82,10 +88,8 @@ class TestPrintCalendar < Minitest::Test
       end.join(' ')
     end.join("\n")
     assert_output(
-      "#{month}月 #{year}年".center(WIDTH_CALENDER).gsub!(/\d+/) { |num| "\e[#{NORMAL_COLOR}m#{num}\033[0m" } + "\n" +
-      DAY_OF_WEEKS_TEXT +
-      days_text +
-      "\n"
+      "#{month}月 #{year}年".center(WIDTH_CALENDER).gsub!(/\d+/) { |num| "\e[#{NORMAL_COLOR}m#{num}\033[0m" } + "\n" \
+      "#{DAY_OF_WEEKS_TEXT}#{days_text}\n"
     ) { print_calendar(year, month) }
   end
 
@@ -98,10 +102,8 @@ class TestPrintCalendar < Minitest::Test
       end.join(' ')
     end.join("\n")
     assert_output(
-      "#{month}月 #{year}年".center(WIDTH_CALENDER).gsub!(/\d+/) { |num| "\e[#{NORMAL_COLOR}m#{num}\033[0m" } + "\n" +
-      DAY_OF_WEEKS_TEXT +
-      days_text +
-      "\n"
+      "#{month}月 #{year}年".center(WIDTH_CALENDER).gsub!(/\d+/) { |num| "\e[#{NORMAL_COLOR}m#{num}\033[0m" } + "\n" \
+      "#{DAY_OF_WEEKS_TEXT}#{days_text}\n"
     ) { print_calendar(year, month) }
   end
 end

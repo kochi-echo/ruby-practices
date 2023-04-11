@@ -36,7 +36,7 @@ def align_days(first, last)
 end
 
 def year_month_to_text(year, month)
-  year_month_text = "#{month}月 #{year}年".center(WIDTH_CALENDER) + "\n"
+  year_month_text = "#{"#{month}月 #{year}年".center(WIDTH_CALENDER)}\n"
   year_month_text.gsub!(/\d+/) { |str| color_text(str, NORMAL_COLOR) }
 end
 
