@@ -47,41 +47,28 @@ class TestInputToYearAndMonth < Minitest::Test
 end
 
 class TestYearAndMonthInRange < Minitest::Test
-  def test_input_in_range
-    assert year_and_month_in_range?(YEAR_MIN, MONTH_MIN)
-    assert year_and_month_in_range?(YEAR_MAX, MONTH_MAX)
+  def test_year_in_range
+    assert_equal "", generate_text_year_out_range(YEAR_MIN)
+    assert_equal "", generate_text_year_out_range(YEAR_MAX)
   end
 
-  def test_month_out_range
-    year = YEAR_MIN
-    month = MONTH_MIN - 1
-    refute year_and_month_in_range?(year, month)
-    assert_output("#{month}月は規定値#{MONTH_MIN}〜#{MONTH_MAX}月の範囲外です。\n") { year_and_month_in_range?(year, month) }
-    year = YEAR_MIN
-    month = MONTH_MAX + 1
-    refute year_and_month_in_range?(year, month)
-    assert_output("#{month}月は規定値#{MONTH_MIN}〜#{MONTH_MAX}月の範囲外です。\n") { year_and_month_in_range?(year, month) }
+  def test_month_in_range
+    assert_equal "", generate_text_month_out_range(MONTH_MIN)
+    assert_equal "", generate_text_month_out_range(MONTH_MAX)
   end
 
   def test_year_out_range
     year = YEAR_MIN - 1
-    month = MONTH_MAX
-    refute year_and_month_in_range?(year, month)
-    assert_output("#{year}年は規定値#{YEAR_MIN}〜#{YEAR_MAX}年の範囲外です。\n") { year_and_month_in_range?(year, month) }
+    assert_equal "#{year}年は規定値#{YEAR_MIN}〜#{YEAR_MAX}年の範囲外です。\n", generate_text_year_out_range(year)
     year = YEAR_MAX + 1
-    month = MONTH_MAX
-    refute year_and_month_in_range?(year, month)
-    assert_output("#{year}年は規定値#{YEAR_MIN}〜#{YEAR_MAX}年の範囲外です。\n") { year_and_month_in_range?(year, month) }
+    assert_equal "#{year}年は規定値#{YEAR_MIN}〜#{YEAR_MAX}年の範囲外です。\n", generate_text_year_out_range(year)
   end
 
-  def test_month_and_year_out_range
-    year = YEAR_MAX + 1
+  def test_month_out_range
+    month = MONTH_MIN - 1
+    assert_equal "#{month}月は規定値#{MONTH_MIN}〜#{MONTH_MAX}月の範囲外です。\n", generate_text_month_out_range(month)
     month = MONTH_MAX + 1
-    refute year_and_month_in_range?(year, month)
-    assert_output(
-      "#{year}年は規定値#{YEAR_MIN}〜#{YEAR_MAX}年の範囲外です。\n" +
-      "#{month}月は規定値#{MONTH_MIN}〜#{MONTH_MAX}月の範囲外です。\n"
-    ) { year_and_month_in_range?(year, month) }
+    assert_equal "#{month}月は規定値#{MONTH_MIN}〜#{MONTH_MAX}月の範囲外です。\n", generate_text_month_out_range(month)
   end
 end
 
