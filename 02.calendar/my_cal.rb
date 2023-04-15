@@ -35,7 +35,7 @@ end
 def days_to_weeks(year, month, today)
   first_date = Date.new(year, month, 1)
   last_date = Date.new(year, month, -1)
-  days_unshaped = ([' ' * WIDTH_1DAY] * first_date.wday) + (first_date..last_date).map { |date| color_days(date, today)} # 初日の曜日を合わせる
+  days_unshaped = ([' ' * WIDTH_1DAY] * first_date.wday) + (first_date..last_date).map { |date| color_days(date, today) } # 初日の曜日を合わせる
   days_unshaped.each_slice(7).map { |week| week.join(' ') }.join("\n")
 end
 
@@ -53,26 +53,26 @@ def input_to_year_and_month(option_y_m)
   [year, month]
 end
 
-def generate_text_year_out_range(year)
-   unless (YEAR_MIN..YEAR_MAX).cover?(year)
+def generate_text_year_in_range(year)
+  if (YEAR_MIN..YEAR_MAX).cover?(year)
+    ''
+  else
     "#{year}年は規定値#{YEAR_MIN}〜#{YEAR_MAX}年の範囲外です。\n"
-   else
-    ""
-   end
+  end
 end
 
-def generate_text_month_out_range(month)
-  unless (MONTH_MIN..MONTH_MAX).cover?(month)
-    "#{month}月は規定値#{MONTH_MIN}〜#{MONTH_MAX}月の範囲外です。\n"
+def generate_text_month_in_range(month)
+  if (MONTH_MIN..MONTH_MAX).cover?(month)
+    ''
   else
-    ""
+    "#{month}月は規定値#{MONTH_MIN}〜#{MONTH_MAX}月の範囲外です。\n"
   end
 end
 
 option_y_m = ARGV.getopts('y:', 'm:')
 year, month = input_to_year_and_month(option_y_m)
-text_year_out_range = generate_text_year_out_range(year)
-text_month_out_range = generate_text_month_out_range(month)
-print text_year_out_range unless text_year_out_range.empty?
-print text_month_out_range unless text_month_out_range.empty?
-print summarize_calendar(year, month, Date.today) if text_year_out_range.empty? && text_month_out_range.empty?
+text_year_in_range = generate_text_year_in_range(year)
+text_month_in_range = generate_text_month_in_range(month)
+print text_year_in_range unless text_year_in_range.empty?
+print text_month_in_range unless text_month_in_range.empty?
+print summarize_calendar(year, month, Date.today) if text_year_in_range.empty? && text_month_in_range.empty?

@@ -48,27 +48,27 @@ end
 
 class TestYearAndMonthInRange < Minitest::Test
   def test_year_in_range
-    assert_equal "", generate_text_year_out_range(YEAR_MIN)
-    assert_equal "", generate_text_year_out_range(YEAR_MAX)
+    assert_equal '', generate_text_year_in_range(YEAR_MIN)
+    assert_equal '', generate_text_year_in_range(YEAR_MAX)
   end
 
   def test_month_in_range
-    assert_equal "", generate_text_month_out_range(MONTH_MIN)
-    assert_equal "", generate_text_month_out_range(MONTH_MAX)
+    assert_equal '', generate_text_month_in_range(MONTH_MIN)
+    assert_equal '', generate_text_month_in_range(MONTH_MAX)
   end
 
   def test_year_out_range
     year = YEAR_MIN - 1
-    assert_equal "#{year}年は規定値#{YEAR_MIN}〜#{YEAR_MAX}年の範囲外です。\n", generate_text_year_out_range(year)
+    assert_equal "#{year}年は規定値#{YEAR_MIN}〜#{YEAR_MAX}年の範囲外です。\n", generate_text_year_in_range(year)
     year = YEAR_MAX + 1
-    assert_equal "#{year}年は規定値#{YEAR_MIN}〜#{YEAR_MAX}年の範囲外です。\n", generate_text_year_out_range(year)
+    assert_equal "#{year}年は規定値#{YEAR_MIN}〜#{YEAR_MAX}年の範囲外です。\n", generate_text_year_in_range(year)
   end
 
   def test_month_out_range
     month = MONTH_MIN - 1
-    assert_equal "#{month}月は規定値#{MONTH_MIN}〜#{MONTH_MAX}月の範囲外です。\n", generate_text_month_out_range(month)
+    assert_equal "#{month}月は規定値#{MONTH_MIN}〜#{MONTH_MAX}月の範囲外です。\n", generate_text_month_in_range(month)
     month = MONTH_MAX + 1
-    assert_equal "#{month}月は規定値#{MONTH_MIN}〜#{MONTH_MAX}月の範囲外です。\n", generate_text_month_out_range(month)
+    assert_equal "#{month}月は規定値#{MONTH_MIN}〜#{MONTH_MAX}月の範囲外です。\n", generate_text_month_in_range(month)
   end
 end
 
