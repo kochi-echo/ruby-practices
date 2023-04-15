@@ -11,14 +11,10 @@ class TestInputToYearAndMonth < Minitest::Test
   end
 
   def test_input_normal
-    year = 2023
-    month = 4
-    option_y_m = { 'y' => year.to_s, 'm' => month.to_s }
-    assert_equal [year, month], input_to_year_and_month(option_y_m)
-    year = 2021
-    month = 8
-    option_y_m = { 'y' => year.to_s, 'm' => month.to_s }
-    assert_equal [year, month], input_to_year_and_month(option_y_m)
+    option_y_m = { 'y' => '2023', 'm' => '4' }
+    assert_equal [2023, 4], input_to_year_and_month(option_y_m)
+    option_y_m = { 'y' => '2021', 'm' => '8' }
+    assert_equal [2021, 8], input_to_year_and_month(option_y_m)
   end
 end
 
