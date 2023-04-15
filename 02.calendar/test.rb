@@ -50,9 +50,6 @@ end
 
 class TestPrintCalendar < Minitest::Test
   def test_sample1_calendar
-    year = 2023
-    month = 4
-    today_day = 10
     calendar = <<~TEXT
       \      \e[38;5;208m4\033[0m月 \e[38;5;208m2023\033[0m年
       日 月 火 水 木 金 土
@@ -63,14 +60,11 @@ class TestPrintCalendar < Minitest::Test
       \e[38;5;208m23\033[0m \e[38;5;208m24\033[0m \e[38;5;208m25\033[0m \e[38;5;208m26\033[0m \e[38;5;208m27\033[0m \e[38;5;208m28\033[0m \e[38;5;208m29\033[0m
       \e[38;5;208m30\033[0m
     TEXT
-    today = Date.new(year, month, today_day)
-    assert_equal calendar, summarize_calendar(year, month, today)
+    today = Date.new(2023, 4, 10)
+    assert_equal calendar, summarize_calendar(2023, 4, today)
   end
 
   def test_sample2_calendar
-    year = 2021
-    month = 8
-    today_day = 20
     calendar = <<~TEXT
       \      \e[38;5;208m8\033[0m月 \e[38;5;208m2021\033[0m年
       日 月 火 水 木 金 土
@@ -80,7 +74,7 @@ class TestPrintCalendar < Minitest::Test
       \e[38;5;208m22\033[0m \e[38;5;208m23\033[0m \e[38;5;208m24\033[0m \e[38;5;208m25\033[0m \e[38;5;208m26\033[0m \e[38;5;208m27\033[0m \e[38;5;208m28\033[0m
       \e[38;5;208m29\033[0m \e[38;5;208m30\033[0m \e[38;5;208m31\033[0m
     TEXT
-    today = Date.new(year, month, today_day)
-    assert_equal calendar, summarize_calendar(year, month, today)
+    today = Date.new(2021, 8, 20)
+    assert_equal calendar, summarize_calendar(2021, 8, today)
   end
 end
