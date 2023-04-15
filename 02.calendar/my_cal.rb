@@ -18,19 +18,19 @@ def color_text(text, color)
   "\e[#{color}m#{text}\033[0m"
 end
 
-def color_days(date)
+def color_days(date, today)
   day = date.day.to_s.rjust(WIDTH_1DAY)
-  if date == Date.today # 今日の日付は色を反転する
+  if date == today # 今日の日付は色を反転する
     color_text(day, INVERT_COLOR)
   else
     color_text(day, NORMAL_COLOR)
   end
 end
 
-def align_days(first, last)
+def align_days(first, last, today)
   dates = (first..last).to_a
   days_colored = dates.map do |date|
-    color_days(date)
+    color_days(date, today)
   end
   ([' ' * WIDTH_1DAY] * first.wday) + days_colored # 初日の曜日を合わせる
 end
@@ -40,17 +40,18 @@ def year_month_to_text(year, month)
   year_month_text.gsub!(/\d+/) { |str| color_text(str, NORMAL_COLOR) }
 end
 
-def days_to_weeks(year, month)
+def days_to_weeks(year, month, today)
   first_date = Date.new(year, month, 1)
   last_date = Date.new(year, month, -1)
-  align_days(first_date, last_date).each_slice(7)
+  align_days(first_date, last_date, today).each_slice(7)
 end
 
-def print_calendar(year, month)
-  print year_month_to_text(year, month)
-  print(DAY_OF_WEEKS_TEXT)
-  weeks = days_to_weeks(year, month)
-  (1..weeks.size).each { print "#{weeks.next.join(' ')}\n" }
+def summarize_calendar(year, month, today)
+  weeks = days_to_weeks(year, month, today)
+  text_weeks = weeks.map { |week| week.join(' ') }.join("\n")
+  (year_month_to_text(year, month) +
+  DAY_OF_WEEKS_TEXT +
+  text_weeks + "\n")
 end
 
 def year_in_range?(year)
@@ -87,4 +88,4 @@ end
 
 option_y_m = ARGV.getopts('y:', 'm:')
 year, month = input_to_year_and_month(option_y_m)
-print_calendar(year, month) if year_and_month_in_range?(year, month)
+print summarize_calendar(year, month, Date.today) if year_and_month_in_range?(year, month)
