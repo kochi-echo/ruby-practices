@@ -53,7 +53,7 @@ class TestPrintCalendar < Minitest::Test
     year = 2023
     month = 4
     today_day = 10
-    days_text = <<~TEXT
+    calendar = <<~TEXT
       \      \e[38;5;208m4\033[0m月 \e[38;5;208m2023\033[0m年#{'      '}
       #{DAY_OF_WEEKS_TEXT}
       \                  \e[38;5;208m 1\033[0m
@@ -64,14 +64,14 @@ class TestPrintCalendar < Minitest::Test
       \e[38;5;208m30\033[0m
     TEXT
     today = Date.new(year, month, today_day)
-    assert_equal days_text, summarize_calendar(year, month, today)
+    assert_equal calendar, summarize_calendar(year, month, today)
   end
 
   def test_sample2_calendar
     year = 2021
     month = 8
     today_day = 20
-    days_text = <<~TEXT
+    calendar = <<~TEXT
       \      \e[38;5;208m8\033[0m月 \e[38;5;208m2021\033[0m年#{'      '}
       #{DAY_OF_WEEKS_TEXT}
       \e[38;5;208m 1\033[0m \e[38;5;208m 2\033[0m \e[38;5;208m 3\033[0m \e[38;5;208m 4\033[0m \e[38;5;208m 5\033[0m \e[38;5;208m 6\033[0m \e[38;5;208m 7\033[0m
@@ -81,6 +81,6 @@ class TestPrintCalendar < Minitest::Test
       \e[38;5;208m29\033[0m \e[38;5;208m30\033[0m \e[38;5;208m31\033[0m
     TEXT
     today = Date.new(year, month, today_day)
-    assert_equal days_text, summarize_calendar(year, month, today)
+    assert_equal calendar, summarize_calendar(year, month, today)
   end
 end
