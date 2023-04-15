@@ -29,7 +29,7 @@ end
 
 def year_and_month_to_text(year, month)
   year_month_text = "#{month}月 #{year}年"
-  year_month_center = " " * ((WIDTH_CALENDER - year_month_text.length) / 2) + year_month_text
+  year_month_center = ' ' * ((WIDTH_CALENDER - year_month_text.length) / 2) + year_month_text
   year_month_center.gsub!(/\d+/) { |str| color_text(str, NORMAL_COLOR) }
 end
 
