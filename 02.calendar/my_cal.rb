@@ -40,9 +40,7 @@ def days_to_weeks(year, month, today)
 end
 
 def summarize_calendar(year, month, today)
-  (year_and_month_to_text(year, month) +
-  DAY_OF_WEEKS_TEXT +
-  days_to_weeks(year, month, today) + "\n")
+  "#{year_and_month_to_text(year, month)}#{DAY_OF_WEEKS_TEXT}#{days_to_weeks(year, month, today)}\n"
 end
 
 def input_to_year_and_month(option_y_m)
