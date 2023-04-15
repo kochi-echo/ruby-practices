@@ -6,7 +6,7 @@ require 'optparse'
 
 NORMAL_COLOR = '38;5;208' # オレンジ
 INVERT_COLOR = '7' # 白
-DAY_OF_WEEKS_TEXT = "日 月 火 水 木 金 土\n"
+DAY_OF_WEEKS_TEXT = "日 月 火 水 木 金 土"
 MONTH_MIN = 1
 MONTH_MAX = 12
 YEAR_MIN = 1970
@@ -28,7 +28,7 @@ def color_days(date, today)
 end
 
 def year_and_month_to_text(year, month)
-  year_month_text = "#{"#{month}月 #{year}年".center(WIDTH_CALENDER)}\n"
+  year_month_text = "#{"#{month}月 #{year}年".center(WIDTH_CALENDER)}"
   year_month_text.gsub!(/\d+/) { |str| color_text(str, NORMAL_COLOR) }
 end
 
@@ -40,7 +40,7 @@ def days_to_weeks(year, month, today)
 end
 
 def summarize_calendar(year, month, today)
-  "#{year_and_month_to_text(year, month)}#{DAY_OF_WEEKS_TEXT}#{days_to_weeks(year, month, today)}\n"
+  "#{year_and_month_to_text(year, month)}\n#{DAY_OF_WEEKS_TEXT}\n#{days_to_weeks(year, month, today)}\n"
 end
 
 def input_to_year_and_month(option_y_m)
