@@ -6,7 +6,7 @@ require 'optparse'
 
 NORMAL_COLOR = '38;5;208' # オレンジ
 INVERT_COLOR = '7' # 白
-DAY_OF_WEEKS_TEXT = "日 月 火 水 木 金 土"
+DAY_OF_WEEKS_TEXT = '日 月 火 水 木 金 土'
 MONTH_MIN = 1
 MONTH_MAX = 12
 YEAR_MIN = 1970
