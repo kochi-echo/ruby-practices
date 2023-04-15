@@ -28,7 +28,7 @@ def color_days(date, today)
 end
 
 def year_and_month_to_text(year, month)
-  year_month_text = "#{"#{month}月 #{year}年".center(WIDTH_CALENDER)}"
+  year_month_text = "#{month}月 #{year}年".center(WIDTH_CALENDER).to_s
   year_month_text.gsub!(/\d+/) { |str| color_text(str, NORMAL_COLOR) }
 end
 
