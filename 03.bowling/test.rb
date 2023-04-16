@@ -4,17 +4,6 @@
 require 'minitest/autorun'
 require_relative 'bowling'
 
-INPUT_SAMPLES = [
-  '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5',
-  '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,X,X,X',
-  '0,10,1,5,0,0,0,0,X,X,X,5,1,8,1,0,4',
-  '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,X,0,0',
-  '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,X,1,8',
-  'X,X,X,X,X,X,X,X,X,X,X,X'
-].freeze
-
-OUTPUT_SAMPLES = [139, 164, 107, 134, 144, 300].freeze
-
 class TestFrameMethod < Minitest::Test
   def test_score
     frame = Frame.new([1, 0])
@@ -42,23 +31,22 @@ class TestFrameMethod < Minitest::Test
     frame = Frame.new([10])
     assert_equal true, frame.strike?
   end
-
-  def test_score_spare
-    previous_frame = Frame.new([1, 9])
-    frame = Frame.new([3, 4], previous_frame)
-    assert_equal 3, frame.score_spare
-    previous_frame = Frame.new([0, 10])
-    frame = Frame.new([1, 5], previous_frame)
-    assert_equal 1, frame.score_spare
-  end
-
-  def test_score_strike
-    previous_frame = Frame.new([10])
-    frame = Frame.new([3, 4], previous_frame)
-    assert_equal 7, frame.score_strike
-  end
 end
 
+class TestSeparateFrame < Minitest::Test
+  def test_separate_pins_without_strike_and_spare
+    all_pins = [1]*20
+    assert_equal [[1,1]]*10, separate_frame(all_pins)
+    all_pins = [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2]
+    assert_equal [[1, 2], [1, 2], [1, 2], [1, 2], [1, 2], [1, 2], [1, 2], [1, 2], [1, 2], [1, 2]], separate_frame(all_pins)
+  end
+  def test_separate_pins_with_strik_and_spare
+    all_pins = [6,3,9,0,0,3,8,2,7,3,10,9,1,8,0,10,6,4,5]
+    assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10], [9, 1], [8, 0], [10], [6,4,5]], separate_frame(all_pins)
+    all_pins = [0, 10, 1, 5, 0, 0, 0, 0, 10, 10, 10, 5, 1, 8, 1, 0, 4]
+    assert_equal [[0, 10], [1, 5], [0, 0], [0, 0], [10], [10], [10], [5, 1], [8, 1], [0, 4]], separate_frame(all_pins)
+  end
+end
 class TestSmallScoreCalculation < Minitest::Test
   def test_calc_normal_score
     all_pins = [1, 2, 3, 4]
@@ -90,56 +78,29 @@ class TestSmallScoreCalculation < Minitest::Test
   end
 end
 
-class TestSampleCalculation < Minitest::Test
-  def test_pins_str_to_int
-    input_points = pins_str_to_int('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5')
-    assert_equal [6, 3, 9, 0, 0, 3, 8, 2, 7, 3, 10, 9, 1, 8, 0, 10, 6, 4, 5], input_points
+class TestGenerationScore < Minitest::Test
+  def test_strike_and_spare
+    assert_equal [6, 3, 9, 0, 0, 3, 8, 2].sum, generate_score('6,3,9,0,0,3,8,2')
+    assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10]].flatten.sum + 7 + 10, generate_score('6,3,9,0,0,3,8,2,7,3,X')
+    assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10], [9, 1], [8, 0]].flatten.sum + 7 + 10 + 10 + 8, generate_score('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0')
+    assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10], [9, 1], [8, 0], [10]].flatten.sum + 7 + 10 + 10 + 8, generate_score('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X')
+    assert_equal 139, generate_score('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5')
   end
 
-  def test_data1_scrore
-    index = 0
-    input_points = pins_str_to_int('6,3,9,0,0,3,8,2')
-    assert_equal [6, 3, 9, 0, 0, 3, 8, 2].sum, calculate_score(input_points)
-    input_points = pins_str_to_int('6,3,9,0,0,3,8,2,7,3,X')
-    assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10]].flatten.sum + 7 + 10, calculate_score(input_points)
-    input_points = pins_str_to_int('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0')
-    assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10], [9, 1], [8, 0]].flatten.sum + 7 + 10 + 10 + 8, calculate_score(input_points)
-    input_points = pins_str_to_int('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X')
-    assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10], [9, 1], [8, 0], [10]].flatten.sum + 7 + 10 + 10 + 8, calculate_score(input_points)
-    input_points = pins_str_to_int('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5')
-    assert_equal OUTPUT_SAMPLES[index], calculate_score(input_points)
+  def test_last_frame_3throw
+    assert_equal 164, generate_score('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,X,X,X')
   end
 
-  def test_data2_scrore
-    index = 2
-    input_points = pins_str_to_int('0,10,1,5,0,0,0,0')
-    assert_equal [0, 10, 1, 5, 0, 0, 0, 0].sum + 1, calculate_score(input_points)
-    input_points = pins_str_to_int('0,10,1,5,0,0,0,0,X,X,X,5')
-    assert_equal [0, 10, 1, 5, 0, 0, 0, 0, 10, 10, 10, 5].sum + 1 + [10, 10].sum + [10, 5].sum + 5, calculate_score(input_points)
-    input_points = pins_str_to_int('0,10,1,5,0,0,0,0,X,X,X,5,1')
-    assert_equal [0, 10, 1, 5, 0, 0, 0, 0, 10, 10, 10, 5, 1].sum + 1 + [10, 10].sum + [10, 5].sum + [5, 1].sum, calculate_score(input_points)
-    input_points = pins_str_to_int('0,10,1,5,0,0,0,0,X,X,X,5,1,8,1,0,4')
-    assert_equal OUTPUT_SAMPLES[index], calculate_score(input_points)
+  def test_3strike
+    assert_equal [0, 10, 1, 5, 0, 0, 0, 0].sum + 1, generate_score('0,10,1,5,0,0,0,0')
+    assert_equal [0, 10, 1, 5, 0, 0, 0, 0, 10, 10, 10, 5].sum + 1 + [10, 10].sum + [10, 5].sum + 5, generate_score('0,10,1,5,0,0,0,0,X,X,X,5')
+    assert_equal [0, 10, 1, 5, 0, 0, 0, 0, 10, 10, 10, 5, 1].sum + 1 + [10, 10].sum + [10, 5].sum + [5, 1].sum, generate_score('0,10,1,5,0,0,0,0,X,X,X,5,1')
+    assert_equal 107, generate_score('0,10,1,5,0,0,0,0,X,X,X,5,1,8,1,0,4')
   end
 
-  def test_all_score
-    index = 0
-    input_points = pins_str_to_int(INPUT_SAMPLES[index])
-    assert_equal OUTPUT_SAMPLES[index], calculate_score(input_points)
-    index = 1
-    input_points = pins_str_to_int(INPUT_SAMPLES[index])
-    assert_equal OUTPUT_SAMPLES[index], calculate_score(input_points)
-    index = 2
-    input_points = pins_str_to_int(INPUT_SAMPLES[index])
-    assert_equal OUTPUT_SAMPLES[index], calculate_score(input_points)
-    index = 3
-    input_points = pins_str_to_int(INPUT_SAMPLES[index])
-    assert_equal OUTPUT_SAMPLES[index], calculate_score(input_points)
-    index = 4
-    input_points = pins_str_to_int(INPUT_SAMPLES[index])
-    assert_equal OUTPUT_SAMPLES[index], calculate_score(input_points)
-    index = 5
-    input_points = pins_str_to_int(INPUT_SAMPLES[index])
-    assert_equal OUTPUT_SAMPLES[index], calculate_score(input_points)
+  def test_other_scores
+    assert_equal 134, generate_score('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,X,0,0')
+    assert_equal 144, generate_score('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,X,1,8')
+    assert_equal 300, generate_score('X,X,X,X,X,X,X,X,X,X,X,X')
   end
 end

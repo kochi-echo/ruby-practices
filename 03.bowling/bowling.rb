@@ -16,6 +16,15 @@ class Frame
     @points.sum + score_spare + score_strike
   end
 
+  def spare?
+    @points.size == BASIC_SIZE_1FRAME && @points.sum == MAX_PIN
+  end
+
+  def strike?
+    @points.size < BASIC_SIZE_1FRAME && @points[0] == MAX_PIN
+  end
+
+  private
   def score_spare
     if @previous_frame&.spare?
       @points[0]
@@ -33,26 +42,17 @@ class Frame
       0
     end
   end
-
-  def spare?
-    @points.size == BASIC_SIZE_1FRAME && @points.sum == MAX_PIN
-  end
-
-  def strike?
-    @points.size < BASIC_SIZE_1FRAME && @points[0] == MAX_PIN
-  end
-end
-
-def pins_str_to_int(input)
-  input.gsub('X', MAX_PIN.to_s).split(',').map(&:to_i) # X->10に置換
 end
 
 def separate_frame(all_pins)
-  all_pins.each_with_object([[]]) do |pin, pairs|
-    if pairs.last.empty? || pairs.size >= MAX_FRAME || (pairs.last.size < BASIC_SIZE_1FRAME && pairs.last.last < MAX_PIN)
-      pairs.last << pin
+  all_pins.each_with_object([]) do |pin, pairs_all_frames|
+    pairs_previous_frame = pairs_all_frames.last || []
+    now_1st_throw = pairs_all_frames.empty? || pairs_previous_frame.size >= BASIC_SIZE_1FRAME || (pairs_previous_frame&.last || 0) >= MAX_PIN
+    
+    if now_1st_throw && pairs_all_frames.size < MAX_FRAME
+      pairs_all_frames << [pin]
     else
-      pairs << [pin]
+      pairs_previous_frame << pin
     end
   end
 end
@@ -69,8 +69,10 @@ def calculate_score(all_pins)
   end
 end
 
-input = ARGV[0]
-unless input.nil?
-  all_pins = pins_str_to_int(input)
-  puts calculate_score(all_pins)
+def generate_score(input)
+    all_pins = input.gsub('X', MAX_PIN.to_s).split(',').map(&:to_i) # X->10に置換
+    calculate_score(all_pins)
 end
+
+input = ARGV[0]
+puts generate_score(input) unless input.nil?
