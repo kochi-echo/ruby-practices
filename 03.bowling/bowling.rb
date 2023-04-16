@@ -25,6 +25,7 @@ class Frame
   end
 
   private
+
   def score_spare
     if @previous_frame&.spare?
       @points[0]
@@ -48,7 +49,7 @@ def separate_frame(all_pins)
   all_pins.each_with_object([]) do |pin, pairs_all_frames|
     pairs_previous_frame = pairs_all_frames.last || []
     now_1st_throw = pairs_all_frames.empty? || pairs_previous_frame.size >= BASIC_SIZE_1FRAME || (pairs_previous_frame&.last || 0) >= MAX_PIN
-    
+
     if now_1st_throw && pairs_all_frames.size < MAX_FRAME
       pairs_all_frames << [pin]
     else
@@ -70,8 +71,8 @@ def calculate_score(all_pins)
 end
 
 def generate_score(input)
-    all_pins = input.gsub('X', MAX_PIN.to_s).split(',').map(&:to_i) # X->10に置換
-    calculate_score(all_pins)
+  all_pins = input.gsub('X', MAX_PIN.to_s).split(',').map(&:to_i) # X->10に置換
+  calculate_score(all_pins)
 end
 
 input = ARGV[0]
