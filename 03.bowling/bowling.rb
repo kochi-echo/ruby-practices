@@ -59,7 +59,6 @@ def calculate_score(all_pins)
   all_pins.each_with_index do |pin, throw_num|
     pairs << pin
     frame = Frame.new(pairs, previous_frame, pre_previous_frame)
-    # debugger if frame_count == 9
     necessary_reset_pairs = frame.throw_max_each_frame? && frame_count < MAX_FRAME
     
     if throw_num + 1 >= all_pins.size || necessary_reset_pairs
