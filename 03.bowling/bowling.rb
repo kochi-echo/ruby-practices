@@ -24,6 +24,10 @@ class Frame
     @points.size < BASIC_SIZE_1FRAME && @points[0] == MAX_PIN
   end
 
+  def throw_max_each_frame?
+    @points.size >= BASIC_SIZE_1FRAME || self.strike?
+  end
+
   private
 
   def score_spare
@@ -45,31 +49,28 @@ class Frame
   end
 end
 
-def now_1st_throw?(pairs_all_frames, pairs_previous_frame)
-  pairs_all_frames.empty? || pairs_previous_frame.size >= BASIC_SIZE_1FRAME || (pairs_previous_frame[0] || 0) >= MAX_PIN
-end
-
-def separate_frame(all_pins)
-  all_pins.each_with_object([]) do |pin, pairs_all_frames|
-    pairs_previous_frame = pairs_all_frames.last || []
-    if now_1st_throw?(pairs_all_frames, pairs_previous_frame) && pairs_all_frames.size < MAX_FRAME
-      pairs_all_frames << [pin] # 新しいフレームの生成
-    else
-      pairs_previous_frame << pin # 既存のフレームに追加
-    end
-  end
-end
-
 def calculate_score(all_pins)
   previous_frame = nil
   pre_previous_frame = nil
+  frame_count = 1
+  pairs = []
+  total_score = 0
 
-  separate_frame(all_pins).sum do |pins|
-    frame = Frame.new(pins, previous_frame, pre_previous_frame)
-    pre_previous_frame = previous_frame
-    previous_frame = frame
-    frame.score
+  all_pins.each_with_index do |pin, throw_num|
+    pairs << pin
+    frame = Frame.new(pairs, previous_frame, pre_previous_frame)
+    # debugger if frame_count == 9
+    necessary_reset_pairs = frame.throw_max_each_frame? && frame_count < MAX_FRAME
+    
+    if throw_num + 1 >= all_pins.size || necessary_reset_pairs
+      total_score += frame.score 
+      pairs = []
+      frame_count += 1
+      pre_previous_frame = previous_frame
+      previous_frame = frame
+    end
   end
+  total_score
 end
 
 def generate_score(input)
@@ -79,3 +80,4 @@ end
 
 input = ARGV[0]
 puts generate_score(input) unless input.nil?
+

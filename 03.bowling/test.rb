@@ -3,7 +3,7 @@
 
 require 'minitest/autorun'
 require_relative 'bowling'
-
+require 'debug'
 class TestFrameMethod < Minitest::Test
   def test_score
     frame = Frame.new([1, 0])
@@ -14,40 +14,35 @@ class TestFrameMethod < Minitest::Test
 
   def test_spare
     frame = Frame.new([3, 4])
-    assert_equal false, frame.spare?
+    refute frame.spare?
     frame = Frame.new([2, 8])
-    assert_equal true, frame.spare?
+    assert frame.spare?
     frame = Frame.new([10])
-    assert_equal false, frame.spare?
+    refute frame.spare?
     frame = Frame.new([0, 10])
-    assert_equal true, frame.spare?
+    assert frame.spare?
   end
 
   def test_strike
     frame = Frame.new([3, 4])
-    assert_equal false, frame.strike?
+    refute frame.strike?
     frame = Frame.new([2, 8])
-    assert_equal false, frame.strike?
+    refute frame.strike?
     frame = Frame.new([10])
-    assert_equal true, frame.strike?
+    assert frame.strike?
+  end
+
+  def test_throw_max_each_frame
+    frame = Frame.new([2])
+    refute frame.throw_max_each_frame?
+    frame = Frame.new([2, 3])
+    assert frame.throw_max_each_frame?
+    frame = Frame.new([10])
+    assert frame.throw_max_each_frame?
   end
 end
 
-class TestSeparateFrame < Minitest::Test
-  def test_separate_pins_without_strike_and_spare
-    all_pins = [1] * 20
-    assert_equal [[1, 1]] * 10, separate_frame(all_pins)
-    all_pins = [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2]
-    assert_equal [[1, 2], [1, 2], [1, 2], [1, 2], [1, 2], [1, 2], [1, 2], [1, 2], [1, 2], [1, 2]], separate_frame(all_pins)
-  end
 
-  def test_separate_pins_with_strik_and_spare
-    all_pins = [6, 3, 9, 0, 0, 3, 8, 2, 7, 3, 10, 9, 1, 8, 0, 10, 6, 4, 5]
-    assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10], [9, 1], [8, 0], [10], [6, 4, 5]], separate_frame(all_pins)
-    all_pins = [0, 10, 1, 5, 0, 0, 0, 0, 10, 10, 10, 5, 1, 8, 1, 0, 4]
-    assert_equal [[0, 10], [1, 5], [0, 0], [0, 0], [10], [10], [10], [5, 1], [8, 1], [0, 4]], separate_frame(all_pins)
-  end
-end
 
 class TestSmallScoreCalculation < Minitest::Test
   def test_calc_normal_score
@@ -85,8 +80,7 @@ class TestGenerationScore < Minitest::Test
     assert_equal [6, 3, 9, 0, 0, 3, 8, 2].sum, generate_score('6,3,9,0,0,3,8,2')
     assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10]].flatten.sum + 7 + 10, generate_score('6,3,9,0,0,3,8,2,7,3,X')
     assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10], [9, 1], [8, 0]].flatten.sum + 7 + 10 + 10 + 8, generate_score('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0')
-    assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10], [9, 1], [8, 0], [10]].flatten.sum + 7 + 10 + 10 + 8,
-                 generate_score('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X')
+    assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10], [9, 1], [8, 0], [10]].flatten.sum + 7 + 10 + 10 + 8, generate_score('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X')
     assert_equal 139, generate_score('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5')
   end
 
