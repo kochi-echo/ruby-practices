@@ -6,10 +6,13 @@ MAX_FRAME = 10
 BASIC_SIZE_1FRAME = 2
 
 class Frame
-  def initialize(points, previous_frame = nil, pre_previous_frame = nil)
-    @points = points
+  attr_accessor :points, :frame_num
+
+  def initialize(previous_frame = nil, pre_previous_frame = nil)
+    @points = []
     @previous_frame = previous_frame
     @pre_previous_frame = pre_previous_frame
+    @frame_num = (previous_frame&.frame_num || 0) + 1
   end
 
   def score
@@ -24,8 +27,8 @@ class Frame
     @points.size < BASIC_SIZE_1FRAME && @points[0] == MAX_PIN
   end
 
-  def throw_max_each_frame?
-    @points.size >= BASIC_SIZE_1FRAME || strike?
+  def max_throw_normal_frame?
+    (@points.size >= BASIC_SIZE_1FRAME || strike?) && @frame_num < MAX_FRAME
   end
 
   private
@@ -41,7 +44,7 @@ class Frame
   def score_strike
     if @previous_frame&.strike?
       sum = @points[0..1].sum
-      sum += @points[0] if @pre_previous_frame&.strike?
+      sum += (@points[0] || 0) if @pre_previous_frame&.strike?
       sum
     else
       0
@@ -50,32 +53,28 @@ class Frame
 end
 
 def calculate_score(all_pins)
-  previous_frame = nil
-  pre_previous_frame = nil
-  frame_count = 1
-  pairs = []
   total_score = 0
+  previous_frame = nil
+  frame = Frame.new
 
-  all_pins.each_with_index do |pin, throw_num|
-    pairs << pin
-    frame = Frame.new(pairs, previous_frame, pre_previous_frame)
-    necessary_reset_pairs = frame.throw_max_each_frame? && frame_count < MAX_FRAME
+  all_pins.each_with_index do |point, throw_num|
+    frame.points << point
+    final_frame = throw_num + 1 >= all_pins.size
 
-    next unless throw_num + 1 >= all_pins.size || necessary_reset_pairs
+    next unless frame.max_throw_normal_frame? || final_frame
 
     total_score += frame.score
-    pairs = []
-    frame_count += 1
-    pre_previous_frame = previous_frame
-    previous_frame = frame
+    now_frame = frame
+    frame = Frame.new(now_frame, previous_frame)
+    previous_frame = now_frame
   end
   total_score
 end
 
-def generate_score(input)
+def convert_input_to_score(input)
   all_pins = input.gsub('X', MAX_PIN.to_s).split(',').map(&:to_i) # X->10に置換
   calculate_score(all_pins)
 end
 
 input = ARGV[0]
-puts generate_score(input) unless input.nil?
+puts convert_input_to_score(input) unless input.nil?
