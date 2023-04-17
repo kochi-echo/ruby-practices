@@ -4,6 +4,7 @@
 MAX_PIN = 10
 MAX_FRAME = 10
 BASIC_SIZE_1FRAME = 2
+SPECIAL_SIZE_LAST_FRAME = 3
 
 class Frame
   attr_accessor :points, :frame_num
@@ -20,15 +21,19 @@ class Frame
   end
 
   def spare?
-    @points.size == BASIC_SIZE_1FRAME && @points.sum == MAX_PIN
+    @points.size >= BASIC_SIZE_1FRAME && @points[0..1].sum == MAX_PIN
   end
 
   def strike?
-    @points.size < BASIC_SIZE_1FRAME && @points[0] == MAX_PIN
+    @points[0] == MAX_PIN
   end
 
-  def max_throw_normal_frame?
-    (@points.size >= BASIC_SIZE_1FRAME || strike?) && @frame_num < MAX_FRAME
+  def max_throw_1frame?
+    if @frame_num < MAX_FRAME
+      @points.size >= BASIC_SIZE_1FRAME || strike?
+    else
+      @points.size >= ((strike? || spare?) ? SPECIAL_SIZE_LAST_FRAME : BASIC_SIZE_1FRAME)
+    end
   end
 
   private
@@ -55,18 +60,20 @@ end
 def calculate_score(all_pins)
   total_score = 0
   previous_frame = nil
+  pre_previous_frame = nil
   frame = Frame.new
 
   all_pins.each_with_index do |point, throw_num|
     frame.points << point
-    final_frame = throw_num + 1 >= all_pins.size
-
-    next unless frame.max_throw_normal_frame? || final_frame
-
-    total_score += frame.score
-    now_frame = frame
-    frame = Frame.new(now_frame, previous_frame)
-    previous_frame = now_frame
+    final_throw = throw_num + 1 >= all_pins.size
+    
+    if frame.max_throw_1frame? || final_throw
+      total_score += frame.score
+      break if final_throw
+      now_frame = frame
+      frame = Frame.new(now_frame, previous_frame)
+      previous_frame = now_frame
+    end
   end
   total_score
 end

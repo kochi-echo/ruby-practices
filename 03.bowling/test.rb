@@ -3,6 +3,7 @@
 
 require 'minitest/autorun'
 require_relative 'bowling'
+require 'debug'
 class TestFrameMethod < Minitest::Test
   def test_score
     frame = Frame.new
@@ -40,28 +41,28 @@ class TestFrameMethod < Minitest::Test
     assert frame.strike?
   end
 
-  def test_max_throw_normal_frame
+  def test_max_throw_1frame
     frame = Frame.new
     frame.points = [3]
-    refute frame.max_throw_normal_frame?
+    refute frame.max_throw_1frame?
     frame = Frame.new
     frame.points = [2, 8]
-    assert frame.max_throw_normal_frame?
+    assert frame.max_throw_1frame?
     frame = Frame.new
     frame.points = [10]
-    assert frame.max_throw_normal_frame?
+    assert frame.max_throw_1frame?
 
     frame.points = [3]
     frame.frame_num = 10
-    refute frame.max_throw_normal_frame?
+    refute frame.max_throw_1frame?
     frame = Frame.new
     frame.points = [2, 8]
     frame.frame_num = 10
-    refute frame.max_throw_normal_frame?
+    refute frame.max_throw_1frame?
     frame = Frame.new
     frame.points = [10]
     frame.frame_num = 10
-    refute frame.max_throw_normal_frame?
+    refute frame.max_throw_1frame?
   end
 end
 
