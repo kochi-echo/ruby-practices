@@ -6,10 +6,13 @@ MAX_FRAME = 10
 BASIC_SIZE_1FRAME = 2
 
 class Frame
-  def initialize(points, previous_frame = nil, pre_previous_frame = nil)
-    @points = points
+  attr_accessor :points, :frame_num
+
+  def initialize(previous_frame = nil, pre_previous_frame = nil)
+    @points = []
     @previous_frame = previous_frame
     @pre_previous_frame = pre_previous_frame
+    @frame_num = 1
   end
 
   def score
@@ -24,10 +27,10 @@ class Frame
     @points.size < BASIC_SIZE_1FRAME && @points[0] == MAX_PIN
   end
 
-  def throw_max_each_frame?
-    @points.size >= BASIC_SIZE_1FRAME || self.strike?
+  def max_throw_each_frame?(throw_num, all_pins)
+    self.throw_max_before_last_frame? || final_frame?(throw_num, all_pins)
   end
-
+  
   private
 
   def score_spare
@@ -41,33 +44,35 @@ class Frame
   def score_strike
     if @previous_frame&.strike?
       sum = @points[0..1].sum
-      sum += @points[0] if @pre_previous_frame&.strike?
+      sum += @points[0] if @pre_previous_frame&.strike? && !a.nil?
       sum
     else
       0
     end
   end
+
+  def throw_max_before_last_frame?
+    @points.size >= BASIC_SIZE_1FRAME || self.strike? && @frame_num < MAX_FRAME
+  end
+
+  def final_frame?(throw_num, all_pins_size)
+    throw_num + 1 >= all_pins_size
+  end
 end
 
 def calculate_score(all_pins)
-  previous_frame = nil
-  pre_previous_frame = nil
-  frame_count = 1
-  pairs = []
   total_score = 0
+  frame = Frame.new
+  previous_frame = nil
 
-  all_pins.each_with_index do |pin, throw_num|
-    pairs << pin
-    frame = Frame.new(pairs, previous_frame, pre_previous_frame)
-    # debugger if frame_count == 9
-    necessary_reset_pairs = frame.throw_max_each_frame? && frame_count < MAX_FRAME
-    
-    if throw_num + 1 >= all_pins.size || necessary_reset_pairs
-      total_score += frame.score 
-      pairs = []
-      frame_count += 1
-      pre_previous_frame = previous_frame
-      previous_frame = frame
+  all_pins.each_with_index do |point, throw_num|
+    frame.points << point
+    if frame.max_throw_each_frame?(throw_num, all_pins.size)
+      total_score = frame.score
+      now_frame = frame
+      frame = Frame.new(now_frame, previous_frame)
+      previous_frame = now_frame
+      frame.frame_num = now_frame.frame_num + 1
     end
   end
   total_score
