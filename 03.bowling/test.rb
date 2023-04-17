@@ -3,7 +3,6 @@
 
 require 'minitest/autorun'
 require_relative 'bowling'
-require 'debug'
 
 class TestFrameMethod < Minitest::Test
   def test_score
@@ -67,8 +66,6 @@ class TestFrameMethod < Minitest::Test
   end
 end
 
-
-
 class TestSmallScoreCalculation < Minitest::Test
   def test_calc_normal_score
     all_pins = [1, 2, 3, 4]
@@ -104,8 +101,10 @@ class TestGenerationScore < Minitest::Test
   def test_strike_and_spare
     assert_equal [6, 3, 9, 0, 0, 3, 8, 2].sum, convert_input_to_score('6,3,9,0,0,3,8,2')
     assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10]].flatten.sum + 7 + 10, convert_input_to_score('6,3,9,0,0,3,8,2,7,3,X')
-    assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10], [9, 1], [8, 0]].flatten.sum + 7 + 10 + 10 + 8, convert_input_to_score('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0')
-    assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10], [9, 1], [8, 0], [10]].flatten.sum + 7 + 10 + 10 + 8, convert_input_to_score('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X')
+    assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10], [9, 1], [8, 0]].flatten.sum + 7 + 10 + 10 + 8,
+                 convert_input_to_score('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0')
+    assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10], [9, 1], [8, 0], [10]].flatten.sum + 7 + 10 + 10 + 8,
+                 convert_input_to_score('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X')
     assert_equal 139, convert_input_to_score('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5')
   end
 
@@ -116,7 +115,8 @@ class TestGenerationScore < Minitest::Test
   def test_3strike
     assert_equal [0, 10, 1, 5, 0, 0, 0, 0].sum + 1, convert_input_to_score('0,10,1,5,0,0,0,0')
     assert_equal [0, 10, 1, 5, 0, 0, 0, 0, 10, 10, 10, 5].sum + 1 + [10, 10].sum + [10, 5].sum + 5, convert_input_to_score('0,10,1,5,0,0,0,0,X,X,X,5')
-    assert_equal [0, 10, 1, 5, 0, 0, 0, 0, 10, 10, 10, 5, 1].sum + 1 + [10, 10].sum + [10, 5].sum + [5, 1].sum, convert_input_to_score('0,10,1,5,0,0,0,0,X,X,X,5,1')
+    assert_equal [0, 10, 1, 5, 0, 0, 0, 0, 10, 10, 10, 5, 1].sum + 1 + [10, 10].sum + [10, 5].sum + [5, 1].sum,
+                 convert_input_to_score('0,10,1,5,0,0,0,0,X,X,X,5,1')
     assert_equal 107, convert_input_to_score('0,10,1,5,0,0,0,0,X,X,X,5,1,8,1,0,4')
   end
 
