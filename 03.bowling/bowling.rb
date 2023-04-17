@@ -32,7 +32,7 @@ class Frame
     if @frame_num < MAX_FRAME
       @points.size >= BASIC_SIZE_1FRAME || strike?
     else
-      @points.size >= ((strike? || spare?) ? SPECIAL_SIZE_LAST_FRAME : BASIC_SIZE_1FRAME)
+      @points.size >= (strike? || spare? ? SPECIAL_SIZE_LAST_FRAME : BASIC_SIZE_1FRAME)
     end
   end
 
@@ -60,20 +60,20 @@ end
 def calculate_score(all_pins)
   total_score = 0
   previous_frame = nil
-  pre_previous_frame = nil
   frame = Frame.new
 
   all_pins.each_with_index do |point, throw_num|
     frame.points << point
     final_throw = throw_num + 1 >= all_pins.size
-    
-    if frame.max_throw_1frame? || final_throw
-      total_score += frame.score
-      break if final_throw
-      now_frame = frame
-      frame = Frame.new(now_frame, previous_frame)
-      previous_frame = now_frame
-    end
+
+    next unless frame.max_throw_1frame? || final_throw
+
+    total_score += frame.score
+    break if final_throw
+
+    now_frame = frame
+    frame = Frame.new(now_frame, previous_frame)
+    previous_frame = now_frame
   end
   total_score
 end
