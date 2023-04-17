@@ -8,11 +8,11 @@ SPECIAL_SIZE_LAST_FRAME = 3
 
 class Frame
   attr_accessor :points, :frame_num
+  attr_reader :previous_frame
 
-  def initialize(previous_frame = nil, pre_previous_frame = nil)
+  def initialize(previous_frame: nil)
     @points = []
     @previous_frame = previous_frame
-    @pre_previous_frame = pre_previous_frame
     @frame_num = (previous_frame&.frame_num || 0) + 1
   end
 
@@ -39,27 +39,20 @@ class Frame
   private
 
   def score_spare
-    if @previous_frame&.spare?
-      @points[0]
-    else
-      0
-    end
+    @previous_frame&.spare? ? @points[0] : 0
   end
 
   def score_strike
-    if @previous_frame&.strike?
-      sum = @points[0..1].sum
-      sum += (@points[0] || 0) if @pre_previous_frame&.strike?
-      sum
-    else
-      0
-    end
+    return 0 unless @previous_frame&.strike?
+    two_frames_ago = @previous_frame.previous_frame
+    sum = @points[0..1].sum
+    sum += (@points[0] || 0) if two_frames_ago&.strike?
+    sum
   end
 end
 
 def calculate_score(all_pins)
   total_score = 0
-  previous_frame = nil
   frame = Frame.new
 
   all_pins.each_with_index do |point, throw_num|
@@ -70,10 +63,7 @@ def calculate_score(all_pins)
 
     total_score += frame.score
     break if final_throw
-
-    now_frame = frame
-    frame = Frame.new(now_frame, previous_frame)
-    previous_frame = now_frame
+    frame = Frame.new(previous_frame: frame)
   end
   total_score
 end
