@@ -44,6 +44,7 @@ class Frame
 
   def score_strike
     return 0 unless @previous_frame&.strike?
+
     two_frames_ago = @previous_frame.previous_frame
     sum = @points[0..1].sum
     sum += (@points[0] || 0) if two_frames_ago&.strike?
@@ -63,6 +64,7 @@ def calculate_score(all_pins)
 
     total_score += frame.score
     break if final_throw
+
     frame = Frame.new(previous_frame: frame)
   end
   total_score
