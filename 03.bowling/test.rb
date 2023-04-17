@@ -77,7 +77,8 @@ class TestGenerationScore < Minitest::Test
     assert_equal [6, 3, 9, 0, 0, 3, 8, 2].sum, generate_score('6,3,9,0,0,3,8,2')
     assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10]].flatten.sum + 7 + 10, generate_score('6,3,9,0,0,3,8,2,7,3,X')
     assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10], [9, 1], [8, 0]].flatten.sum + 7 + 10 + 10 + 8, generate_score('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0')
-    assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10], [9, 1], [8, 0], [10]].flatten.sum + 7 + 10 + 10 + 8, generate_score('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X')
+    assert_equal [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10], [9, 1], [8, 0], [10]].flatten.sum + 7 + 10 + 10 + 8,
+                 generate_score('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X')
     assert_equal 139, generate_score('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5')
   end
 

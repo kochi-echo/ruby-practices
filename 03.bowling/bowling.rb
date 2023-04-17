@@ -25,7 +25,7 @@ class Frame
   end
 
   def throw_max_each_frame?
-    @points.size >= BASIC_SIZE_1FRAME || self.strike?
+    @points.size >= BASIC_SIZE_1FRAME || strike?
   end
 
   private
@@ -60,14 +60,14 @@ def calculate_score(all_pins)
     pairs << pin
     frame = Frame.new(pairs, previous_frame, pre_previous_frame)
     necessary_reset_pairs = frame.throw_max_each_frame? && frame_count < MAX_FRAME
-    
-    if throw_num + 1 >= all_pins.size || necessary_reset_pairs
-      total_score += frame.score 
-      pairs = []
-      frame_count += 1
-      pre_previous_frame = previous_frame
-      previous_frame = frame
-    end
+
+    next unless throw_num + 1 >= all_pins.size || necessary_reset_pairs
+
+    total_score += frame.score
+    pairs = []
+    frame_count += 1
+    pre_previous_frame = previous_frame
+    previous_frame = frame
   end
   total_score
 end
@@ -79,4 +79,3 @@ end
 
 input = ARGV[0]
 puts generate_score(input) unless input.nil?
-
