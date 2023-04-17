@@ -45,12 +45,14 @@ class Frame
   end
 end
 
+def now_1st_throw?(pairs_all_frames, pairs_previous_frame)
+  pairs_all_frames.empty? || pairs_previous_frame.size >= BASIC_SIZE_1FRAME || (pairs_previous_frame[0] || 0) >= MAX_PIN
+end
+
 def separate_frame(all_pins)
   all_pins.each_with_object([]) do |pin, pairs_all_frames|
     pairs_previous_frame = pairs_all_frames.last || []
-    now_1st_throw = pairs_all_frames.empty? || pairs_previous_frame.size >= BASIC_SIZE_1FRAME || (pairs_previous_frame[0] || 0) >= MAX_PIN
-
-    if now_1st_throw && pairs_all_frames.size < MAX_FRAME
+    if now_1st_throw?(pairs_all_frames, pairs_previous_frame) && pairs_all_frames.size < MAX_FRAME
       pairs_all_frames << [pin] # 新しいフレームの生成
     else
       pairs_previous_frame << pin # 既存のフレームに追加
