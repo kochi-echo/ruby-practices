@@ -6,10 +6,10 @@ require 'optparse'
 
 NORMAL_COLOR = '38;5;208' # オレンジ
 INVERT_COLOR = '7' # 白
-MONTH_MIN = 1
-MONTH_MAX = 12
 YEAR_MIN = 1970
 YEAR_MAX = 2100
+MONTH_MIN = 1
+MONTH_MAX = 12
 WIDTH_1DAY = 2
 WIDTH_CALENDER = 20
 
@@ -39,21 +39,24 @@ def generate_calendar(year, month, today)
   days_unshaped.each_slice(7).map { |week| week.join(' ') }.join("\n")
 end
 
-def input_to_year_and_month(option_y_m)
-  option_y = option_y_m['y']
-  option_m = option_y_m['m']
-  year = option_y.nil? ? Date.today.year : option_y.to_i
-  month = option_m.nil? ? Date.today.month : option_m.to_i
-  [year, month]
+def input_to_year(input)
+  year = input['y'].nil? ? Date.today.year : input['y'].to_i
+  return nil unless (YEAR_MIN..YEAR_MAX).cover?(year)
+  year
 end
 
-option_y_m = ARGV.getopts('y:', 'm:')
-year, month = input_to_year_and_month(option_y_m)
-year_in_range = (YEAR_MIN..YEAR_MAX).cover?(year)
-month_in_range = (MONTH_MIN..MONTH_MAX).cover?(month)
-puts "#{year}年は規定値#{YEAR_MIN}〜#{YEAR_MAX}年の範囲外です。" unless year_in_range
-puts "#{month}月は規定値#{MONTH_MIN}〜#{MONTH_MAX}月の範囲外です。" unless month_in_range
-if year_in_range && month_in_range
+def input_to_month(input)
+  month = input['m'].nil? ? Date.today.month : input['m'].to_i
+  return nil unless (MONTH_MIN..MONTH_MAX).cover?(month)
+  month
+end
+
+input = ARGV.getopts('y:', 'm:')
+year = input_to_year(input)
+month = input_to_month(input)
+puts "#{year}年は規定値#{YEAR_MIN}〜#{YEAR_MAX}年の範囲外です。" unless year
+puts "#{month}月は規定値#{MONTH_MIN}〜#{MONTH_MAX}月の範囲外です。" unless month
+if year && month
   calendar = <<~TEXT
     #{year_and_month_to_text(year, month)}
     日 月 火 水 木 金 土

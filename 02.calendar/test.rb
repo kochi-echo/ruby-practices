@@ -4,20 +4,47 @@
 require 'minitest/autorun'
 require_relative 'my_cal'
 
-class TestInputToYearAndMonth < Minitest::Test
+class TestInputToYear < Minitest::Test
   def test_input_nil
-    option_y_m = { 'y' => nil, 'm' => nil }
-    assert_equal [Date.today.year, Date.today.month], input_to_year_and_month(option_y_m)
+    input = { 'y' => nil }
+    assert_equal Date.today.year, input_to_year(input)
   end
 
-  def test_input_normal
-    option_y_m = { 'y' => '2023', 'm' => '4' }
-    assert_equal [2023, 4], input_to_year_and_month(option_y_m)
-    option_y_m = { 'y' => '2021', 'm' => '8' }
-    assert_equal [2021, 8], input_to_year_and_month(option_y_m)
+  def test_input_in_range
+    input = { 'y' => YEAR_MIN.to_s }
+    assert_equal YEAR_MIN, input_to_year(input)
+    input = { 'y' => YEAR_MAX.to_s }
+    assert_equal YEAR_MAX, input_to_year(input)
+  end
+
+  def test_input_out_range
+    input = { 'y' => (YEAR_MIN - 1).to_s }
+    assert_nil input_to_year(input)
+    input = { 'y' => (YEAR_MAX + 1).to_s }
+    assert_nil input_to_year(input)
   end
 end
 
+class TestInputToMonth < Minitest::Test
+  def test_input_nil
+    input = { 'm' => nil }
+    assert_equal Date.today.month, input_to_month(input)
+  end
+
+  def test_input_in_range
+    input = { 'm' => MONTH_MIN.to_s }
+    assert_equal MONTH_MIN, input_to_month(input)
+    input = { 'm' => MONTH_MAX.to_s }
+    assert_equal MONTH_MAX, input_to_month(input)
+  end
+
+  def test_input_out_range
+    input = { 'm' => (MONTH_MIN - 1).to_s }
+    assert_nil input_to_month(input)
+    input = { 'm' => (MONTH_MAX + 1).to_s }
+    assert_nil input_to_month(input)
+  end
+end
 class TestPrintCalendar < Minitest::Test
   def test_year_and_month_text
     assert_equal "\      \e[38;5;208m4\033[0m月 \e[38;5;208m2023\033[0m年", year_and_month_to_text(2023, 4)
