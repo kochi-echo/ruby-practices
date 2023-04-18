@@ -46,7 +46,7 @@ def input_to_year(input)
 end
 
 def input_to_month(input)
-  month = input['m'].nil? ? Date.today.month : input['m'].to_i
+  month = input['m'].nil? ? Date.today.month : input['m'].to_i unless
   return nil unless (MONTH_MIN..MONTH_MAX).cover?(month)
   month
 end
