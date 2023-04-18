@@ -19,11 +19,7 @@ end
 
 def color_days(date, today)
   day = date.day.to_s.rjust(WIDTH_1DAY)
-  if date == today # 今日の日付は色を反転する
-    color_text(day, INVERT_COLOR)
-  else
-    color_text(day, NORMAL_COLOR)
-  end
+  date == today ? color_text(day, INVERT_COLOR) : color_text(day, NORMAL_COLOR)
 end
 
 def year_and_month_to_text(year, month)
