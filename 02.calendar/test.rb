@@ -45,6 +45,7 @@ class TestInputToMonth < Minitest::Test
     assert_nil input_to_month(input)
   end
 end
+
 class TestPrintCalendar < Minitest::Test
   def test_year_and_month_text
     assert_equal "\      \e[38;5;208m4\033[0m月 \e[38;5;208m2023\033[0m年", year_and_month_to_text(2023, 4)
