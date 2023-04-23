@@ -22,7 +22,7 @@ def path_to_directory_and_file(absolute_path)
 end
 
 def select_file(target_dir, target_file)
-  file_names_all = Dir.entries(target_dir).sort.map(&:unicode_normalize)
+  file_names_all = Dir.entries(target_dir).sort_jp.map(&:unicode_normalize)
   if target_file.empty?
     file_names_all.reject { |file_name| file_name =~ /^\./ }
   else
@@ -50,6 +50,18 @@ class Array
     max_size = self.map(&:size).max
     (0...max_size).map do |selection_num|
       self.map { |nest_array| nest_array[selection_num] }.compact
+    end
+  end
+
+  def sort_jp
+    self.sort_by do |file_name|
+      if file_name.match?(/\p{Han}|\p{Hiragana}|\p{Katakana}/)
+        # [1, file_name]
+        
+      else
+        # [0, file_name]
+        1
+      end
     end
   end
 end

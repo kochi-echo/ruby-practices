@@ -36,6 +36,10 @@ class TestArrayMethod < Minitest::Test
     assert_equal [[1, 3, 5], [2, 4]], [[1, 2], [3, 4], [5]].transpose_lack
     assert_equal [[1, 4, 7], [2, 5], [3, 6]], [[1, 2, 3], [4, 5, 6], [7]].transpose_lack
   end
+
+  def test_sort_jp
+    assert_equal ['a_test.txt', 'b_test.rb', 'sub.dir', '試験.txt', 'テスト-ターゲット.md'], ['b_test.rb', 'a_test.txt', 'テスト-ターゲット.md', '試験.txt', 'sub.dir'].sort_jp
+  end
 end
 
 class TestStringMethod < Minitest::Test
