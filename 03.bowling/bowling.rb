@@ -60,7 +60,7 @@ def calculate_score(all_pins)
     frame.points << point
     final_throw = throw_num + 1 >= all_pins.size
 
-    next unless frame.max_throw_1frame? || final_throw
+    next if !frame.max_throw_1frame? && !final_throw
 
     total_score += frame.score
     frame = Frame.new(previous_frame: frame) unless final_throw
