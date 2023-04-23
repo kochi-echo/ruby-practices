@@ -70,6 +70,7 @@ end
 
 def convert_input_to_score(input)
   all_pins = input.gsub('X', MAX_PIN.to_s).split(',').map(&:to_i) # X->10に置換
+  all_pins = input.split(',').map{ |pin| pin == 'X' ? 10 : pin.to_i } # X->10に置換
   calculate_score(all_pins)
 end
 
