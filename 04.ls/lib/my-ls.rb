@@ -80,9 +80,7 @@ def generate_name_list_text(file_names, number)
   max_name_size = file_names.map(&:size_jp).max
 
   separatiopn_names.transpose_lack.inject('') do |text, names|
-    text += names.map.with_index(1) do |name, index| 
-      index < names.size ? name.ljust_jp(max_name_size) : name # 行末はファイル名の右側にスペースを入れない
-    end.join(' ') + "\n"
+    text += "#{names[0..-2].map{ |name| "#{name.ljust_jp(max_name_size)} " }.join}#{names[-1]}\n"
   end
 end
 
