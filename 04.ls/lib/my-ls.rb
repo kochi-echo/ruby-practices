@@ -66,7 +66,7 @@ def path_to_directory_and_file(absolute_path)
 end
 
 def select_file(target_dir, target_file)
-  file_names_all = Dir.entries(target_dir).sort_jp.map(&:unicode_normalize) # String#unicode_normalizeしないと文字カウントがズレる
+  file_names_all = Dir.entries(target_dir).map(&:unicode_normalize).sort_jp # String#unicode_normalizeしないとsortや文字カウントがズレる
   
   if target_file.empty?
     file_names_all.reject { |file_name| file_name =~ /^\./ } # '.', '..', '.ファイル名'を除外する
