@@ -77,7 +77,7 @@ end
 
 def generate_name_list_text(file_names, number)
   separatiopn_names = file_names.divide_equal(number)
-  max_name_size = file_names.max {|a, b| a.size_jp <=> b.size_jp }.size_jp
+  max_name_size = file_names.map(&:size_jp).max
 
   separatiopn_names.transpose_lack.inject('') do |text, names|
     text += names.map.with_index(1) do |name, index| 
