@@ -37,7 +37,8 @@ class TestArrayMethod < Minitest::Test
   end
 
   def test_sort_jp
-    assert_equal ['a_test.txt', 'b_test.rb', 'sub.dir', '試験.txt', 'てすと', 'テスト-ターゲット.md'], ['b_test.rb', 'a_test.txt', 'テスト-ターゲット.md', '試験.txt', 'sub.dir', 'てすと'].sort_jp
+    assert_equal ['a_test.txt', 'b_test.rb', 'sub.dir', '試験.txt', 'てすと', 'テスト-ターゲット.md'],
+                 ['b_test.rb', 'a_test.txt', 'テスト-ターゲット.md', '試験.txt', 'sub.dir', 'てすと'].sort_jp
   end
 end
 
