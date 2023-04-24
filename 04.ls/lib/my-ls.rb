@@ -3,43 +3,6 @@
 
 LIST_ROW_NUM = 3
 
-def get_file_names(argument_name)
-  argument_name ||= '.'
-  absolute_path = File.expand_path(argument_name)
-  target_dir, target_file = path_to_directory_and_file(absolute_path)
-  select_file(target_dir, target_file)
-end
-
-def path_to_directory_and_file(absolute_path)
-  if File.file?(absolute_path)
-    target_dir = File.dirname(absolute_path)
-    target_file = File.basename(absolute_path)
-  else
-    target_dir = absolute_path
-    target_file = ''
-  end
-  [target_dir, target_file]
-end
-
-def select_file(target_dir, target_file)
-  file_names_all = Dir.entries(target_dir).sort_jp.map(&:unicode_normalize)
-  if target_file.empty?
-    file_names_all.reject { |file_name| file_name =~ /^\./ }
-  else
-    file_names_all.select{ |file_name| file_name == target_file}
-  end  
-end
-
-def generate_name_list_text(file_names, number)
-  separatiopn_names = file_names.divide_equal(number)
-  max_name_size = file_names.max {|a, b| a.size_jp <=> b.size_jp }.size_jp
-  separatiopn_names.transpose_lack.inject('') do |text, names|
-    text += names.map.with_index(1) do |name, index| 
-      index < names.size ? name.ljust_jp(max_name_size) : name
-    end.join(' ') + "\n"
-  end
-end
-
 class Array
   def divide_equal(number)
     split_num = (self.size / number.to_f).ceil
@@ -54,13 +17,13 @@ class Array
   end
 
   def sort_jp
-    self.sort_by do |file_name|
-      if file_name.match?(/\p{Han}|\p{Hiragana}|\p{Katakana}/)
-        # [1, file_name]
-        
-      else
-        # [0, file_name]
+    self.sort do |a, b|
+      if a.match?(/\p{Han}/) &&  b.match?(/\p{Han}|\p{Hiragana}|\p{Katakana}/)
+        -1
+      elsif a.match?(/\p{Han}|\p{Hiragana}|\p{Katakana}/) && b.match?(/\p{Han}/)
         1
+      else
+        a <=> b
       end
     end
   end
@@ -81,6 +44,45 @@ class String
 
   def ljust_jp(max_size)
     self + ' ' * (max_size - self.size_jp)
+  end
+end
+
+def get_file_names(argument_name)
+  argument_name ||= '.'
+  absolute_path = File.expand_path(argument_name)
+  target_dir, target_file = path_to_directory_and_file(absolute_path)
+  select_file(target_dir, target_file)
+end
+
+def path_to_directory_and_file(absolute_path)
+  if File.file?(absolute_path)
+    target_dir = File.dirname(absolute_path)
+    target_file = File.basename(absolute_path)
+  else
+    target_dir = absolute_path
+    target_file = ''
+  end
+  [target_dir, target_file]
+end
+
+def select_file(target_dir, target_file)
+  file_names_all = Dir.entries(target_dir).sort_jp.map(&:unicode_normalize)
+  
+  if target_file.empty?
+    file_names_all.reject { |file_name| file_name =~ /^\./ }
+  else
+    file_names_all.select{ |file_name| file_name == target_file}
+  end  
+end
+
+def generate_name_list_text(file_names, number)
+  separatiopn_names = file_names.divide_equal(number)
+  max_name_size = file_names.max {|a, b| a.size_jp <=> b.size_jp }.size_jp
+
+  separatiopn_names.transpose_lack.inject('') do |text, names|
+    text += names.map.with_index(1) do |name, index| 
+      index < names.size ? name.ljust_jp(max_name_size) : name
+    end.join(' ') + "\n"
   end
 end
 

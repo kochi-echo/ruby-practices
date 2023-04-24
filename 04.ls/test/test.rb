@@ -11,8 +11,7 @@ class TestNameReciever < Minitest::Test
   end
 
   def test_get_file_names_dir_argument
-    assert_equal ['a_test.txt', 'b_test.rb', 'sub.dir', 'テスト-ターゲット.md', '試験.txt'], get_file_names('test_target')
-    # lsだと実際は 'a_test.txt', 'b_test.rb', 'sub.dir', '試験.txt', 'テスト-ターゲット.md' の順番
+    assert_equal ['a_test.txt', 'b_test.rb', 'sub.dir', '試験.txt', 'てすと', 'テスト-ターゲット.md'], get_file_names('test_target')
     assert_equal %w[lib test], get_file_names('..')
     assert_equal ['test.rb', 'test_target'], get_file_names('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test') # 絶対パス確認用
     assert_equal ['test.rb', 'test_target'], get_file_names('~/Documents/Fjord/ruby-practices/04.ls/test/') # 絶対パス確認用(ホームディレクトリから)
@@ -38,7 +37,7 @@ class TestArrayMethod < Minitest::Test
   end
 
   def test_sort_jp
-    assert_equal ['a_test.txt', 'b_test.rb', 'sub.dir', '試験.txt', 'テスト-ターゲット.md'], ['b_test.rb', 'a_test.txt', 'テスト-ターゲット.md', '試験.txt', 'sub.dir'].sort_jp
+    assert_equal ['a_test.txt', 'b_test.rb', 'sub.dir', '試験.txt', 'てすと', 'テスト-ターゲット.md'], ['b_test.rb', 'a_test.txt', 'テスト-ターゲット.md', '試験.txt', 'sub.dir', 'てすと'].sort_jp
   end
 end
 
