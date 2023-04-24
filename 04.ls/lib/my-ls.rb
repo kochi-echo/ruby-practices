@@ -18,9 +18,9 @@ class Array
 
   def sort_jp # Array#sortとは異なり、漢字→ひらがな→カタカナの順にソートするメソッド
     self.sort do |a, b|
-      if a.match?(/\p{Han}/) &&  b.match?(/\p{Han}|\p{Hiragana}|\p{Katakana}/)
+      if a.match?(/\p{Han}/) &&  b.match?(/\p{Hiragana}|\p{Katakana}/)
         -1
-      elsif a.match?(/\p{Han}|\p{Hiragana}|\p{Katakana}/) && b.match?(/\p{Han}/)
+      elsif a.match?(/\p{Hiragana}|\p{Katakana}/) && b.match?(/\p{Han}/)
         1
       else
         a <=> b
