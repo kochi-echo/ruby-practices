@@ -60,6 +60,27 @@ def calculate_score(all_pins)
     frame = Frame.new(previous_frame: frame) if frame.max_throw_1frame? # 前フレームで最大まで投げた時に、新しいフレームを作成
     frame.points << point
     total_score += frame.score if frame.max_throw_1frame? || (throw_num + 1 >= all_pins.size) # 現フレームで最大まで投げた or 最後の投球の時に現フレームの点数計算
+  
+    frame.points << point 
+    if frame.max_throw_1frame? || (throw_num + 1 >= all_pins.size) 
+      total_score += frame.score
+      frame = Frame.new(previous_frame: frame) unless (throw_num + 1 >= all_pins.size) 
+    end
+
+    frame.points << point 
+    next unless frame.max_throw_1frame? # フレームの途中での点数計算ができない
+    total_score += frame.score
+    frame = Frame.new(previous_frame: frame) if throw_num + 1 < all_pins.size
+
+    frame.points << point
+    next if !frame.max_throw_1frame? && throw_num + 1 < all_pins.size
+    total_score += frame.score
+    frame = Frame.new(previous_frame: frame) # 11フレームが生成
+
+    frame.points << point
+    total_score += frame.score if 
+    frame = Frame.new(previous_frame: frame) if frame.max_throw_1frame?
+
   end
   total_score
 end
