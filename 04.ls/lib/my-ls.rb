@@ -9,14 +9,14 @@ class Array
     self.each_slice(split_num).to_a
   end
 
-  def transpose_lack
+  def transpose_lack # Array#teansposeとは異なり、二次元配列の要素のサイズが異なっても転置できるメソッド
     max_size = self.map(&:size).max
     (0...max_size).map do |selection_num|
       self.map { |nest_array| nest_array[selection_num] }.compact
     end
   end
 
-  def sort_jp
+  def sort_jp # Array#sortとは異なり、漢字→ひらがな→カタカナの順にソートするメソッド
     self.sort do |a, b|
       if a.match?(/\p{Han}/) &&  b.match?(/\p{Han}|\p{Hiragana}|\p{Katakana}/)
         -1
@@ -30,7 +30,7 @@ class Array
 end
 
 class String
-  def size_jp
+  def size_jp # String#sizeと異なり、日本語を2文字とみなすメソッド
     count = 0
     self.each_char do |char|
       if char.match?(/\p{Han}|\p{Hiragana}|\p{Katakana}|ー/)
@@ -66,12 +66,12 @@ def path_to_directory_and_file(absolute_path)
 end
 
 def select_file(target_dir, target_file)
-  file_names_all = Dir.entries(target_dir).sort_jp.map(&:unicode_normalize)
+  file_names_all = Dir.entries(target_dir).sort_jp.map(&:unicode_normalize) # String#unicode_normalizeしないと文字カウントがズレる
   
   if target_file.empty?
-    file_names_all.reject { |file_name| file_name =~ /^\./ }
+    file_names_all.reject { |file_name| file_name =~ /^\./ } # '.', '..', '.ファイル名'を除外する
   else
-    file_names_all.select{ |file_name| file_name == target_file}
+    file_names_all.select{ |file_name| file_name == target_file} # '.ファイル名'も表示対象
   end  
 end
 
@@ -81,7 +81,7 @@ def generate_name_list_text(file_names, number)
 
   separatiopn_names.transpose_lack.inject('') do |text, names|
     text += names.map.with_index(1) do |name, index| 
-      index < names.size ? name.ljust_jp(max_name_size) : name
+      index < names.size ? name.ljust_jp(max_name_size) : name # 行末はファイル名の右側にスペースを入れない
     end.join(' ') + "\n"
   end
 end
