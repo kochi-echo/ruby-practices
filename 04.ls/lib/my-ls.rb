@@ -11,9 +11,7 @@ class Array
 
   def transpose_lack # Array#teansposeとは異なり、二次元配列の要素のサイズが異なっても転置できるメソッド
     max_size = self.map(&:size).max
-    self.map do |element|
-      element + [nil] * (max_size - element.size)
-    end.transpose.map(&:compact)
+    self.map { |element| element + [nil] * (max_size - element.size) }.transpose.map(&:compact)
   end
 
   def sort_jp # Array#sortとは異なり、漢字→ひらがな→カタカナの順にソートするメソッド
