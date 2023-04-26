@@ -57,8 +57,9 @@ def calculate_score(all_pins)
   frame = Frame.new
 
   all_pins.each_with_index do |point, throw_num|
-    frame.points << point 
-    next unless frame.max_throw_1frame? # フレームの途中での点数計算ができない
+    frame.points << point
+    next unless frame.max_throw_1frame?
+
     total_score += frame.score
     frame = Frame.new(previous_frame: frame) if throw_num + 1 < all_pins.size
   end

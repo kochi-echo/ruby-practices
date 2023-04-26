@@ -3,7 +3,7 @@
 
 require 'minitest/autorun'
 require_relative 'bowling'
-require 'debug'
+
 class TestFrameMethod < Minitest::Test
   def test_score
     frame = Frame.new
@@ -70,30 +70,22 @@ class TestSmallScoreCalculation < Minitest::Test
   def test_calc_normal_score
     all_pins = [1, 2, 3, 4]
     assert_equal 10, calculate_score(all_pins)
-    all_pins = [1, 2, 3]
-    assert_equal 6, calculate_score(all_pins)
   end
 
   def test_calc_spare_score
     all_pins = [1, 9, 3, 4]
     assert_equal 20, calculate_score(all_pins)
-    all_pins = [1, 9, 3]
-    assert_equal 16, calculate_score(all_pins)
-    all_pins = [0, 10, 1]
-    assert_equal 12, calculate_score(all_pins)
+    all_pins = [0, 10, 1, 2]
+    assert_equal 14, calculate_score(all_pins)
   end
 
   def test_calc_strike_score
     all_pins = [10, 3, 4]
     assert_equal 24, calculate_score(all_pins)
-    all_pins = [10, 3]
-    assert_equal 16, calculate_score(all_pins)
     all_pins = [10, 2, 3, 10, 2, 3]
     assert_equal 40, calculate_score(all_pins)
     all_pins = [10, 10, 10, 2, 3]
     assert_equal 35 + 20 + 12 + 5, calculate_score(all_pins)
-    all_pins = [10, 10, 10, 2]
-    assert_equal 32 + 20 + 12 + 2, calculate_score(all_pins)
   end
 end
 
@@ -114,7 +106,6 @@ class TestGenerationScore < Minitest::Test
 
   def test_3strike
     assert_equal [0, 10, 1, 5, 0, 0, 0, 0].sum + 1, convert_input_to_score('0,10,1,5,0,0,0,0')
-    assert_equal [0, 10, 1, 5, 0, 0, 0, 0, 10, 10, 10, 5].sum + 1 + [10, 10].sum + [10, 5].sum + 5, convert_input_to_score('0,10,1,5,0,0,0,0,X,X,X,5')
     assert_equal [0, 10, 1, 5, 0, 0, 0, 0, 10, 10, 10, 5, 1].sum + 1 + [10, 10].sum + [10, 5].sum + [5, 1].sum,
                  convert_input_to_score('0,10,1,5,0,0,0,0,X,X,X,5,1')
     assert_equal 107, convert_input_to_score('0,10,1,5,0,0,0,0,X,X,X,5,1,8,1,0,4')
