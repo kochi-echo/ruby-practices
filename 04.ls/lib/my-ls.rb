@@ -16,7 +16,7 @@ class Array
 
   def sort_jp # Array#sortとは異なり、漢字→ひらがな→カタカナの順にソートするメソッド
     self.sort do |a, b|
-      if a.match?(/\p{Han}/) &&  b.match?(/\p{Hiragana}|\p{Katakana}/)
+      if a.match?(/\p{Han}/) && b.match?(/\p{Hiragana}|\p{Katakana}/)
         -1
       elsif a.match?(/\p{Hiragana}|\p{Katakana}/) && b.match?(/\p{Han}/)
         1
@@ -63,13 +63,13 @@ def path_to_directory_and_file(absolute_path)
   [target_dir, target_file]
 end
 
-def select_file(target_dir, target_file)
+def select_files(target_dir, target_file)
   file_names_all = Dir.entries(target_dir).map(&:unicode_normalize).sort_jp # String#unicode_normalizeしないとsortや文字カウントがズレる
   
   if target_file.empty?
     file_names_all.reject { |file_name| file_name =~ /^\./ } # '.', '..', '.ファイル名'を除外する
   else
-    file_names_all.select{ |file_name| file_name == target_file} # '.ファイル名'も表示対象
+    file_names_all.select { |file_name| file_name == target_file } # '.ファイル名'も表示対象
   end  
 end
 
