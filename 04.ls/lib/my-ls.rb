@@ -29,15 +29,13 @@ end
 
 class String
   def size_jp # String#sizeと異なり、日本語を2文字とみなすメソッド
-    count = 0
-    self.each_char do |char|
+    self.each_char.sum do |char|
       if char.match?(/\p{Han}|\p{Hiragana}|\p{Katakana}|ー/)
-        count += 2
+        2
       else
-        count += 1
+        1
       end
     end
-    count
   end
 
   def ljust_jp(max_size)
