@@ -47,7 +47,7 @@ def get_file_names(argument_name)
   argument_name ||= '.'
   absolute_path = File.expand_path(argument_name)
   target_dir, target_file = path_to_directory_and_file(absolute_path)
-  select_file(target_dir, target_file)
+  select_files(target_dir, target_file)
 end
 
 def path_to_directory_and_file(absolute_path)
