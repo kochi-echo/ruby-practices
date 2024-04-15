@@ -3,44 +3,40 @@
 
 LIST_ROW_NUM = 3
 
-class Array
-  def divide_equal(number)
-    split_num = (self.size / number.to_f).ceil
-    self.each_slice(split_num).to_a
-  end
+def divide_equal(file_names, number)
+  split_num = (file_names.size / number.to_f).ceil
+  file_names.each_slice(split_num).to_a
+end
 
-  def transpose_lack # Array#teansposeとは異なり、二次元配列の要素のサイズが異なっても転置できるメソッド
-    max_size = self.map(&:size).max
-    self.map { |element| element + [nil] * (max_size - element.size) }.transpose.map(&:compact)
-  end
+def transpose_lack(uneven_size_array) # Array#teansposeとは異なり、二次元配列の要素のサイズが異なっても転置できるメソッド
+  max_size = uneven_size_array.map(&:size).max
+  uneven_size_array.map { |element| element + [nil] * (max_size - element.size) }.transpose.map(&:compact)
+end
 
-  def sort_jp # Array#sortとは異なり、漢字→ひらがな→カタカナの順にソートするメソッド
-    self.sort do |a, b|
-      if a.match?(/\p{Han}/) && b.match?(/\p{Hiragana}|\p{Katakana}/)
-        -1
-      elsif a.match?(/\p{Hiragana}|\p{Katakana}/) && b.match?(/\p{Han}/)
-        1
-      else
-        a <=> b
-      end
+def sort_jp(jp_array) # Array#sortとは異なり、漢字→ひらがな→カタカナの順にソートするメソッド
+  jp_array.sort do |a, b|
+    if a.match?(/\p{Han}/) && b.match?(/\p{Hiragana}|\p{Katakana}/)
+      -1
+    elsif a.match?(/\p{Hiragana}|\p{Katakana}/) && b.match?(/\p{Han}/)
+      1
+    else
+      a <=> b
     end
   end
 end
 
-class String
-  def size_jp # String#sizeと異なり、日本語を2文字とみなすメソッド
-    self.each_char.sum do |char|
-      if char.match?(/\p{Han}|\p{Hiragana}|\p{Katakana}|ー/)
-        2
-      else
-        1
-      end
+def size_jp(jp_string) # String#sizeと異なり、日本語を2文字とみなすメソッド
+  jp_string.each_char.sum do |char|
+    if char.match?(/\p{Han}|\p{Hiragana}|\p{Katakana}|ー/)
+      2
+    else
+      1
     end
   end
+end
 
-  def ljust_jp(max_size)
-    self + ' ' * (max_size - self.size_jp)
-  end
+def ljust_jp(jp_string, max_size)
+  jp_string + ' ' * (max_size - size_jp(jp_string))
 end
 
 def get_file_names(argument_name)
@@ -62,7 +58,7 @@ def path_to_directory_and_file(absolute_path)
 end
 
 def select_files(target_dir, target_file)
-  file_names_all = Dir.entries(target_dir).map(&:unicode_normalize).sort_jp # String#unicode_normalizeしないとsortや文字カウントがズレる
+  file_names_all = sort_jp(Dir.entries(target_dir).map(&:unicode_normalize)) # String#unicode_normalizeしないとsortや文字カウントがズレる
   
   if target_file.empty?
     file_names_all.reject { |file_name| file_name =~ /^\./ } # '.', '..', '.ファイル名'を除外する
@@ -72,11 +68,11 @@ def select_files(target_dir, target_file)
 end
 
 def generate_name_list_text(file_names, number)
-  separatiopn_names = file_names.divide_equal(number)
-  max_name_size = file_names.map(&:size_jp).max
+  separatiopn_names = divide_equal(file_names, number)
+  max_name_size = file_names.map{|file_name| size_jp(file_name)}.max
 
-  separatiopn_names.transpose_lack.inject('') do |text, names|
-    text += "#{names[0..-2].map{ |name| "#{name.ljust_jp(max_name_size)} " }.join}#{names[-1]}\n"
+  transpose_lack(separatiopn_names).inject('') do |text, names|
+    text += "#{names[0..-2].map{ |name| "#{ljust_jp(name, max_name_size)} " }.join}#{names[-1]}\n"
   end
 end
 
