@@ -27,32 +27,32 @@ end
 
 class TestArrayMethod < Minitest::Test
   def test_divide_equal
-    assert_equal [[1, 2], [3, 4], [5]], [1, 2, 3, 4, 5].divide_equal(3)
-    assert_equal [[1, 2], [3, 4], [5, 6]], [1, 2, 3, 4, 5, 6].divide_equal(3)
+    assert_equal [[1, 2], [3, 4], [5]], divide_equal([1, 2, 3, 4, 5], 3)
+    assert_equal [[1, 2], [3, 4], [5, 6]], divide_equal([1, 2, 3, 4, 5, 6], 3)
   end
 
   def transpose_lack
-    assert_equal [[1, 3, 5], [2, 4]], [[1, 2], [3, 4], [5]].transpose_lack
-    assert_equal [[1, 4, 7], [2, 5], [3, 6]], [[1, 2, 3], [4, 5, 6], [7]].transpose_lack
+    assert_equal [[1, 3, 5], [2, 4]], transpose_lack([[1, 2], [3, 4], [5]])
+    assert_equal [[1, 4, 7], [2, 5], [3, 6]], transpose_lack([[1, 2, 3], [4, 5, 6], [7]])
   end
 
   def test_sort_jp
     assert_equal ['a_test.txt', 'b_test.rb', 'sub.dir', '試験.txt', 'てすと', 'テスト-ターゲット.md'],
-                 ['b_test.rb', 'a_test.txt', 'テスト-ターゲット.md', '試験.txt', 'sub.dir', 'てすと'].sort_jp
+    sort_jp(['b_test.rb', 'a_test.txt', 'テスト-ターゲット.md', '試験.txt', 'sub.dir', 'てすと'])
   end
 end
 
 class TestStringMethod < Minitest::Test
   def test_size_jp
-    assert_equal 3, 'abc'.size_jp
-    assert_equal 6, 'あいう'.size_jp
-    assert_equal 4, 'aあc'.size_jp
+    assert_equal 3, size_jp('abc')
+    assert_equal 6, size_jp('あいう')
+    assert_equal 4, size_jp('aあc')
   end
 
   def test_ljust_jp
-    assert_equal 'abc   ', 'abc'.ljust_jp(6)
-    assert_equal 'あいう', 'あいう'.ljust_jp(6)
-    assert_equal 'あいう  ', 'あいう'.ljust_jp(8)
+    assert_equal 'abc   ', ljust_jp('abc', 6)
+    assert_equal 'あいう', ljust_jp('あいう', 6)
+    assert_equal 'あいう  ', ljust_jp('あいう', 8)
   end
 end
 
