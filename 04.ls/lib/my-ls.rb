@@ -76,7 +76,7 @@ def generate_name_list_text(file_names, number)
   max_name_size = file_names.map { |file_name| size_jp(file_name) }.max
 
   transpose_lack(separatiopn_names).inject('') do |text, names|
-    text += "#{names[0..-2].map { |name| "#{ljust_jp(name, max_name_size)} " }.join}#{names[-1]}\n"
+    text + "#{names[0..-2].map { |name| "#{ljust_jp(name, max_name_size)} " }.join}#{names[-1]}\n"
   end
 end
 
