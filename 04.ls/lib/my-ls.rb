@@ -63,8 +63,6 @@ def path_to_directory_and_file(absolute_path)
 end
 
 def select_files(target_dir, target_file, options)
-  puts target_dir
-  puts options
   file_names_all = sort_jp(Dir.entries(target_dir).map(&:unicode_normalize))
   # String#unicode_normalizeしないとsortや文字カウントがズレる
 
