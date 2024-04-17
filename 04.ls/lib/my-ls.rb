@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'optparse'
+
 LIST_ROW_NUM = 3
 
 def divide_equal(file_names, number)
@@ -42,11 +44,11 @@ def ljust_jp(jp_string, max_size)
   jp_string + ' ' * (max_size - size_jp(jp_string))
 end
 
-def get_file_names(argument_name)
+def get_file_names(argument_name, options)
   argument_name ||= '.'
   absolute_path = File.expand_path(argument_name)
   target_dir, target_file = path_to_directory_and_file(absolute_path)
-  select_files(target_dir, target_file)
+  select_files(target_dir, target_file, options)
 end
 
 def path_to_directory_and_file(absolute_path)
@@ -60,12 +62,13 @@ def path_to_directory_and_file(absolute_path)
   [target_dir, target_file]
 end
 
-def select_files(target_dir, target_file)
+def select_files(target_dir, target_file, options)
   file_names_all = sort_jp(Dir.entries(target_dir).map(&:unicode_normalize))
   # String#unicode_normalizeしないとsortや文字カウントがズレる
 
   if target_file.empty?
-    file_names_all.reject { |file_name| file_name =~ /^\./ } # '.', '..', '.ファイル名'を除外する
+    file_names_all.reject { |file_name| file_name =~ /^\./ } unless options['a']
+    # オプション -a 以外の時は '.', '..', '.ファイル名'を除外する
   else
     file_names_all.select { |file_name| file_name == target_file } # '.ファイル名'も表示対象
   end
@@ -81,5 +84,6 @@ def generate_name_list_text(file_names, number)
 end
 
 input = ARGV[0]
-file_names = get_file_names(input)
+options = ARGV.getopts('a')
+file_names = get_file_names(input, options)
 print generate_name_list_text(file_names, LIST_ROW_NUM)

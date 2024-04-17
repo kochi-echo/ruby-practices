@@ -17,6 +17,12 @@ class TestNameReciever < Minitest::Test
     # assert_equal ['test.rb', 'test_target'], get_file_names('~/Documents/Fjord/ruby-practices/04.ls/test/') # 絶対パス確認用(ホームディレクトリから)
   end
 
+  def test_get_file_names_dir_argument_optiona_a
+    ARGV.replace(['-a']) # -aのオプション対応
+    assert_equal ['.', '..', '.dot_subdir', '.test', 'a_test.txt', 'b_test.rb', 'sub.dir', '試験.txt', 'てすと', 'テスト-ターゲット.md'], get_file_names('test_target')
+    ARGV.replace([])
+  end
+
   def test_get_file_names_file_argument
     assert_equal ['test.rb'], get_file_names('test.rb')
     assert_equal ['試験.txt'], get_file_names('test_target/試験.txt')
