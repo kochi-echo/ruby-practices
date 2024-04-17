@@ -92,7 +92,7 @@ input = nil
 
 opt = OptionParser.new
 opt.on('-a [path]') do |path|
-  path ? options['a'] = true : options['a'] = false
+  options['a'] = true
   input = path
 end
 opt.parse!(ARGV) # オプション除いて残った引数
