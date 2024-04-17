@@ -63,12 +63,18 @@ def path_to_directory_and_file(absolute_path)
 end
 
 def select_files(target_dir, target_file, options)
+  puts target_dir
+  puts options
   file_names_all = sort_jp(Dir.entries(target_dir).map(&:unicode_normalize))
   # String#unicode_normalizeしないとsortや文字カウントがズレる
 
   if target_file.empty?
-    file_names_all.reject { |file_name| file_name =~ /^\./ } unless options['a']
-    # オプション -a 以外の時は '.', '..', '.ファイル名'を除外する
+    if options['a']
+      file_names_all
+    else
+      file_names_all.reject { |file_name| file_name =~ /^\./ } unless options['a']
+      # オプション -a 以外の時は '.', '..', '.ファイル名'を除外する
+    end
   else
     file_names_all.select { |file_name| file_name == target_file } # '.ファイル名'も表示対象
   end
@@ -83,7 +89,16 @@ def generate_name_list_text(file_names, number)
   end
 end
 
-input = ARGV[0]
-options = ARGV.getopts('a')
+options = {}
+input = nil
+
+opt = OptionParser.new
+opt.on('-a [path]') do |path|
+  path ? options['a'] = true : options['a'] = false
+  input = path
+end
+opt.parse!(ARGV) # オプション除いて残った引数
+input = ARGV[0] unless input
+
 file_names = get_file_names(input, options)
 print generate_name_list_text(file_names, LIST_ROW_NUM)
