@@ -70,7 +70,7 @@ def select_files(target_dir, target_file, options)
     if options['a']
       file_names_all
     else
-      file_names_all.reject { |file_name| file_name =~ /^\./ } unless options['a']
+      file_names_all.reject { |file_name| file_name =~ /^\./ }
       # オプション -a 以外の時は '.', '..', '.ファイル名'を除外する
     end
   else
@@ -88,15 +88,10 @@ def generate_name_list_text(file_names, number)
 end
 
 options = {}
-input = nil
-
 opt = OptionParser.new
-opt.on('-a [path]') do |path|
-  options['a'] = true
-  input = path
-end
+opt.on('-a') { options['a'] = true }
 opt.parse!(ARGV) # オプション除いて残った引数
-input = ARGV[0] unless input
+input = ARGV[0]
 
 file_names = get_file_names(input, options)
 print generate_name_list_text(file_names, LIST_ROW_NUM)
