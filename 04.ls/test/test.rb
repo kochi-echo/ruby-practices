@@ -7,21 +7,23 @@ require_relative '../lib/my-ls'
 
 class TestNameReciever < Minitest::Test
   def test_get_file_names_no_argument
-    assert_equal ['test.rb', 'test_target'], get_file_names('')
+    assert_equal ['test.rb', 'test_target'], get_file_names('', { 'a' => false })
   end
 
   def test_get_file_names_dir_argument
-    assert_equal ['a_test.txt', 'b_test.rb', 'sub.dir', '試験.txt', 'てすと', 'テスト-ターゲット.md'], get_file_names('test_target')
-    assert_equal %w[lib test], get_file_names('..')
-    # assert_equal ['test.rb', 'test_target'], get_file_names('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test') # 絶対パス確認用
-    # assert_equal ['test.rb', 'test_target'], get_file_names('~/Documents/Fjord/ruby-practices/04.ls/test/') # 絶対パス確認用(ホームディレクトリから)
+    assert_equal ['a_test.txt', 'b_test.rb', 'sub.dir', '試験.txt', 'てすと', 'テスト-ターゲット.md'], get_file_names('test_target', { 'a' => false })
+    assert_equal %w[lib test], get_file_names('..', { 'a' => false })
+    # assert_equal ['test.rb', 'test_target'], get_file_names('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test', {"a"=>false}) # 絶対パス確認用
+    # assert_equal ['test.rb', 'test_target'], get_file_names('~/Documents/Fjord/ruby-practices/04.ls/test/', {"a"=>false}) # 絶対パス確認用(ホームディレクトリから)
+    assert_equal ['.', '..', '.dot_subdir', '.test', 'a_test.txt', 'b_test.rb', 'sub.dir', '試験.txt', 'てすと', 'テスト-ターゲット.md'],
+                 get_file_names('test_target', { 'a' => true })
   end
 
   def test_get_file_names_file_argument
-    assert_equal ['test.rb'], get_file_names('test.rb')
-    assert_equal ['試験.txt'], get_file_names('test_target/試験.txt')
-    assert_equal ['テスト-ターゲット.md'], get_file_names('test_target/テスト-ターゲット.md')
-    assert_equal ['.test'], get_file_names('test_target/.test')
+    assert_equal ['test.rb'], get_file_names('test.rb', { 'a' => false })
+    assert_equal ['試験.txt'], get_file_names('test_target/試験.txt', { 'a' => false })
+    assert_equal ['テスト-ターゲット.md'], get_file_names('test_target/テスト-ターゲット.md', { 'a' => false })
+    assert_equal ['.test'], get_file_names('test_target/.test', { 'a' => false })
   end
 end
 
