@@ -8,7 +8,7 @@ require_relative '../lib/my-ls'
 class TestNameReciever < Minitest::Test
   def test_get_file_names_no_argument
     assert_equal ['test.rb', 'test_target'], get_file_names('', { 'a' => false })
-    assert_equal ['.', '..', '.ruby-lsp', 'test.rb', 'test_target'], get_file_names('', { 'a' => false })
+    assert_equal ['.', '..', '.ruby-lsp', 'test.rb', 'test_target'], get_file_names('', { 'a' => true })
     assert_equal ['test_target', 'test.rb'], get_file_names('', { 'r' => true })
     assert_equal ['test_target', 'test.rb', '.ruby-lsp', '..', '.'], get_file_names('', { 'a' => true, 'r' => true })
   end
@@ -23,7 +23,7 @@ class TestNameReciever < Minitest::Test
                  get_file_names('test_target', { 'a' => true })
     assert_equal ['テスト-ターゲット.md', 'てすと', '試験.txt', 'sub.dir', 'b_test.rb', 'a_test.txt'],
                  get_file_names('test_target', { 'r' => true })
-    assert_equal ['テスト-ターゲット.md', 'てすと', '試験.txt', 'sub.dir', 'b_test.rb', 'a_test.txt', '.dot_subdir', '..', '.'],
+    assert_equal ['テスト-ターゲット.md', 'てすと', '試験.txt', 'sub.dir', 'b_test.rb', 'a_test.txt', '.test', '.dot_subdir', '..', '.'],
                  get_file_names('test_target', { 'a' => true, 'r' => true })
   end
 
