@@ -32,7 +32,7 @@ end
 def size_jp(jp_string)
   # String#sizeと異なり、日本語を2文字とみなすメソッド
   jp_string.each_char.sum do |char|
-    if char'（'.match?(/\p{Han}|\p{Hiragana}|\p{Katakana}|ー|（|）/)
+    if char.match?(/\p{Han}|\p{Hiragana}|\p{Katakana}|ー|（|）/)
       2
     else
       1
