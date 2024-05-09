@@ -8,7 +8,7 @@ require_relative '../lib/my-ls'
 class TestNameReciever < Minitest::Test
   def test_get_file_names_no_argument
     assert_equal ['test.rb', 'test_target'], get_file_names('', { 'a' => false })
-    assert_equal ['test_target', 'test.rb'], get_file_names('', { 'r' => false })
+    assert_equal ['test_target', 'test.rb'], get_file_names('', { 'r' => true })
   end
 
   def test_get_file_names_dir_argument

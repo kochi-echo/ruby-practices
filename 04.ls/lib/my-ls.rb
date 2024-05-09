@@ -65,6 +65,7 @@ end
 def select_files(target_dir, target_file, options)
   file_names_all = sort_jp(Dir.entries(target_dir).map(&:unicode_normalize))
   # String#unicode_normalizeしないとsortや文字カウントがズレる
+  file_names_all.reverse! if options['r']
 
   if target_file.empty?
     if options['a']
