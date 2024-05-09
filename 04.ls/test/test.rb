@@ -8,15 +8,23 @@ require_relative '../lib/my-ls'
 class TestNameReciever < Minitest::Test
   def test_get_file_names_no_argument
     assert_equal ['test.rb', 'test_target'], get_file_names('', { 'a' => false })
+    assert_equal ['.', '..', '.ruby-lsp', 'test.rb', 'test_target'], get_file_names('', { 'a' => true })
+    assert_equal ['test_target', 'test.rb'], get_file_names('', { 'r' => true })
+    assert_equal ['test_target', 'test.rb', '.ruby-lsp', '..', '.'], get_file_names('', { 'a' => true, 'r' => true })
   end
 
   def test_get_file_names_dir_argument
-    assert_equal ['a_test.txt', 'b_test.rb', 'sub.dir', '試験.txt', 'てすと', 'テスト-ターゲット.md'], get_file_names('test_target', { 'a' => false })
+    assert_equal ['a_test.txt', 'b_test.rb', 'sub.dir', '試験.txt', 'てすと', 'テスト-ターゲット.md'],
+                 get_file_names('test_target', { 'a' => false })
     assert_equal %w[lib test], get_file_names('..', { 'a' => false })
     # assert_equal ['test.rb', 'test_target'], get_file_names('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test', {"a"=>false}) # 絶対パス確認用
     # assert_equal ['test.rb', 'test_target'], get_file_names('~/Documents/Fjord/ruby-practices/04.ls/test/', {"a"=>false}) # 絶対パス確認用(ホームディレクトリから)
     assert_equal ['.', '..', '.dot_subdir', '.test', 'a_test.txt', 'b_test.rb', 'sub.dir', '試験.txt', 'てすと', 'テスト-ターゲット.md'],
                  get_file_names('test_target', { 'a' => true })
+    assert_equal ['テスト-ターゲット.md', 'てすと', '試験.txt', 'sub.dir', 'b_test.rb', 'a_test.txt'],
+                 get_file_names('test_target', { 'r' => true })
+    assert_equal ['テスト-ターゲット.md', 'てすと', '試験.txt', 'sub.dir', 'b_test.rb', 'a_test.txt', '.test', '.dot_subdir', '..', '.'],
+                 get_file_names('test_target', { 'a' => true, 'r' => true })
   end
 
   def test_get_file_names_file_argument

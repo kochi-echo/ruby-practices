@@ -32,7 +32,7 @@ end
 def size_jp(jp_string)
   # String#sizeと異なり、日本語を2文字とみなすメソッド
   jp_string.each_char.sum do |char|
-    if char.match?(/\p{Han}|\p{Hiragana}|\p{Katakana}|ー/)
+    if char.match?(/\p{Han}|\p{Hiragana}|\p{Katakana}|ー|（|）/)
       2
     else
       1
@@ -65,6 +65,7 @@ end
 def select_files(target_dir, target_file, options)
   file_names_all = sort_jp(Dir.entries(target_dir).map(&:unicode_normalize))
   # String#unicode_normalizeしないとsortや文字カウントがズレる
+  file_names_all.reverse! if options['r']
 
   if target_file.empty?
     if options['a']
@@ -90,6 +91,7 @@ end
 options = {}
 opt = OptionParser.new
 opt.on('-a') { options['a'] = true }
+opt.on('-r') { options['r'] = true }
 opt.parse!(ARGV) # オプション除いて残った引数
 input = ARGV[0]
 
