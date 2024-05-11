@@ -77,7 +77,11 @@ def select_files(target_dir, target_file, options)
 end
 
 def get_files_detail_info(target_dir, file_names_all)
-  ["-rwxr-xr-x@  1 atsushi  staff  4847  5  9 11:05 test.rb"]
+  file_info_list = []
+  file_names_all.each do |file_name|
+    file_info_list += ["-rwxr-xr-x@  1 atsushi  staff  4847  5  9 11:05 test.rb"]
+  end
+  file_info_list
 end
 
 def generate_name_list_text(file_names, number, options)

@@ -27,9 +27,9 @@ class TestNameReciever < Minitest::Test
                  get_file_names('test_target', { 'a' => true, 'r' => true } )
   end
 
-  def test_get_file_info_dir_argument
-    assert_equal ['-rwxr-xr-x@  1 atsushi  staff  4847  5  9 11:05 test.rb'],
-                 get_file_names('test_target', { 'l' => true } )
+  def test_get_file_info
+    assert_equal ['-rwxr-xr-x@  1 atsushi  staff  4847  5  9 11:05 test.rb', '-rwxr-xr-x@  1 atsushi  staff  4847  5  9 11:05 test.rb'],
+                 get_file_names('', { 'l' => true } )
   end
 
   def test_get_file_names_file_argument
