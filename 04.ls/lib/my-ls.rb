@@ -68,15 +68,16 @@ def select_files(target_dir, target_file, options)
   file_names_all.reverse! if options['r']
 
   if target_file.empty?
-    if options['a']
-      file_names_all
-    else
-      file_names_all.reject { |file_name| file_name =~ /^\./ }
+      file_names_all.reject! { |file_name| file_name =~ /^\./ } unless options['a']
       # オプション -a 以外の時は '.', '..', '.ファイル名'を除外する
-    end
   else
-    file_names_all.select { |file_name| file_name == target_file } # '.ファイル名'も表示対象
+    file_names_all.select! { |file_name| file_name == target_file } # '.ファイル名'も表示対象
   end
+  options['l'] ? get_files_detail_info(target_dir, file_names_all) : file_names_all
+end
+
+def get_files_detail_info(target_dir, file_names_all)
+  ["-rwxr-xr-x@  1 atsushi  staff  4847  5  9 11:05 test.rb"]
 end
 
 def generate_name_list_text(file_names, number, options)

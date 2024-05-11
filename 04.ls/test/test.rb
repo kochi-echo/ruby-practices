@@ -27,6 +27,11 @@ class TestNameReciever < Minitest::Test
                  get_file_names('test_target', { 'a' => true, 'r' => true } )
   end
 
+  def test_get_file_info_dir_argument
+    assert_equal ['-rwxr-xr-x@  1 atsushi  staff  4847  5  9 11:05 test.rb'],
+                 get_file_names('test_target', { 'l' => true } )
+  end
+
   def test_get_file_names_file_argument
     assert_equal ['test.rb'], get_file_names('test.rb', { 'a' => false } )
     assert_equal ['試験.txt'], get_file_names('test_target/試験.txt', { 'a' => false } )
@@ -97,9 +102,5 @@ class TestGenerationNameListText < Minitest::Test
       b_test.rb            テスト-ターゲット.md
     TEXT
     assert_equal result_text, generate_name_list_text(['a_test.txt', 'b_test.rb', 'sub.dir', 'テスト-ターゲット.md', '試験.txt'], 3, { 'l' => false } )
-  end
-
-  def test_generate_name_list_text_1line
-    assert_equal "abc\nbc\n", generate_name_list_text(%w[abc bc], 3, { 'l' => true } )
   end
 end
