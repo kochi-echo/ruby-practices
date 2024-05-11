@@ -78,9 +78,23 @@ end
 
 def get_files_info_text(target_dir, file_names_all)
   files_info_list = get_files_info_list(target_dir, file_names_all)
-  files_size_list = files_info_list.map(&:size).map(&:to_s)
-  max_text_size_of_file_size = files_size_list.map(&:size).max
-  files_info_text = files_size_list.map{ |size| size.rjust(max_text_size_of_file_size) }
+  convert_files_info_to_files_size_text(files_info_list)
+end
+
+def convert_files_info_to_files_mode_text(files_info_list)
+
+end
+
+def convert_files_info_to_numbers_of_hard_link_text(files_info_list)
+  files_link = files_info_list.map(&:nlink).map(&:to_s)
+  max_text_size = files_link.map(&:size).max
+  files_link.map{ |size| size.rjust(max_text_size) }
+end
+
+def convert_files_info_to_files_size_text(files_info_list)
+  files_size = files_info_list.map(&:size).map(&:to_s)
+  max_text_size = files_size.map(&:size).max
+  files_size.map{ |size| size.rjust(max_text_size) }
 end
 
 def get_files_info_list(target_dir, file_names_all)
