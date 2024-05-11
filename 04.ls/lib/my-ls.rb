@@ -73,15 +73,22 @@ def select_files(target_dir, target_file, options)
   else
     file_names_all.select! { |file_name| file_name == target_file } # '.ファイル名'も表示対象
   end
-  options['l'] ? get_files_detail_info(target_dir, file_names_all) : file_names_all
+  options['l'] ? get_files_info_text(target_dir, file_names_all) : file_names_all
 end
 
-def get_files_detail_info(target_dir, file_names_all)
-  file_info_list = []
+def get_files_info_text(target_dir, file_names_all)
+  files_info_list = get_files_info_list(target_dir, file_names_all)
+  files_size_list = files_info_list.map(&:size).map(&:to_s)
+  max_text_size_of_file_size = files_size_list.map(&:size).max
+  files_info_text = files_size_list.map{ |size| size.rjust(max_text_size_of_file_size) }
+end
+
+def get_files_info_list(target_dir, file_names_all)
+  files_info_list = []
   file_names_all.each do |file_name|
-    file_info_list += ["-rwxr-xr-x@  1 atsushi  staff  4847  5  9 11:05 test.rb"]
+    files_info_list += [File::Stat.new("#{target_dir}/#{file_name}")]
   end
-  file_info_list
+  files_info_list
 end
 
 def generate_name_list_text(file_names, number, options)
