@@ -78,7 +78,9 @@ end
 
 def get_files_info_text(target_dir, file_names_all)
   files_info_list = get_files_info_list(target_dir, file_names_all)
-  convert_files_info_to_files_size_text(files_info_list)
+  files_size_text = convert_files_info_to_files_size_text(files_info_list)
+  numbers_of_hard_link_text = convert_files_info_to_numbers_of_hard_link_text(files_info_list)
+  []
 end
 
 def convert_files_info_to_files_mode_text(files_info_list)
