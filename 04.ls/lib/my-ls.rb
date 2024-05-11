@@ -79,8 +79,9 @@ def select_files(target_dir, target_file, options)
   end
 end
 
-def generate_name_list_text(file_names, number)
-  separatiopn_names = divide_equal(file_names, number)
+def generate_name_list_text(file_names, number, options)
+  options['l'] ? row_max_num = 1 : row_max_num = number
+  separatiopn_names = divide_equal(file_names, row_max_num)
   max_name_size = file_names.map { |file_name| size_jp(file_name) }.max
 
   transpose_lack(separatiopn_names).inject('') do |text, names|
@@ -96,4 +97,4 @@ opt.parse!(ARGV) # オプション除いて残った引数
 input = ARGV[0]
 
 file_names = get_file_names(input, options)
-print generate_name_list_text(file_names, LIST_ROW_NUM)
+print generate_name_list_text(file_names, LIST_ROW_NUM, options)
