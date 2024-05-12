@@ -87,6 +87,7 @@ def get_files_info_text(target_dir, file_names_all)
   files_info_each_type['user_name'] = align_jp_str_list_to_left(files_info.map{ |file_info| Etc.getpwuid(file_info.uid).name.to_s })
   files_info_each_type['group_name'] = align_jp_str_list_to_left(files_info.map{ |file_info| Etc.getgrgid(file_info.gid).name.to_s })
   files_info_each_type['size'] = align_str_list_to_right(files_info.map(&:size).map(&:to_s))
+  files_info_each_type['file_name'] = align_jp_str_list_to_left(file_names_all)
   files_info_each_type
 end
 
