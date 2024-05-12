@@ -83,7 +83,7 @@ def get_files_info_text(target_dir, file_names_all)
   []
 end
 
-def convert_files_info_to_files_mode_text(files_info_list)
+def align_str_list_to_right(str)
 
 end
 

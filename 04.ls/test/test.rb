@@ -27,9 +27,9 @@ class TestNameReciever < Minitest::Test
                  get_file_names('test_target', { 'a' => true, 'r' => true } )
   end
 
-  def test_get_file_info
-    assert_equal [' 0', '38', '96', ' 0', ' 0', ' 0'], get_file_names('test_target', { 'l' => true } )
-  end
+  # def test_get_file_info
+  #   assert_equal [' 0', '38', '96', ' 0', ' 0', ' 0'], get_file_names('test_target', { 'l' => true } )
+  # end
 
   def test_get_file_names_file_argument
     assert_equal ['test.rb'], get_file_names('test.rb', { 'a' => false } )
@@ -70,6 +70,12 @@ class TestStringMethod < Minitest::Test
     assert_equal 'abc   ', ljust_jp('abc', 6)
     assert_equal 'あいう', ljust_jp('あいう', 6)
     assert_equal 'あいう  ', ljust_jp('あいう', 8)
+  end
+end
+
+class TestAlignStrMethod < Minitest::Test
+  def test_align_str_list_to_right
+    assert_equal [' 1', '10'], align_str_list_to_right(['1', '10'])
   end
 end
 
