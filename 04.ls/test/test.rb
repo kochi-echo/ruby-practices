@@ -74,6 +74,11 @@ class TestStringMethod < Minitest::Test
 end
 
 class TestGetFilesInfoText < Minitest::Test
+  def test_get_number_of_link
+    assert_equal ['1'], get_files_info_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])['number_of_link']
+    assert_equal ['1', '3'], get_files_info_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['a_test.txt', 'sub.dir'])['number_of_link']
+  end
+
   def test_get_size_text
     assert_equal ['38'], get_files_info_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])['size']
     assert_equal [' 0', '38'], get_files_info_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['a_test.txt', 'b_test.rb'])['size']

@@ -83,6 +83,7 @@ end
 def get_files_info_text(target_dir, file_names_all)
   files_info = file_names_all.map { |file_name| File::Stat.new("#{target_dir}/#{file_name}") }
   files_info_each_type = {}
+  files_info_each_type['number_of_link'] = align_str_list_to_right(files_info.map(&:nlink).map(&:to_s))
   files_info_each_type['size'] = align_str_list_to_right(files_info.map(&:size).map(&:to_s))
   files_info_each_type
 end
@@ -95,18 +96,6 @@ end
 def align_jp_str_list_to_left(str_list)
   max_size_str = str_list.map(&:size).max
   str_list.map{ |str| str.ljust_jp(max_size_str) }
-end
-
-def convert_files_info_to_numbers_of_hard_link_text(files_info_list)
-  files_link = files_info_list.map(&:nlink).map(&:to_s)
-  max_text_size = files_link.map(&:size).max
-  files_link.map{ |size| size.rjust(max_text_size) }
-end
-
-def convert_files_info_to_files_size_text(files_info_list)
-  files_size = files_info_list.map(&:size).map(&:to_s)
-  max_text_size = files_size.map(&:size).max
-  files_size.map{ |size| size.rjust(max_text_size) }
 end
 
 def generate_name_list_text(file_names, number, options)
