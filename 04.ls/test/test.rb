@@ -73,9 +73,19 @@ class TestStringMethod < Minitest::Test
   end
 end
 
+class TestGetFilesInfoText < Minitest::Test
+  def test_get_size_text
+    assert_equal ['38'], get_files_info_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])['size']
+  end
+end
+
 class TestAlignStrMethod < Minitest::Test
   def test_align_str_list_to_right
     assert_equal [' 1', '10'], align_str_list_to_right(['1', '10'])
+  end
+
+  def align_jp_str_list_to_left
+    assert_equal ['あ  ', 'うえ'], align_str_list_to_right(['あ', 'うえ'])
   end
 end
 
