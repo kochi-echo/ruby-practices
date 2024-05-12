@@ -79,9 +79,14 @@ class TestGetFilesInfoText < Minitest::Test
     assert_equal ['1', '3'], get_files_info_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['a_test.txt', 'sub.dir'])['number_of_link']
   end
 
-  def test_get_number_of_link
+  def test_get_user_name
     assert_equal ['atsushi'], get_files_info_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])['user_name']
     assert_equal ['atsushi', 'atsushi'], get_files_info_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['a_test.txt', 'sub.dir'])['user_name']
+  end
+
+  def test_get_group_name
+    assert_equal ['staff'], get_files_info_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])['group_name']
+    assert_equal ['staff', 'staff'], get_files_info_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['a_test.txt', 'sub.dir'])['group_name']
   end
 
   def test_get_size_text
