@@ -81,7 +81,7 @@ def convert_files_mode_to_l_option_format(files_mode, number_of_space)
     }
   end
   files_mode_chars.map do |chars|
-    chars['file_type'] + chars['owner_permission'] + chars['group_permission'] + chars['others_permission'] + '@' + ' ' * number_of_space
+    "#{chars['file_type']}#{chars['owner_permission']}#{chars['group_permission']}#{chars['others_permission']}@#{' ' * number_of_space}"
   end
 end
 
