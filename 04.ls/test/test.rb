@@ -138,11 +138,11 @@ end
 
 class TestAlignStrMethod < Minitest::Test
   def test_align_str_list_to_right
-    assert_equal [' 1', '10'], align_str_list_to_right(%w[1 10])
+    assert_equal [' 1', '10'], align_str_list_to_right(%w[1 10], 0)
   end
 
   def align_jp_str_list_to_left
-    assert_equal ['あ  ', 'うえ'], align_str_list_to_right(%w[あ うえ])
+    assert_equal ['あ  ', 'うえ'], align_str_list_to_right(%w[あ うえ], 0)
   end
 end
 

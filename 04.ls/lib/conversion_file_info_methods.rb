@@ -3,7 +3,7 @@
 
 require_relative 'jp_methods.rb'
 
-def convert_files_mode_to_l_option_format(files_mode)
+def convert_files_mode_to_l_option_format(files_mode, number_of_space)
   files_mode_chars = files_mode.map do |file_mode|
     file_mode_bits = format('%016b', file_mode)
     {
@@ -13,7 +13,9 @@ def convert_files_mode_to_l_option_format(files_mode)
       'others_permission' => convert_permission_bits_to_str(file_mode_bits[13..15], file_mode_bits[6])
     }
   end
-  files_mode_chars.map { |chars| chars['file_type'] + chars['owner_permission'] + chars['group_permission'] + chars['others_permission'] + '@' }
+  files_mode_chars.map do |chars|
+    chars['file_type'] + chars['owner_permission'] + chars['group_permission'] + chars['others_permission'] + '@' + ' '*number_of_space
+  end
 end
 
 def convert_file_type_bit_to_char(file_type_bit)
@@ -37,20 +39,20 @@ def convert_permission_bits_to_str(permission_bits, special_permission_bit)
   file_permission.join
 end
 
-def convert_files_mtime_to_l_option_format(files_mtime)
+def convert_files_mtime_to_l_option_format(files_mtime, number_of_space)
   files_each_mtime = {}
-  files_each_mtime['month'] = align_str_list_to_right(files_mtime.map(&:month).map(&:to_s))
-  files_each_mtime['day'] = align_str_list_to_right(files_mtime.map(&:day).map(&:to_s))
-  files_each_mtime['time'] = align_str_list_to_right(files_mtime.map { |mtime| "#{mtime.hour}:#{mtime.min}" })
-  [files_each_mtime['month'], files_each_mtime['day'], files_each_mtime['time']].transpose.map { |each_mtime| each_mtime.join(' ') }
+  files_each_mtime['month'] = align_str_list_to_right(files_mtime.map(&:month).map(&:to_s), 1)
+  files_each_mtime['day'] = align_str_list_to_right(files_mtime.map(&:day).map(&:to_s), 1)
+  files_each_mtime['time'] = align_str_list_to_right(files_mtime.map { |mtime| "#{mtime.hour}:#{mtime.min}" }, number_of_space)
+  [files_each_mtime['month'], files_each_mtime['day'], files_each_mtime['time']].transpose.map(&:join)
 end
 
-def align_str_list_to_right(str_list)
+def align_str_list_to_right(str_list, number_of_space)
   max_size_str = str_list.map(&:size).max
-  str_list.map { |str| str.rjust(max_size_str) }
+  str_list.map { |str| str.rjust(max_size_str) + ' '*number_of_space }
 end
 
-def align_jp_str_list_to_left(str_list)
+def align_jp_str_list_to_left(str_list, number_of_space)
   max_size_str = str_list.map { |str| size_jp(str) }.max
-  str_list.map { |str| ljust_jp(str, max_size_str) }
+  str_list.map { |str| ljust_jp(str, max_size_str) + ' '*number_of_space }
 end

@@ -58,13 +58,13 @@ end
 def get_files_info_each_type(target_dir, file_names_all)
   files_info = file_names_all.map { |file_name| File::Stat.new("#{target_dir}/#{file_name}") }
   files_info_each_type = {}
-  files_info_each_type['mode'] = convert_files_mode_to_l_option_format(files_info.map(&:mode))
-  files_info_each_type['number_of_link'] = align_str_list_to_right(files_info.map(&:nlink).map(&:to_s))
-  files_info_each_type['user_name'] = align_jp_str_list_to_left(files_info.map { |file_info| Etc.getpwuid(file_info.uid).name.to_s })
-  files_info_each_type['group_name'] = align_jp_str_list_to_left(files_info.map { |file_info| Etc.getgrgid(file_info.gid).name.to_s })
-  files_info_each_type['size'] = align_str_list_to_right(files_info.map(&:size).map(&:to_s))
-  files_info_each_type['mtime'] = convert_files_mtime_to_l_option_format(files_info.map(&:mtime))
-  files_info_each_type['file_name'] = align_jp_str_list_to_left(file_names_all)
+  files_info_each_type['mode'] = convert_files_mode_to_l_option_format(files_info.map(&:mode), 1)
+  files_info_each_type['number_of_link'] = align_str_list_to_right(files_info.map(&:nlink).map(&:to_s), 1)
+  files_info_each_type['user_name'] = align_jp_str_list_to_left(files_info.map { |file_info| Etc.getpwuid(file_info.uid).name.to_s }, 2)
+  files_info_each_type['group_name'] = align_jp_str_list_to_left(files_info.map { |file_info| Etc.getgrgid(file_info.gid).name.to_s }, 2)
+  files_info_each_type['size'] = align_str_list_to_right(files_info.map(&:size).map(&:to_s), 2)
+  files_info_each_type['mtime'] = convert_files_mtime_to_l_option_format(files_info.map(&:mtime), 1)
+  files_info_each_type['file_name'] = align_jp_str_list_to_left(file_names_all, 0)
   files_info_each_type
 end
 
