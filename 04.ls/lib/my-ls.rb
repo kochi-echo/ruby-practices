@@ -163,6 +163,7 @@ options = {}
 opt = OptionParser.new
 opt.on('-a') { options['a'] = true }
 opt.on('-r') { options['r'] = true }
+opt.on('-l') { options['l'] = true }
 opt.parse!(ARGV) # オプション除いて残った引数
 input = ARGV[0]
 
