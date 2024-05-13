@@ -54,7 +54,12 @@ end
 def get_files_info_text(target_dir, file_names_all)
   files_info_each_type = get_files_info_each_type(target_dir, file_names_all)
   files_info_text = files_info_each_type.values.transpose.map(&:join)
-  ["total #{file_names_all.map { |file_name| File::Stat.new("#{target_dir}/#{file_name}") }.map(&:blocks).sum}"] + files_info_text
+  if file_names_all.size
+    total_blocks = ["total #{file_names_all.map { |file_name| File::Stat.new("#{target_dir}/#{file_name}") }.map(&:blocks).sum}"]
+  else
+    total_blocks = []
+  end
+  total_blocks + files_info_text
 end
 
 def get_files_info_each_type(target_dir, file_names_all)
@@ -110,7 +115,9 @@ def convert_files_mtime_to_l_option_format(files_mtime, number_of_space)
   files_each_mtime = {}
   files_each_mtime['month'] = align_str_list_to_right(files_mtime.map(&:month).map(&:to_s), 1)
   files_each_mtime['day'] = align_str_list_to_right(files_mtime.map(&:day).map(&:to_s), 1)
-  files_each_mtime['time'] = align_str_list_to_right(files_mtime.map { |mtime| "#{mtime.hour}:#{mtime.min}" }, number_of_space)
+  files_each_mtime['time'] = align_str_list_to_right(files_mtime.map do |mtime|
+    "#{format('%02d', mtime.hour)}:#{format('%02d', mtime.min)}"
+  end, number_of_space)
   [files_each_mtime['month'], files_each_mtime['day'], files_each_mtime['time']].transpose.map(&:join)
 end
 
