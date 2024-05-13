@@ -69,8 +69,8 @@ def select_files(target_dir, target_file, options)
   file_names_all.reverse! if options['r']
 
   if target_file.empty?
-      file_names_all.reject! { |file_name| file_name =~ /^\./ } unless options['a']
-      # オプション -a 以外の時は '.', '..', '.ファイル名'を除外する
+    file_names_all.reject! { |file_name| file_name =~ /^\./ } unless options['a']
+  # オプション -a 以外の時は '.', '..', '.ファイル名'を除外する
   else
     file_names_all.select! { |file_name| file_name == target_file } # '.ファイル名'も表示対象
   end
@@ -79,8 +79,8 @@ end
 
 def get_files_info_merged_text(target_dir, file_names_all)
   files_info_each_type = get_files_info_each_type(target_dir, file_names_all)
-  files_info_text = files_info_each_type['file_name'].map.with_index do |name, idx|
-      "#{files_info_each_type['mode'][idx]} #{files_info_each_type['number_of_link'][idx]} #{files_info_each_type['user_name'][idx]}  #{files_info_each_type['group_name'][idx]}  #{files_info_each_type['size'][idx]}  #{files_info_each_type['mtime'][idx]} #{files_info_each_type['file_name'][idx]}"
+  files_info_text = files_info_each_type['file_name'].map.with_index do |_name, idx|
+    "#{files_info_each_type['mode'][idx]} #{files_info_each_type['number_of_link'][idx]} #{files_info_each_type['user_name'][idx]}  #{files_info_each_type['group_name'][idx]}  #{files_info_each_type['size'][idx]}  #{files_info_each_type['mtime'][idx]} #{files_info_each_type['file_name'][idx]}"
   end
   ["total #{file_names_all.map { |file_name| File::Stat.new("#{target_dir}/#{file_name}") }.map(&:blocks).sum}"] + files_info_text
 end
@@ -90,8 +90,8 @@ def get_files_info_each_type(target_dir, file_names_all)
   files_info_each_type = {}
   files_info_each_type['mode'] = convert_files_mode_to_l_option_format(files_info.map(&:mode))
   files_info_each_type['number_of_link'] = align_str_list_to_right(files_info.map(&:nlink).map(&:to_s))
-  files_info_each_type['user_name'] = align_jp_str_list_to_left(files_info.map{ |file_info| Etc.getpwuid(file_info.uid).name.to_s })
-  files_info_each_type['group_name'] = align_jp_str_list_to_left(files_info.map{ |file_info| Etc.getgrgid(file_info.gid).name.to_s })
+  files_info_each_type['user_name'] = align_jp_str_list_to_left(files_info.map { |file_info| Etc.getpwuid(file_info.uid).name.to_s })
+  files_info_each_type['group_name'] = align_jp_str_list_to_left(files_info.map { |file_info| Etc.getgrgid(file_info.gid).name.to_s })
   files_info_each_type['size'] = align_str_list_to_right(files_info.map(&:size).map(&:to_s))
   files_info_each_type['mtime'] = convert_files_mtime_to_l_option_format(files_info.map(&:mtime))
   files_info_each_type['file_name'] = align_jp_str_list_to_left(file_names_all)
@@ -100,7 +100,7 @@ end
 
 def convert_files_mode_to_l_option_format(files_mode)
   files_mode_chars = files_mode.map do |file_mode|
-    file_mode_bits = sprintf("%016b", file_mode)
+    file_mode_bits = format('%016b', file_mode)
     {
       'file_type' => convert_file_type_bit_to_char(file_mode_bits[0..3]),
       'owner_permission' => convert_permission_bits_to_str(file_mode_bits[7..9], file_mode_bits[4]),
@@ -108,24 +108,24 @@ def convert_files_mode_to_l_option_format(files_mode)
       'others_permission' => convert_permission_bits_to_str(file_mode_bits[13..15], file_mode_bits[6])
     }
   end
-  files_mode_chars.map{ |chars| chars['file_type'] + chars['owner_permission'] + chars['group_permission'] + chars['others_permission'] + '@' }
+  files_mode_chars.map { |chars| chars['file_type'] + chars['owner_permission'] + chars['group_permission'] + chars['others_permission'] + '@' }
 end
 
 def convert_file_type_bit_to_char(file_type_bit)
-  file_type_char = { #file_modeに対する、8進数対応表 cf. Linux file type and mode Doc
-    '0o01'.to_i(8) =>	'p', #FIFO
-    '0o02'.to_i(8) => 'c', #Character special file
-    '0o04'.to_i(8) =>	'd', #Directory(ディレクトリ)
-    '0o06'.to_i(8) =>	'b', #Block special file
-    '0o10'.to_i(8) =>	'-', #Regular file(通常ファイル)
-    '0o12'.to_i(8) =>	'l', #Symbolic link(シンボリックリンク)
-    '0o14'.to_i(8) =>	's'	 #Socket link
+  file_type_char = { # file_modeに対する、8進数対応表 cf. Linux file type and mode Doc
+    '0o01'.to_i(8) =>	'p', # FIFO
+    '0o02'.to_i(8) => 'c', # Character special file
+    '0o04'.to_i(8) =>	'd', # Directory(ディレクトリ)
+    '0o06'.to_i(8) =>	'b', # Block special file
+    '0o10'.to_i(8) =>	'-', # Regular file(通常ファイル)
+    '0o12'.to_i(8) =>	'l', # Symbolic link(シンボリックリンク)
+    '0o14'.to_i(8) =>	's'	 # Socket link
   }
   file_type_char[file_type_bit.to_i(2)]
 end
 
 def convert_permission_bits_to_str(permission_bits, special_permission_bit)
-  file_permission = ['-','-','-']
+  file_permission = ['-', '-', '-']
   file_permission[0] = 'r' if permission_bits[0] == '1'
   file_permission[1] = 'w' if permission_bits[1] == '1'
   file_permission[2] = ['-x', 'Ss'][special_permission_bit.to_i][permission_bits[2].to_i] # 2次元テーブルから実行権限記号を選択
@@ -136,22 +136,22 @@ def convert_files_mtime_to_l_option_format(files_mtime)
   files_each_mtime = {}
   files_each_mtime['month'] = align_str_list_to_right(files_mtime.map(&:month).map(&:to_s))
   files_each_mtime['day'] = align_str_list_to_right(files_mtime.map(&:day).map(&:to_s))
-  files_each_mtime['time'] = align_str_list_to_right(files_mtime.map{ |mtime| "#{mtime.hour}:#{mtime.min}"})
-  [files_each_mtime['month'], files_each_mtime['day'], files_each_mtime['time']].transpose.map{ |each_mtime| each_mtime.join(' ')}
+  files_each_mtime['time'] = align_str_list_to_right(files_mtime.map { |mtime| "#{mtime.hour}:#{mtime.min}" })
+  [files_each_mtime['month'], files_each_mtime['day'], files_each_mtime['time']].transpose.map { |each_mtime| each_mtime.join(' ') }
 end
 
 def align_str_list_to_right(str_list)
   max_size_str = str_list.map(&:size).max
-  str_list.map{ |str| str.rjust(max_size_str) }
+  str_list.map { |str| str.rjust(max_size_str) }
 end
 
 def align_jp_str_list_to_left(str_list)
-  max_size_str = str_list.map{ |str| size_jp(str) }.max
-  str_list.map{ |str| ljust_jp(str, max_size_str) }
+  max_size_str = str_list.map { |str| size_jp(str) }.max
+  str_list.map { |str| ljust_jp(str, max_size_str) }
 end
 
 def generate_name_list_text(file_names, number, options)
-  options['l'] ? row_max_num = 1 : row_max_num = number
+  row_max_num = options['l'] ? 1 : number
   separatiopn_names = divide_equal(file_names, row_max_num)
   max_name_size = file_names.map { |file_name| size_jp(file_name) }.max
 
