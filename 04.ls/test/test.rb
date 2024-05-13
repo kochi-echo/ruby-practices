@@ -74,32 +74,48 @@ class TestStringMethod < Minitest::Test
 end
 
 class TestGetFilesInfoText < Minitest::Test
+  def test_get_mode
+    assert_equal ['-rw-r--r--@'], get_files_info_each_type('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])['mode']
+    assert_equal ['-rw-r--r--@', 'drwxr-xr-x@'], get_files_info_each_type('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['a_test.txt', 'sub.dir'])['mode']
+  end
+
   def test_get_number_of_link
-    assert_equal ['1'], get_files_info_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])['number_of_link']
-    assert_equal ['1', '3'], get_files_info_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['a_test.txt', 'sub.dir'])['number_of_link']
+    assert_equal ['1'], get_files_info_each_type('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])['number_of_link']
+    assert_equal ['1', '3'], get_files_info_each_type('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['a_test.txt', 'sub.dir'])['number_of_link']
   end
 
   def test_get_user_name
-    assert_equal ['atsushi'], get_files_info_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])['user_name']
-    assert_equal ['atsushi', 'atsushi'], get_files_info_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['a_test.txt', 'sub.dir'])['user_name']
+    assert_equal ['atsushi'], get_files_info_each_type('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])['user_name']
+    assert_equal ['atsushi', 'atsushi'], get_files_info_each_type('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['a_test.txt', 'sub.dir'])['user_name']
   end
 
   def test_get_group_name
-    assert_equal ['staff'], get_files_info_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])['group_name']
-    assert_equal ['staff', 'staff'], get_files_info_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['a_test.txt', 'sub.dir'])['group_name']
+    assert_equal ['staff'], get_files_info_each_type('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])['group_name']
+    assert_equal ['staff', 'staff'], get_files_info_each_type('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['a_test.txt', 'sub.dir'])['group_name']
   end
 
-  def test_get_size_text
-    assert_equal ['38'], get_files_info_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])['size']
-    assert_equal [' 0', '38'], get_files_info_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['a_test.txt', 'b_test.rb'])['size']
+  def test_get_size
+    assert_equal ['38'], get_files_info_each_type('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])['size']
+    assert_equal [' 0', '38'], get_files_info_each_type('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['a_test.txt', 'b_test.rb'])['size']
+  end
+
+  def test_get_mtime
+    assert_equal ['4 17 11:23'], get_files_info_each_type('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])['mtime']
+    assert_equal ['4 17 11:23', '4 17 11:23'], get_files_info_each_type('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['a_test.txt', 'b_test.rb'])['mtime']
   end
 
   def test_get_file_name
-    assert_equal ['b_test.rb'], get_files_info_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])['file_name']
-    assert_equal ['a_test.txt', 'sub.dir   '], get_files_info_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['a_test.txt', 'sub.dir'])['file_name']
+    assert_equal ['b_test.rb'], get_files_info_each_type('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])['file_name']
+    assert_equal ['a_test.txt', 'sub.dir   '], get_files_info_each_type('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['a_test.txt', 'sub.dir'])['file_name']
   end
 end
 
+class TestGetFilesInfoText < Minitest::Test
+  def test_get_files_info_merged_text
+    assert_equal ['total 8', '-rw-r--r--@ 1 atsushi  staff  38  4 17 11:23 b_test.rb'], get_files_info_merged_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])
+    assert_equal ['total 8', '-rw-r--r--@ 1 atsushi  staff  38  4 17 11:23 b_test.rb', 'drwxr-xr-x@ 3 atsushi  staff  96  4 17 11:23 sub.dir  '], get_files_info_merged_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb', 'sub.dir'])
+  end
+end
 class TestAlignStrMethod < Minitest::Test
   def test_align_str_list_to_right
     assert_equal [' 1', '10'], align_str_list_to_right(['1', '10'])
