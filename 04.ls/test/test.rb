@@ -139,6 +139,7 @@ class TestGenerationNameListText < Minitest::Test
 
   def test_generate_name_list_text_with_japanese
     assert_equal "人生       苦もあるさ\n", generate_name_list_text(%w[人生 苦もあるさ], 3, { 'l' => false } )
+    assert_equal "人生\n苦もあるさ\n", generate_name_list_text(['人生', '苦もあるさ'], 3, { 'l' => true } )
     assert_equal "人生       happy.rb   苦もあるさ\n", generate_name_list_text(['人生', 'happy.rb', '苦もあるさ'], 3, { 'l' => false } )
     assert_equal "人生       苦もあるさ happy.rb\n", generate_name_list_text(['人生', '苦もあるさ', 'happy.rb'], 3, { 'l' => false } )
     result_text = <<~TEXT
