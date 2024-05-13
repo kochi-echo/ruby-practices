@@ -25,6 +25,16 @@ class TestNameReciever < Minitest::Test
                  get_file_names('test_target', { 'r' => true } )
     assert_equal ['テスト-ターゲット.md', 'てすと', '試験.txt', 'sub.dir', 'b_test.rb', 'a_test.txt', '.test', '.dot_subdir', '..', '.'],
                  get_file_names('test_target', { 'a' => true, 'r' => true } )
+    result_list = [
+      'total 8',
+      '-rw-r--r--@ 1 atsushi  staff   0  4 17 11:23 a_test.txt          ',
+      '-rw-r--r--@ 1 atsushi  staff  38  4 17 11:23 b_test.rb           ',
+      'drwxr-xr-x@ 3 atsushi  staff  96  4 17 11:23 sub.dir             ',
+      '-rw-r--r--@ 1 atsushi  staff   0  4 17 11:23 試験.txt            ',
+      '-rw-r--r--@ 1 atsushi  staff   0  4 17 11:23 てすと              ',
+      '-rw-r--r--@ 1 atsushi  staff   0  4 17 11:23 テスト-ターゲット.md'
+  ]
+    assert_equal result_list, get_file_names('test_target', { 'l' => true } )
   end
 
   # def test_get_file_info
