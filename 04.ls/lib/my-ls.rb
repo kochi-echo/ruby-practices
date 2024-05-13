@@ -81,7 +81,7 @@ def convert_files_mode_to_l_option_format(files_mode, number_of_space)
     }
   end
   files_mode_chars.map do |chars|
-    chars['file_type'] + chars['owner_permission'] + chars['group_permission'] + chars['others_permission'] + '@' + ' '*number_of_space
+    chars['file_type'] + chars['owner_permission'] + chars['group_permission'] + chars['others_permission'] + '@' + ' ' * number_of_space
   end
 end
 
@@ -116,12 +116,12 @@ end
 
 def align_str_list_to_right(str_list, number_of_space)
   max_size_str = str_list.map(&:size).max
-  str_list.map { |str| str.rjust(max_size_str) + ' '*number_of_space }
+  str_list.map { |str| str.rjust(max_size_str) + ' ' * number_of_space }
 end
 
 def align_jp_str_list_to_left(str_list, number_of_space)
   max_size_str = str_list.map { |str| size_jp(str) }.max
-  str_list.map { |str| ljust_jp(str, max_size_str) + ' '*number_of_space }
+  str_list.map { |str| ljust_jp(str, max_size_str) + ' ' * number_of_space }
 end
 
 def size_jp(jp_string)
