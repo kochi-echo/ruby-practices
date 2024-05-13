@@ -149,11 +149,11 @@ class TestGetFilesInfoText < Minitest::Test
 end
 
 class TestGetFilesInfoText < Minitest::Test
-  def test_get_files_info_text_merged
+  def test_get_files_info_text
     assert_equal ['total 8', '-rw-r--r--@ 1 atsushi  staff  38  4 17 11:23 b_test.rb'],
-                 get_files_info_text_merged('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])
+                 get_files_info_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])
     assert_equal ['total 8', '-rw-r--r--@ 1 atsushi  staff  38  4 17 11:23 b_test.rb', 'drwxr-xr-x@ 3 atsushi  staff  96  4 17 11:23 sub.dir  '],
-                 get_files_info_text_merged('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb', 'sub.dir'])
+                 get_files_info_text('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb', 'sub.dir'])
   end
 end
 

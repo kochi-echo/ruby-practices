@@ -35,7 +35,7 @@ def select_files(target_dir, target_file, options)
   else
     file_names_all.select! { |file_name| file_name == target_file } # '.ファイル名'も表示対象
   end
-  options['l'] ? get_files_info_text_merged(target_dir, file_names_all) : file_names_all
+  options['l'] ? get_files_info_text(target_dir, file_names_all) : file_names_all
 end
 
 def sort_jp(jp_array)
@@ -51,7 +51,7 @@ def sort_jp(jp_array)
   end
 end
 
-def get_files_info_text_merged(target_dir, file_names_all)
+def get_files_info_text(target_dir, file_names_all)
   files_info_each_type = get_files_info_each_type(target_dir, file_names_all)
   files_info_text = files_info_each_type.values.transpose.map(&:join)
   ["total #{file_names_all.map { |file_name| File::Stat.new("#{target_dir}/#{file_name}") }.map(&:blocks).sum}"] + files_info_text
