@@ -43,15 +43,7 @@ end
 
 def get_files_info_text_merged(target_dir, file_names_all)
   files_info_each_type = get_files_info_each_type(target_dir, file_names_all)
-  files_info_text = files_info_each_type['file_name'].map.with_index do |_name, idx|
-    "#{files_info_each_type['mode'][idx]} "\
-    "#{files_info_each_type['number_of_link'][idx]} "\
-    "#{files_info_each_type['user_name'][idx]}  "\
-    "#{files_info_each_type['group_name'][idx]}  "\
-    "#{files_info_each_type['size'][idx]}  "\
-    "#{files_info_each_type['mtime'][idx]} "\
-    "#{files_info_each_type['file_name'][idx]}"
-  end
+  files_info_text = files_info_each_type.values.transpose.map(&:join)
   ["total #{file_names_all.map { |file_name| File::Stat.new("#{target_dir}/#{file_name}") }.map(&:blocks).sum}"] + files_info_text
 end
 
