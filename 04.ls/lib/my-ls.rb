@@ -28,13 +28,14 @@ def select_files(target_dir, target_file, options)
   all_files_name = sort_jp(Dir.entries(target_dir).map(&:unicode_normalize))
   # String#unicode_normalizeしないとsortや文字カウントがズレる
   all_files_name.reverse! if options['r']
-  all_files_name.select! do |file_name|
-    (file_name == target_file) || (!file_name.match?(/^\./) && !options['a'])
+
+  if target_file.empty?
+    all_files_name.reject! { |file_name| file_name.match?(/^\./) && !options['a'] }
+    # オプション -a 以外の時は '.', '..', '.ファイル名'を除外する
+  else
+    all_files_name = target_file
   end
-  # all_files_name.reject! do |file_name|
-  #   (!target_file.empty? & (file_name != target_file)) | (file_name.match?(/^\./) && !options['a'])
-  # end
-  # オプション -a 以外の時は '.', '..', '.ファイル名'を除外する
+
   options['l'] ? get_files_info_text(target_dir, all_files_name) : all_files_name
 end
 
