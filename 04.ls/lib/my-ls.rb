@@ -55,7 +55,7 @@ end
 def get_files_info_text(target_dir, all_files_name)
   files_info_each_type = get_files_info_each_type(target_dir, all_files_name)
   files_info_text = files_info_each_type.values.transpose.map(&:join)
-  total_blocks = if all_files_name.size
+  total_blocks = if all_files_name.size > 1
                    ["total #{all_files_name.map { |file_name| File::Stat.new("#{target_dir}/#{file_name}") }.map(&:blocks).sum}"]
                  else
                    []
