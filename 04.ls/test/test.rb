@@ -26,13 +26,13 @@ class TestNameReciever < Minitest::Test
     assert_equal ['テスト-ターゲット.md', 'てすと', '試験.txt', 'sub.dir', 'b_test.rb', 'a_test.txt', '.test', '.dot_subdir', '..', '.'],
                  get_file_names('test_target', { 'a' => true, 'r' => true })
     result_list = [
-      "total 8",
-      "-rw-r--r--@ 1 atsushi  staff    0  4 17 11:23 a_test.txt          ",
-      "-rw-r--r--@ 1 atsushi  staff   38  4 17 11:23 b_test.rb           ",
-      "drwxr-xr-x@ 4 atsushi  staff  128  5 14 11:11 sub.dir             ",
-      "-rw-r--r--@ 1 atsushi  staff    0  4 17 11:23 試験.txt            ",
-      "-rw-r--r--@ 1 atsushi  staff    0  4 17 11:23 てすと              ",
-      "-rw-r--r--@ 1 atsushi  staff    0  4 17 11:23 テスト-ターゲット.md"
+      'total 8',
+      '-rw-r--r--@ 1 atsushi  staff    0  4 17 11:23 a_test.txt          ',
+      '-rw-r--r--@ 1 atsushi  staff   38  4 17 11:23 b_test.rb           ',
+      'drwxr-xr-x@ 4 atsushi  staff  128  5 14 11:11 sub.dir             ',
+      '-rw-r--r--@ 1 atsushi  staff    0  4 17 11:23 試験.txt            ',
+      '-rw-r--r--@ 1 atsushi  staff    0  4 17 11:23 てすと              ',
+      '-rw-r--r--@ 1 atsushi  staff    0  4 17 11:23 テスト-ターゲット.md'
     ]
     assert_equal result_list, get_file_names('test_target', { 'l' => true })
     # result_list = [
@@ -53,7 +53,7 @@ class TestNameReciever < Minitest::Test
     result_list = [
       'total 0',
       '-rwSr--r--@ 1 atsushi  staff  0  4 17 11:23 test_permission_large_s.txt',
-      '-rwsr--r--@ 1 atsushi  staff  0  4 17 11:23 test_permission_s.txt      ',
+      '-rwsr--r--@ 1 atsushi  staff  0  4 17 11:23 test_permission_s.txt      '
     ]
     assert_equal result_list, get_file_names('test_target/sub.dir', { 'l' => true })
     result_list = [
