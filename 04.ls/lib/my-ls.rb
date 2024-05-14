@@ -25,17 +25,17 @@ def path_to_directory_and_file(absolute_path)
 end
 
 def select_files(target_dir, target_file, options)
-  file_names_all = sort_jp(Dir.entries(target_dir).map(&:unicode_normalize))
+  all_files_name = sort_jp(Dir.entries(target_dir).map(&:unicode_normalize))
   # String#unicode_normalizeしないとsortや文字カウントがズレる
-  file_names_all.reverse! if options['r']
-
-  if target_file.empty?
-    file_names_all.reject! { |file_name| file_name =~ /^\./ } unless options['a']
-  # オプション -a 以外の時は '.', '..', '.ファイル名'を除外する
-  else
-    file_names_all.select! { |file_name| file_name == target_file } # '.ファイル名'も表示対象
+  all_files_name.reverse! if options['r']
+  all_files_name.select! do |file_name|
+    (file_name == target_file) || (!file_name.match?(/^\./) && !options['a'])
   end
-  options['l'] ? get_files_info_text(target_dir, file_names_all) : file_names_all
+  # all_files_name.reject! do |file_name|
+  #   (!target_file.empty? & (file_name != target_file)) | (file_name.match?(/^\./) && !options['a'])
+  # end
+  # オプション -a 以外の時は '.', '..', '.ファイル名'を除外する
+  options['l'] ? get_files_info_text(target_dir, all_files_name) : all_files_name
 end
 
 def sort_jp(jp_array)
@@ -51,28 +51,28 @@ def sort_jp(jp_array)
   end
 end
 
-def get_files_info_text(target_dir, file_names_all)
-  files_info_each_type = get_files_info_each_type(target_dir, file_names_all)
+def get_files_info_text(target_dir, all_files_name)
+  files_info_each_type = get_files_info_each_type(target_dir, all_files_name)
   files_info_text = files_info_each_type.values.transpose.map(&:join)
-  if file_names_all.size
-    total_blocks = ["total #{file_names_all.map { |file_name| File::Stat.new("#{target_dir}/#{file_name}") }.map(&:blocks).sum}"]
-  else
-    total_blocks = []
-  end
+  total_blocks = if all_files_name.size
+                   ["total #{all_files_name.map { |file_name| File::Stat.new("#{target_dir}/#{file_name}") }.map(&:blocks).sum}"]
+                 else
+                   []
+                 end
   total_blocks + files_info_text
 end
 
-def get_files_info_each_type(target_dir, file_names_all)
-  files_info = file_names_all.map { |file_name| File::Stat.new("#{target_dir}/#{file_name}") }
-  files_info_each_type = {}
-  files_info_each_type['mode'] = convert_files_mode_to_l_option_format(files_info.map(&:mode), 1)
-  files_info_each_type['number_of_link'] = align_str_list_to_right(files_info.map(&:nlink).map(&:to_s), 1)
-  files_info_each_type['user_name'] = align_jp_str_list_to_left(files_info.map { |file_info| Etc.getpwuid(file_info.uid).name.to_s }, 2)
-  files_info_each_type['group_name'] = align_jp_str_list_to_left(files_info.map { |file_info| Etc.getgrgid(file_info.gid).name.to_s }, 2)
-  files_info_each_type['size'] = align_str_list_to_right(files_info.map(&:size).map(&:to_s), 2)
-  files_info_each_type['mtime'] = convert_files_mtime_to_l_option_format(files_info.map(&:mtime), 1)
-  files_info_each_type['file_name'] = align_jp_str_list_to_left(file_names_all, 0)
-  files_info_each_type
+def get_files_info_each_type(target_dir, all_files_name)
+  files_info = all_files_name.map { |file_name| File::Stat.new("#{target_dir}/#{file_name}") }
+  {
+    'mode' => convert_files_mode_to_l_option_format(files_info.map(&:mode), 1),
+    'number_of_link' => align_str_list_to_right(files_info.map { |file_info| file_info.nlink.to_s }, 1),
+    'user_name' => align_jp_str_list_to_left(files_info.map { |file_info| Etc.getpwuid(file_info.uid).name.to_s }, 2),
+    'group_name' => align_jp_str_list_to_left(files_info.map { |file_info| Etc.getgrgid(file_info.gid).name.to_s }, 2),
+    'size' => align_str_list_to_right(files_info.map { |file_info| file_info.size.to_s }, 2),
+    'mtime' => convert_files_mtime_to_l_option_format(files_info.map(&:mtime), 1),
+    'file_name' => align_jp_str_list_to_left(all_files_name, 0)
+  }
 end
 
 def convert_files_mode_to_l_option_format(files_mode, number_of_space)
