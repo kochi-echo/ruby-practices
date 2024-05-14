@@ -33,7 +33,7 @@ def select_files(target_dir, target_file, options)
     all_files_name.reject! { |file_name| file_name.match?(/^\./) && !options['a'] }
     # オプション -a 以外の時は '.', '..', '.ファイル名'を除外する
   else
-    all_files_name = target_file
+    all_files_name = [target_file]
   end
 
   options['l'] ? get_files_info_text(target_dir, all_files_name) : all_files_name
