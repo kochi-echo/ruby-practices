@@ -66,13 +66,13 @@ end
 def get_files_info_each_type(target_dir, all_files_name)
   files_info = all_files_name.map { |file_name| File::Stat.new("#{target_dir}/#{file_name}") }
   {
-    'mode' => convert_files_mode_to_l_option_format(files_info.map(&:mode), 1),
-    'number_of_link' => align_str_list_to_right(files_info.map { |file_info| file_info.nlink.to_s }, 1),
-    'user_name' => align_jp_str_list_to_left(files_info.map { |file_info| Etc.getpwuid(file_info.uid).name.to_s }, 2),
-    'group_name' => align_jp_str_list_to_left(files_info.map { |file_info| Etc.getgrgid(file_info.gid).name.to_s }, 2),
-    'size' => align_str_list_to_right(files_info.map { |file_info| file_info.size.to_s }, 2),
-    'mtime' => convert_files_mtime_to_l_option_format(files_info.map(&:mtime), 1),
-    'file_name' => align_jp_str_list_to_left(all_files_name, 0)
+    mode: convert_files_mode_to_l_option_format(files_info.map(&:mode), 1),
+    number_of_link: align_str_list_to_right(files_info.map { |file_info| file_info.nlink.to_s }, 1),
+    user_name: align_jp_str_list_to_left(files_info.map { |file_info| Etc.getpwuid(file_info.uid).name.to_s }, 2),
+    group_name: align_jp_str_list_to_left(files_info.map { |file_info| Etc.getgrgid(file_info.gid).name.to_s }, 2),
+    size: align_str_list_to_right(files_info.map { |file_info| file_info.size.to_s }, 2),
+    mtime: convert_files_mtime_to_l_option_format(files_info.map(&:mtime), 1),
+    file_name: align_jp_str_list_to_left(all_files_name, 0)
   }
 end
 
@@ -80,14 +80,14 @@ def convert_files_mode_to_l_option_format(files_mode, number_of_space)
   files_mode_chars = files_mode.map do |file_mode|
     file_mode_bits = format('%016b', file_mode)
     {
-      'file_type' => convert_file_type_bit_to_char(file_mode_bits[0..3]),
-      'owner_permission' => convert_permission_bits_to_str(file_mode_bits[7..9], file_mode_bits[4]),
-      'group_permission' => convert_permission_bits_to_str(file_mode_bits[10..12], file_mode_bits[5]),
-      'others_permission' => convert_permission_bits_to_str(file_mode_bits[13..15], file_mode_bits[6])
+      file_type: convert_file_type_bit_to_char(file_mode_bits[0..3]),
+      owner_permission: convert_permission_bits_to_str(file_mode_bits[7..9], file_mode_bits[4]),
+      group_permission: convert_permission_bits_to_str(file_mode_bits[10..12], file_mode_bits[5]),
+      others_permission: convert_permission_bits_to_str(file_mode_bits[13..15], file_mode_bits[6])
     }
   end
   files_mode_chars.map do |chars|
-    "#{chars['file_type']}#{chars['owner_permission']}#{chars['group_permission']}#{chars['others_permission']}@#{' ' * number_of_space}"
+    "#{chars[:file_type]}#{chars[:owner_permission]}#{chars[:group_permission]}#{chars[:others_permission]}@#{' ' * number_of_space}"
   end
 end
 
