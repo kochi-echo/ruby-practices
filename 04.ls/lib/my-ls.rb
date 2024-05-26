@@ -116,9 +116,7 @@ def convert_files_mtime_to_l_option_format(files_mtime, number_of_space)
   files_each_mtime = {}
   files_each_mtime['month'] = align_str_list_to_right(files_mtime.map(&:month).map(&:to_s), 1)
   files_each_mtime['day'] = align_str_list_to_right(files_mtime.map(&:day).map(&:to_s), 1)
-  files_each_mtime['time'] = align_str_list_to_right(files_mtime.map do |mtime|
-    "#{format('%02d', mtime.hour)}:#{format('%02d', mtime.min)}"
-  end, number_of_space)
+  files_each_mtime['time'] = align_str_list_to_right(files_mtime.map { |mtime| mtime.strftime("%R") }, number_of_space)
   [files_each_mtime['month'], files_each_mtime['day'], files_each_mtime['time']].transpose.map(&:join)
 end
 
