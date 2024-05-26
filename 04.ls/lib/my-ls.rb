@@ -93,13 +93,13 @@ end
 
 def convert_file_type_bit_to_char(file_type_bit)
   file_type_char = { # file_modeに対する、8進数対応表 cf. Linux file type and mode Doc
-    '0o01'.to_i(8) =>	'p', # FIFO
+    '0o01'.to_i(8) => 'p', # FIFO
     '0o02'.to_i(8) => 'c', # Character special file
-    '0o04'.to_i(8) =>	'd', # Directory(ディレクトリ)
-    '0o06'.to_i(8) =>	'b', # Block special file
-    '0o10'.to_i(8) =>	'-', # Regular file(通常ファイル)
-    '0o12'.to_i(8) =>	'l', # Symbolic link(シンボリックリンク)
-    '0o14'.to_i(8) =>	's'	 # Socket link
+    '0o04'.to_i(8) => 'd', # Directory(ディレクトリ)
+    '0o06'.to_i(8) => 'b', # Block special file
+    '0o10'.to_i(8) => '-', # Regular file(通常ファイル)
+    '0o12'.to_i(8) => 'l', # Symbolic link(シンボリックリンク)
+    '0o14'.to_i(8) => 's'  # Socket link
   }
   file_type_char[file_type_bit.to_i(2)]
 end
