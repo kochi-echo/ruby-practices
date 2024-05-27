@@ -114,7 +114,7 @@ class TestGetFilesInfoText < Minitest::Test
   def test_files_mode_list
     assert_equal ['-rw-r--r--@ '], files_detail_info_list('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])[:mode]
     assert_equal ['-rw-r--r--@ ', 'drwxr-xr-x@ '],
-                  files_detail_info_list('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['a_test.txt', 'sub.dir'])[:mode]
+                 files_detail_info_list('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['a_test.txt', 'sub.dir'])[:mode]
   end
 
   def test_files_number_of_link_list
@@ -157,9 +157,9 @@ end
 class TestGetFilesInfoText < Minitest::Test
   def test_files_detail_info_list
     assert_equal ['-rw-r--r--@ 1 atsushi  staff  38  4 17 11:23 b_test.rb'],
-                  files_total_blocks_and_detail_info_list('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])
+                 files_total_blocks_and_detail_info_list('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])
     assert_equal ['total 8', '-rw-r--r--@ 1 atsushi  staff   38  4 17 11:23 b_test.rb', 'drwxr-xr-x@ 4 atsushi  staff  128  5 14 11:11 sub.dir  '],
-                  files_total_blocks_and_detail_info_list('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb', 'sub.dir'])
+                 files_total_blocks_and_detail_info_list('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb', 'sub.dir'])
   end
 end
 

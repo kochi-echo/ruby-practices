@@ -51,16 +51,16 @@ end
 
 def files_total_blocks_and_detail_info_list(target_dir, all_files_name)
   total_blocks = if all_files_name.size > 1
-    ["total #{all_files_name.map { |file_name| File::Stat.new("#{target_dir}/#{file_name}") }.map(&:blocks).sum}"]
-  else
-    []
-  end
+                   ["total #{all_files_name.map { |file_name| File::Stat.new("#{target_dir}/#{file_name}") }.map(&:blocks).sum}"]
+                 else
+                   []
+                 end
   total_blocks + files_detail_info_list(target_dir, all_files_name).values.transpose.map(&:join)
 end
 
 def files_detail_info_list(target_dir, all_files_name)
   files_status = all_files_name.map { |file_name| File::Stat.new("#{target_dir}/#{file_name}") }
-  files_status_text = {
+  {
     mode: files_mode_to_l_option_format(files_status.map(&:mode), 1),
     number_of_link: align_str_list_to_right(files_status.map { |file_info| file_info.nlink.to_s }, 1),
     user_name: align_jp_str_list_to_left(files_status.map { |file_info| Etc.getpwuid(file_info.uid).name.to_s }, 2),
@@ -111,7 +111,7 @@ def files_mtime_to_l_option_format(files_mtime, number_of_space)
   files_each_mtime = {}
   files_each_mtime['month'] = align_str_list_to_right(files_mtime.map(&:month).map(&:to_s), 1)
   files_each_mtime['day'] = align_str_list_to_right(files_mtime.map(&:day).map(&:to_s), 1)
-  files_each_mtime['time'] = align_str_list_to_right(files_mtime.map { |mtime| mtime.strftime("%R") }, number_of_space)
+  files_each_mtime['time'] = align_str_list_to_right(files_mtime.map { |mtime| mtime.strftime('%R') }, number_of_space)
   [files_each_mtime['month'], files_each_mtime['day'], files_each_mtime['time']].transpose.map(&:join)
 end
 
