@@ -10,21 +10,7 @@ def argument_to_files_info_list(argument_name, options)
   argument_name ||= '.'
   absolute_path = File.expand_path(argument_name)
   target_dir, target_file = path_to_directory_and_file(absolute_path)
-  select_files(target_dir, target_file, options)
-end
 
-def path_to_directory_and_file(absolute_path)
-  if File.file?(absolute_path)
-    target_dir = File.dirname(absolute_path)
-    target_file = File.basename(absolute_path)
-  else
-    target_dir = absolute_path
-    target_file = ''
-  end
-  [target_dir, target_file]
-end
-
-def select_files(target_dir, target_file, options)
   all_files_name = sort_jp(Dir.entries(target_dir).map(&:unicode_normalize))
   # String#unicode_normalizeしないとsortや文字カウントがズレる
   all_files_name.reverse! if options['r']
@@ -37,6 +23,17 @@ def select_files(target_dir, target_file, options)
   end
 
   options['l'] ? get_files_info_text(target_dir, all_files_name) : all_files_name
+end
+
+def path_to_directory_and_file(absolute_path)
+  if File.file?(absolute_path)
+    target_dir = File.dirname(absolute_path)
+    target_file = File.basename(absolute_path)
+  else
+    target_dir = absolute_path
+    target_file = ''
+  end
+  [target_dir, target_file]
 end
 
 def sort_jp(jp_array)
