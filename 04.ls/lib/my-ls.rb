@@ -6,7 +6,7 @@ require 'etc'
 
 LIST_ROW_NUM = 3
 
-def get_file_names(argument_name, options)
+def argument_to_files_info_list(argument_name, options)
   argument_name ||= '.'
   absolute_path = File.expand_path(argument_name)
   target_dir, target_file = path_to_directory_and_file(absolute_path)
@@ -66,24 +66,24 @@ end
 def get_files_info_each_type(target_dir, all_files_name)
   files_info = all_files_name.map { |file_name| File::Stat.new("#{target_dir}/#{file_name}") }
   {
-    mode: convert_files_mode_to_l_option_format(files_info.map(&:mode), 1),
+    mode: files_mode_to_l_option_format(files_info.map(&:mode), 1),
     number_of_link: align_str_list_to_right(files_info.map { |file_info| file_info.nlink.to_s }, 1),
     user_name: align_jp_str_list_to_left(files_info.map { |file_info| Etc.getpwuid(file_info.uid).name.to_s }, 2),
     group_name: align_jp_str_list_to_left(files_info.map { |file_info| Etc.getgrgid(file_info.gid).name.to_s }, 2),
     size: align_str_list_to_right(files_info.map { |file_info| file_info.size.to_s }, 2),
-    mtime: convert_files_mtime_to_l_option_format(files_info.map(&:mtime), 1),
+    mtime: files_mtime_to_l_option_format(files_info.map(&:mtime), 1),
     file_name: align_jp_str_list_to_left(all_files_name, 0)
   }
 end
 
-def convert_files_mode_to_l_option_format(files_mode, number_of_space)
+def files_mode_to_l_option_format(files_mode, number_of_space)
   files_mode_chars = files_mode.map do |file_mode|
     file_mode_bits = format('%016b', file_mode)
     {
-      file_type: convert_file_type_bit_to_char(file_mode_bits[0..3]),
-      owner_permission: convert_permission_bits_to_str(file_mode_bits[7..9], file_mode_bits[4]),
-      group_permission: convert_permission_bits_to_str(file_mode_bits[10..12], file_mode_bits[5]),
-      others_permission: convert_permission_bits_to_str(file_mode_bits[13..15], file_mode_bits[6])
+      file_type: file_type_bit_to_char(file_mode_bits[0..3]),
+      owner_permission: permission_bits_to_str(file_mode_bits[7..9], file_mode_bits[4]),
+      group_permission: permission_bits_to_str(file_mode_bits[10..12], file_mode_bits[5]),
+      others_permission: permission_bits_to_str(file_mode_bits[13..15], file_mode_bits[6])
     }
   end
   files_mode_chars.map do |chars|
@@ -91,7 +91,7 @@ def convert_files_mode_to_l_option_format(files_mode, number_of_space)
   end
 end
 
-def convert_file_type_bit_to_char(file_type_bit)
+def file_type_bit_to_char(file_type_bit)
   file_type_char = { # file_modeに対する、8進数対応表 cf. Linux file type and mode Doc
     '0o01'.to_i(8) => 'p', # FIFO
     '0o02'.to_i(8) => 'c', # Character special file
@@ -104,7 +104,7 @@ def convert_file_type_bit_to_char(file_type_bit)
   file_type_char[file_type_bit.to_i(2)]
 end
 
-def convert_permission_bits_to_str(permission_bits, special_permission_bit)
+def permission_bits_to_str(permission_bits, special_permission_bit)
   file_permission = ['-', '-', '-']
   file_permission[0] = 'r' if permission_bits[0] == '1'
   file_permission[1] = 'w' if permission_bits[1] == '1'
@@ -112,7 +112,7 @@ def convert_permission_bits_to_str(permission_bits, special_permission_bit)
   file_permission.join
 end
 
-def convert_files_mtime_to_l_option_format(files_mtime, number_of_space)
+def files_mtime_to_l_option_format(files_mtime, number_of_space)
   files_each_mtime = {}
   files_each_mtime['month'] = align_str_list_to_right(files_mtime.map(&:month).map(&:to_s), 1)
   files_each_mtime['day'] = align_str_list_to_right(files_mtime.map(&:day).map(&:to_s), 1)
@@ -145,9 +145,9 @@ def ljust_jp(jp_string, max_size)
   jp_string + ' ' * (max_size - size_jp(jp_string))
 end
 
-def generate_name_list_text(file_names, number, options)
-  row_max_num = options['l'] ? 1 : number
-  separatiopn_names = divide_equal(file_names, row_max_num)
+def files_info_list_to_displayed_text(file_names, number, options)
+  row_max_number = options['l'] ? 1 : number
+  separatiopn_names = divide_equal(file_names, row_max_number)
   max_name_size = file_names.map { |file_name| size_jp(file_name) }.max
 
   transpose_lack(separatiopn_names).inject('') do |text, names|
@@ -174,5 +174,5 @@ opt.on('-l') { options['l'] = true }
 opt.parse!(ARGV) # オプション除いて残った引数
 input = ARGV[0]
 
-file_names = get_file_names(input, options)
-print generate_name_list_text(file_names, LIST_ROW_NUM, options)
+files_info_list = argument_to_files_info_list(input, options)
+print files_info_list_to_displayed_text(files_info_list, LIST_ROW_NUM, options)
