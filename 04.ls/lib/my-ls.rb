@@ -6,9 +6,9 @@ require 'etc'
 
 LIST_ROW_NUM = 3
 
-def argument_to_files_info_list(argument_name, options)
-  argument_name ||= '.'
-  absolute_path = File.expand_path(argument_name)
+def argument_to_files_info_list(argument_text, options)
+  argument_text ||= '.'
+  absolute_path = File.expand_path(argument_text)
   target_dir, target_file = path_to_directory_and_file(absolute_path)
 
   all_files_name = sort_jp(Dir.entries(target_dir).map(&:unicode_normalize))
@@ -22,7 +22,7 @@ def argument_to_files_info_list(argument_name, options)
     all_files_name = [target_file]
   end
 
-  options['l'] ? get_files_info_text(target_dir, all_files_name) : all_files_name
+  options['l'] ? files_total_blocks_and_detail_info_list(target_dir, all_files_name) : all_files_name
 end
 
 def path_to_directory_and_file(absolute_path)
@@ -49,26 +49,24 @@ def sort_jp(jp_array)
   end
 end
 
-def get_files_info_text(target_dir, all_files_name)
-  files_info_each_type = get_files_info_each_type(target_dir, all_files_name)
-  files_info_text = files_info_each_type.values.transpose.map(&:join)
+def files_total_blocks_and_detail_info_list(target_dir, all_files_name)
   total_blocks = if all_files_name.size > 1
-                   ["total #{all_files_name.map { |file_name| File::Stat.new("#{target_dir}/#{file_name}") }.map(&:blocks).sum}"]
-                 else
-                   []
-                 end
-  total_blocks + files_info_text
+    ["total #{all_files_name.map { |file_name| File::Stat.new("#{target_dir}/#{file_name}") }.map(&:blocks).sum}"]
+  else
+    []
+  end
+  total_blocks + files_detail_info_list(target_dir, all_files_name).values.transpose.map(&:join)
 end
 
-def get_files_info_each_type(target_dir, all_files_name)
-  files_info = all_files_name.map { |file_name| File::Stat.new("#{target_dir}/#{file_name}") }
-  {
-    mode: files_mode_to_l_option_format(files_info.map(&:mode), 1),
-    number_of_link: align_str_list_to_right(files_info.map { |file_info| file_info.nlink.to_s }, 1),
-    user_name: align_jp_str_list_to_left(files_info.map { |file_info| Etc.getpwuid(file_info.uid).name.to_s }, 2),
-    group_name: align_jp_str_list_to_left(files_info.map { |file_info| Etc.getgrgid(file_info.gid).name.to_s }, 2),
-    size: align_str_list_to_right(files_info.map { |file_info| file_info.size.to_s }, 2),
-    mtime: files_mtime_to_l_option_format(files_info.map(&:mtime), 1),
+def files_detail_info_list(target_dir, all_files_name)
+  files_status = all_files_name.map { |file_name| File::Stat.new("#{target_dir}/#{file_name}") }
+  files_status_text = {
+    mode: files_mode_to_l_option_format(files_status.map(&:mode), 1),
+    number_of_link: align_str_list_to_right(files_status.map { |file_info| file_info.nlink.to_s }, 1),
+    user_name: align_jp_str_list_to_left(files_status.map { |file_info| Etc.getpwuid(file_info.uid).name.to_s }, 2),
+    group_name: align_jp_str_list_to_left(files_status.map { |file_info| Etc.getgrgid(file_info.gid).name.to_s }, 2),
+    size: align_str_list_to_right(files_status.map { |file_info| file_info.size.to_s }, 2),
+    mtime: files_mtime_to_l_option_format(files_status.map(&:mtime), 1),
     file_name: align_jp_str_list_to_left(all_files_name, 0)
   }
 end
