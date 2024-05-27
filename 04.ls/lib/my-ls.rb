@@ -76,9 +76,9 @@ def files_mode_to_l_option_format(files_mode, number_of_space)
     file_mode_bits = format('%016b', file_mode)
     {
       file_type: file_type_bit_to_char(file_mode_bits[0..3]),
-      owner_permission: permission_bits_to_str(file_mode_bits[7..9], file_mode_bits[4]),
-      group_permission: permission_bits_to_str(file_mode_bits[10..12], file_mode_bits[5]),
-      others_permission: permission_bits_to_str(file_mode_bits[13..15], file_mode_bits[6])
+      owner_permission: permission_bits_to_str(file_mode_bits[7..9], file_mode_bits[4], 'Ss'),
+      group_permission: permission_bits_to_str(file_mode_bits[10..12], file_mode_bits[5], 'Ss'),
+      others_permission: permission_bits_to_str(file_mode_bits[13..15], file_mode_bits[6], 'Tt')
     }
   end
   files_mode_chars.map do |chars|
@@ -99,11 +99,11 @@ def file_type_bit_to_char(file_type_bit)
   file_type_char[file_type_bit.to_i(2)]
 end
 
-def permission_bits_to_str(permission_bits, special_permission_bit)
+def permission_bits_to_str(permission_bits, special_permission_bit, mark)
   file_permission = ['-', '-', '-']
   file_permission[0] = 'r' if permission_bits[0] == '1'
   file_permission[1] = 'w' if permission_bits[1] == '1'
-  file_permission[2] = ['-x', 'Ss'][special_permission_bit.to_i][permission_bits[2].to_i] # 2次元テーブルから実行権限記号を選択
+  file_permission[2] = ['-x', mark][special_permission_bit.to_i][permission_bits[2].to_i] # 2次元テーブルから実行権限記号を選択
   file_permission.join
 end
 
