@@ -9,9 +9,9 @@ LIST_ROW_NUM = 3
 def argument_to_files_info_list(argument_text, options)
   argument_text ||= '.'
   absolute_path = File.expand_path(argument_text)
-  target_dir, target_file = path_to_directory_and_file(absolute_path)
+  target_directory, target_file = path_to_directory_and_file(absolute_path)
 
-  all_files_name = sort_jp(Dir.entries(target_dir).map(&:unicode_normalize))
+  all_files_name = sort_jp(Dir.entries(target_directory).map(&:unicode_normalize))
   # String#unicode_normalizeしないとsortや文字カウントがズレる
   all_files_name.reverse! if options['r']
 
@@ -22,18 +22,18 @@ def argument_to_files_info_list(argument_text, options)
     all_files_name = [target_file]
   end
 
-  options['l'] ? files_total_blocks_and_detail_info_list(target_dir, all_files_name) : all_files_name
+  options['l'] ? files_total_blocks_and_detail_info_list(target_directory, all_files_name) : all_files_name
 end
 
 def path_to_directory_and_file(absolute_path)
   if File.file?(absolute_path)
-    target_dir = File.dirname(absolute_path)
+    target_directory = File.dirname(absolute_path)
     target_file = File.basename(absolute_path)
   else
-    target_dir = absolute_path
+    target_directory = absolute_path
     target_file = ''
   end
-  [target_dir, target_file]
+  [target_directory, target_file]
 end
 
 def sort_jp(jp_array)
@@ -49,17 +49,17 @@ def sort_jp(jp_array)
   end
 end
 
-def files_total_blocks_and_detail_info_list(target_dir, all_files_name)
+def files_total_blocks_and_detail_info_list(target_directory, all_files_name)
   total_blocks = if all_files_name.size > 1
-                   ["total #{all_files_name.map { |file_name| File::Stat.new("#{target_dir}/#{file_name}") }.map(&:blocks).sum}"]
+                   ["total #{directory_and_files_to_files_status(target_directory, all_files_name).map(&:blocks).sum}"]
                  else
                    []
                  end
-  total_blocks + files_detail_info_list(target_dir, all_files_name).values.transpose.map(&:join)
+  total_blocks + files_detail_info_list(target_directory, all_files_name).values.transpose.map(&:join)
 end
 
-def files_detail_info_list(target_dir, all_files_name)
-  files_status = all_files_name.map { |file_name| File::Stat.new("#{target_dir}/#{file_name}") }
+def files_detail_info_list(target_directory, all_files_name)
+  files_status = directory_and_files_to_files_status(target_directory, all_files_name)
   {
     mode: files_mode_to_l_option_format(files_status.map(&:mode), 1),
     number_of_link: align_str_list_to_right(files_status.map { |file_info| file_info.nlink.to_s }, 1),
@@ -69,6 +69,10 @@ def files_detail_info_list(target_dir, all_files_name)
     mtime: files_mtime_to_l_option_format(files_status.map(&:mtime), 1),
     file_name: align_jp_str_list_to_left(all_files_name, 0)
   }
+end
+
+def directory_and_files_to_files_status(target_directory, all_files_name)
+  all_files_name.map { |file_name| File::Stat.new("#{target_directory}/#{file_name}") }
 end
 
 def files_mode_to_l_option_format(files_mode, number_of_space)
