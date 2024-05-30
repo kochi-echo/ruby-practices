@@ -6,11 +6,7 @@ require 'etc'
 
 LIST_ROW_NUM = 3
 
-def argument_to_files_info_list(argument_text, options)
-  argument_text ||= '.'
-  absolute_path = File.expand_path(argument_text)
-  target_directory, target_file = path_to_directory_and_file(absolute_path)
-
+def target_names_and_options_to_files_name(target_directory, target_file, options)
   all_files_name = sort_jp(Dir.entries(target_directory).map(&:unicode_normalize))
   # String#unicode_normalizeしないとsortや文字カウントがズレる
   all_files_name.reverse! if options['r']
@@ -22,7 +18,7 @@ def argument_to_files_info_list(argument_text, options)
     all_files_name = [target_file]
   end
 
-  options['l'] ? files_total_blocks_and_detail_info_list(target_directory, all_files_name) : all_files_name
+  all_files_name
 end
 
 def path_to_directory_and_file(absolute_path)
@@ -144,8 +140,7 @@ def ljust_jp(jp_string, max_size)
   jp_string + ' ' * (max_size - size_jp(jp_string))
 end
 
-def files_info_list_to_displayed_text(file_names, number, options)
-  row_max_number = options['l'] ? 1 : number
+def files_info_list_to_displayed_text(file_names, row_max_number)
   separatiopn_names = divide_equal(file_names, row_max_number)
   max_name_size = file_names.map { |file_name| size_jp(file_name) }.max
 
@@ -173,5 +168,12 @@ opt.on('-l') { options['l'] = true }
 opt.parse!(ARGV) # オプション除いて残った引数
 input = ARGV[0]
 
-files_info_list = argument_to_files_info_list(input, options)
-print files_info_list_to_displayed_text(files_info_list, LIST_ROW_NUM, options)
+absolute_path = File.expand_path(input || '.')
+target_directory, target_file = path_to_directory_and_file(absolute_path)
+all_files_name = target_names_and_options_to_files_name(target_directory, target_file, options)
+if options['l']
+  files_info_list = files_total_blocks_and_detail_info_list(target_directory, all_files_name)
+  print files_info_list_to_displayed_text(files_info_list, 1)
+else
+  print files_info_list_to_displayed_text(all_files_name, LIST_ROW_NUM)
+end
