@@ -17,8 +17,10 @@ class TestNameReciever < Minitest::Test
     assert_equal ['a_test.txt', 'b_test.rb', 'sub.dir', '試験.txt', 'てすと', 'テスト-ターゲット.md'],
                  target_names_and_options_to_files_name('test_target', '', { 'a' => false })
     assert_equal %w[lib test], target_names_and_options_to_files_name('..', '', { 'a' => false })
-    # assert_equal ['test.rb', 'test_target'], target_names_and_options_to_files_name('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test', {"a"=>false }) # 絶対パス確認用
-    # assert_equal ['test.rb', 'test_target'], target_names_and_options_to_files_name('~/Documents/Fjord/ruby-practices/04.ls/test/', {"a"=>false }) # 絶対パス確認用(ホームディレクトリから)
+    # assert_equal ['test.rb', 'test_target'],
+    #            target_names_and_options_to_files_name('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test', {"a"=>false }) # 絶対パス確認用
+    # assert_equal ['test.rb', 'test_target'],
+    #            target_names_and_options_to_files_name('~/Documents/Fjord/ruby-practices/04.ls/test/', {"a"=>false }) # 絶対パス確認用(ホームディレクトリから)
     assert_equal ['.', '..', '.dot_subdir', '.test', 'a_test.txt', 'b_test.rb', 'sub.dir', '試験.txt', 'てすと', 'テスト-ターゲット.md'],
                  target_names_and_options_to_files_name('test_target', '', { 'a' => true })
     assert_equal ['テスト-ターゲット.md', 'てすと', '試験.txt', 'sub.dir', 'b_test.rb', 'a_test.txt'],
@@ -28,7 +30,7 @@ class TestNameReciever < Minitest::Test
   end
 
   def test_files_total_blocks_and_detail_info_list
-                 result_list = [
+    result_list = [
       'total 8',
       '-rw-r--r--@ 1 atsushi  staff   0  4 17 11:23 a_test.txt',
       '-rw-r--r--@ 1 atsushi  staff  38  4 17 11:23 b_test.rb '
@@ -58,12 +60,13 @@ class TestNameReciever < Minitest::Test
       '-rwSr--r--@ 1 atsushi  staff  0  4 17 11:23 test_permission_large_s.txt',
       '-rwsr--r--@ 1 atsushi  staff  0  4 17 11:23 test_permission_s.txt      '
     ]
-    assert_equal result_list, files_total_blocks_and_detail_info_list('test_target/sub.dir', ['test_permission_large_s.txt', 'test_permission_s.txt'])
+    assert_equal result_list,
+                 files_total_blocks_and_detail_info_list('test_target/sub.dir', ['test_permission_large_s.txt', 'test_permission_s.txt'])
     result_list = [
       'total 0',
       '-rw-r--r--@ 1 atsushi  staff  0  4 17 11:23 テスト-ターゲット.md',
       '-rw-r--r--@ 1 atsushi  staff  0  4 17 11:23 てすと              ',
-      '-rw-r--r--@ 1 atsushi  staff  0  4 17 11:23 試験.txt            ',
+      '-rw-r--r--@ 1 atsushi  staff  0  4 17 11:23 試験.txt            '
     ]
     assert_equal result_list, files_total_blocks_and_detail_info_list('test_target', ['テスト-ターゲット.md', 'てすと', '試験.txt'])
   end
