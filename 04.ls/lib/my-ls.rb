@@ -177,3 +177,5 @@ if options['l']
 else
   print files_info_list_to_displayed_text(all_files_name, LIST_ROW_NUM)
 end
+
+#修正検討中
