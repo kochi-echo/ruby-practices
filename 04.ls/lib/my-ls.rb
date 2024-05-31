@@ -6,6 +6,8 @@ require 'etc'
 
 LIST_ROW_NUM = 3
 
+#修正検討中
+
 def target_names_and_options_to_files_name(target_directory, target_file, options)
   all_files_name = sort_jp(Dir.entries(target_directory).map(&:unicode_normalize))
   # String#unicode_normalizeしないとsortや文字カウントがズレる
@@ -177,5 +179,3 @@ if options['l']
 else
   print files_info_list_to_displayed_text(all_files_name, LIST_ROW_NUM)
 end
-
-#修正検討中
