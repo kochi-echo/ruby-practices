@@ -22,6 +22,10 @@ def target_names_and_options_to_files_name(target_directory, target_file, option
 end
 
 def path_to_directory_and_file(absolute_path)
+
+  #リファクタリング対象：優先度　中
+  #Dir.globを使うとpathのままコード進行ができるので、このメソッドは要らなくなる
+
   if File.file?(absolute_path)
     target_directory = File.dirname(absolute_path)
     target_file = File.basename(absolute_path)
@@ -55,6 +59,13 @@ def files_total_blocks_and_detail_info_list(target_directory, all_files_name)
 end
 
 def files_detail_info_list(target_directory, all_files_name)
+
+  #リファクタリング対象：優先度　高
+  #このメソッドでは「statから各ファイル情報を取得する」「縦方向の文字のずれを揃える」「揃えた各情報のテキストを一つのハッシュにする」の三つの機能があり、
+  #メソッドの役割が不明瞭かつパッと見て何の処理をしているか分からない。（単純に見た時に「うっ」となる。）
+  #このメソッドを「statから各ファイル情報を取得する」と「各情報を一つのハッシュにする」を一つにして「statから各情報を含んだハッシュにする」にして、
+  #「縦方向の文字のずれを揃える」は「揃える時の最大文字数を算出する」と「文字を揃えてlong formatにする」の二つのメソッドにする。
+
   files_status = directory_and_files_to_files_status(target_directory, all_files_name)
   {
     mode: files_mode_to_l_option_format(files_status.map(&:mode), 1),
@@ -82,11 +93,19 @@ def files_mode_to_l_option_format(files_mode, number_of_space)
     }
   end
   files_mode_chars.map do |chars|
+
+    #リファクタリング対象：優先度　低
+    #ハッシュのvaluesをtransposeすれば短くなる
+
     "#{chars[:file_type]}#{chars[:owner_permission]}#{chars[:group_permission]}#{chars[:others_permission]}@#{' ' * number_of_space}"
   end
 end
 
 def file_type_bit_to_char(file_type_bit)
+
+  #リファクタリング対象：優先度　中
+  #変動しないハッシュなため、定数として切り出したほうがいい
+
   file_type_char = { # file_modeに対する、8進数対応表 cf. Linux file type and mode Doc
     '0o01'.to_i(8) => 'p', # FIFO
     '0o02'.to_i(8) => 'c', # Character special file
@@ -108,6 +127,10 @@ def permission_bits_to_str(permission_bits, special_permission_bit, mark)
 end
 
 def files_mtime_to_l_option_format(files_mtime, number_of_space)
+
+  #リファクタリング対象：優先度　中
+  #strftimeで簡潔に書ける
+
   files_each_mtime = {}
   files_each_mtime['month'] = align_str_list_to_right(files_mtime.map(&:month).map(&:to_s), 1)
   files_each_mtime['day'] = align_str_list_to_right(files_mtime.map(&:day).map(&:to_s), 1)
@@ -174,6 +197,12 @@ all_files_name = target_names_and_options_to_files_name(target_directory, target
 if options['l']
   files_info_list = files_total_blocks_and_detail_info_list(target_directory, all_files_name)
   print files_info_list_to_displayed_text(files_info_list, 1)
+
+  #リファクタリング対象：優先度　高
+  #files_info_list_to_displayed_textの本来の機能は「ファイルのリストをLIST_ROW_NUMの列で並べる」のはずなのに、
+  #列が1しかないlong formatに無理やり使用しているので、完全に無駄。
+  #並べる機能はfiles_total_blocks_and_detail_info_listに入るべき
+
 else
   print files_info_list_to_displayed_text(all_files_name, LIST_ROW_NUM)
 end
