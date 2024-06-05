@@ -4,8 +4,8 @@
 require 'minitest/autorun'
 require_relative '../lib/bin_wc'
 
-class SampleTest < Minitest::Test
-  def test_sample
-
+class WCTest < Minitest::Test
+  def test_wc_without_argument
+    '       1       3       6 one_line.txt'
   end
 end

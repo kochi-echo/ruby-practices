@@ -3,7 +3,7 @@
 
 require 'optparse'
 
-require_relative './lib/bin_wc_command'
+require_relative 'bin_wc_command'
 
 options = {}
 opt = OptionParser.new
