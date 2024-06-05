@@ -3,7 +3,7 @@
 
 require 'optparse'
 
-require_relative 'bin_wc_command'
+require_relative './lib/bin_wc_command'
 
 options = {}
 opt = OptionParser.new
@@ -15,4 +15,4 @@ input = ARGV[0]
 
 path_name = File.expand_path(input || '.')
 
-puts run_wc(path_name)
+puts run_wc(path_name, options)
