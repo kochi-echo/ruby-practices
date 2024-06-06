@@ -4,7 +4,7 @@
 require 'pathname'
 
 def run_wc(path_name, options)
-  files_path = Dir.glob(path_name.join('*'))
+  files_path = Dir.glob(path_name)
   files_data = build_data(files_path)
   align_data(files_data, options)
 end
