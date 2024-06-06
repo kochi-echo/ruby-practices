@@ -25,11 +25,12 @@ end
 
 def align_data(files_data, options)
   files_data.map do |file_data|
-    [
-    "       #{file_data[:row_number]}",
-    "       #{file_data[:word_number]}",
-    "       #{file_data[:bytesize]}",
-    " #{file_data[:file_name]}"
-    ].join
+    no_option = options.values.count(true).zero?
+    text = []
+    text.push("       #{file_data[:row_number]}") if no_option || options[:l]
+    text.push("       #{file_data[:word_number]}") if no_option || options[:w]
+    text.push("       #{file_data[:bytesize]}") if no_option || options[:c]
+    text.push(" #{file_data[:file_name]}")
+    text.join
   end.join('\n')
 end

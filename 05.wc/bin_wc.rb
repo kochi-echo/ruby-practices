@@ -8,9 +8,9 @@ require_relative './lib/lib_wc_command'
 
 options = {}
 opt = OptionParser.new
-opt.on('-l') { options[:a] = true }
-opt.on('-w') { options[:r] = true }
-opt.on('-c') { options[:l] = true }
+opt.on('-l') { options[:l] = true }
+opt.on('-w') { options[:w] = true }
+opt.on('-c') { options[:c] = true }
 opt.parse!(ARGV) # オプション除いて残った引数
 input = ARGV[0]
 
