@@ -10,16 +10,16 @@ def run_wc(path, options)
 end
 
 def build_data(targets_path)
-  targets_path.map do |file_path|
-    next if File.directory?(file_path)
-    io = File.open(file_path)
+  targets_path.map do |target_path|
+    next if File.directory?(target_path)
+    io = File.open(target_path)
     content = io.read
 
     {
       row_number: content.lines.count,
       word_number: content.split.size,
       bytesize: content.bytesize,
-      file_name: File.basename(file_path)
+      file_name: target_path
     }
   end.compact
 end
