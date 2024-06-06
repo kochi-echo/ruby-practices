@@ -6,8 +6,16 @@ require 'pathname'
 def run_wc(inputs, options)
   targets_path = inputs.map { |input| Dir.glob(input) }.flatten
   files_data = build_data(targets_path)
-  text = align_data(files_data, options)
-  text.push(calculate_total(files_data, options)) if files_data.size > 1
+
+  no_option = options.values.count(true).zero?
+  disp_selection = {
+    row_number: no_option || options[:l],
+    word_number: no_option || options[:w],
+    bytesize: no_option || options[:c]
+  }.select { |key, value| value }.keys
+
+  text = align_data(files_data, disp_selection)
+  text.push(calculate_total(files_data, disp_selection)) if files_data.size > 1
   text.join("\n")
 end
 
@@ -27,25 +35,16 @@ def build_data(targets_path)
   end.compact
 end
 
-def align_data(files_data, options)
+def align_data(files_data, disp_selection)
   files_data.map do |file_data|
     next file_data[:warning] if file_data.key?(:warning)
 
-    no_option = options.values.count(true).zero?
-    text = []
-    text.push((file_data[:row_number]).to_s.rjust(8)) if no_option || options[:l]
-    text.push((file_data[:word_number]).to_s.rjust(8)) if no_option || options[:w]
-    text.push((file_data[:bytesize]).to_s.rjust(8)) if no_option || options[:c]
-    text.push(" #{file_data[:file_name]}")
-    text.join
+    text = disp_selection.map { |key| file_data[key].to_s.rjust(8) }
+    text.push(" #{file_data[:file_name]}").join
   end
 end
 
-def calculate_total(files_data, options)
-  no_option = options.values.count(true).zero?
-  text = []
-  text.push((files_data.sum { |file_data| file_data.key?(:row_number) ? file_data[:row_number] : 0 }).to_s.rjust(8)) if no_option || options[:l]
-  text.push((files_data.sum { |file_data| file_data.key?(:word_number) ? file_data[:word_number] : 0 }).to_s.rjust(8)) if no_option || options[:w]
-  text.push((files_data.sum { |file_data| file_data.key?(:bytesize) ? file_data[:bytesize] : 0 }).to_s.rjust(8)) if no_option || options[:c]
+def calculate_total(files_data, disp_selection)
+  text = disp_selection.map { |key| files_data.sum { |file_data| file_data.key?(key) ? file_data[key] : 0 }.to_s.rjust(8) }
   text.push(' total').join
 end
