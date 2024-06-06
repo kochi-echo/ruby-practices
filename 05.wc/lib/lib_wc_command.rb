@@ -4,13 +4,14 @@
 require 'pathname'
 
 def run_wc(path, options)
-  files_path = Dir.glob(path)
-  files_data = build_data(files_path)
+  targets_path = Dir.glob(path)
+  files_data = build_data(targets_path)
   align_data(files_data, options)
 end
 
-def build_data(files_path)
-  files_path.map do |file_path|
+def build_data(targets_path)
+  targets_path.map do |file_path|
+    next if File.directory?(file_path)
     io = File.open(file_path)
     content = io.read
 
@@ -20,7 +21,7 @@ def build_data(files_path)
       bytesize: content.bytesize,
       file_name: File.basename(file_path)
     }
-  end
+  end.compact
 end
 
 def align_data(files_data, options)

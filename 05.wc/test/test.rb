@@ -22,6 +22,7 @@ class WCTest < Minitest::Test
     ].join('\n')
     assert_equal expected, run_wc("#{DIRECTORY_PATH}*.txt", {})
     assert_equal expected, run_wc("#{DIRECTORY_PATH}*", {})
+    # assert_equal expected, run_wc('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target/*', {})
   end
 
   def test_wc_one_line_file_l_option
