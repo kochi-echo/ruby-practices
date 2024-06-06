@@ -12,7 +12,7 @@ def run_wc(inputs, options)
     row_number: no_option || options[:l],
     word_number: no_option || options[:w],
     bytesize: no_option || options[:c]
-  }.select { |key, value| value }.keys
+  }.select { |_key, value| value }.keys
 
   text = align_data(files_data, disp_selection)
   text.push(calculate_total(files_data, disp_selection)) if files_data.size > 1
