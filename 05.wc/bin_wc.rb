@@ -2,8 +2,9 @@
 # frozen_string_literal: true
 
 require 'optparse'
+require 'pathname'
 
-require_relative 'bin_wc_command'
+require_relative './lib/lib_wc_command'
 
 options = {}
 opt = OptionParser.new
@@ -13,6 +14,6 @@ opt.on('-c') { options[:l] = true }
 opt.parse!(ARGV) # オプション除いて残った引数
 input = ARGV[0]
 
-path_name = File.expand_path(input || '.')
+path_name = Pathname(input || '.')
 
 puts run_wc(path_name, options)
