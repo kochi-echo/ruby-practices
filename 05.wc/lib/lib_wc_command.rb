@@ -6,7 +6,9 @@ require 'pathname'
 def run_wc(path, options)
   targets_path = Dir.glob(path)
   files_data = build_data(targets_path)
-  align_data(files_data, options)
+  text = align_data(files_data, options)
+  text.push(calculate_total(files_data, options)) if files_data.size > 1
+  text.join('\n')
 end
 
 def build_data(targets_path)
@@ -28,10 +30,19 @@ def align_data(files_data, options)
   files_data.map do |file_data|
     no_option = options.values.count(true).zero?
     text = []
-    text.push("       #{file_data[:row_number]}") if no_option || options[:l]
-    text.push("       #{file_data[:word_number]}") if no_option || options[:w]
-    text.push("       #{file_data[:bytesize]}") if no_option || options[:c]
+    text.push("#{file_data[:row_number]}".rjust(8)) if no_option || options[:l]
+    text.push("#{file_data[:word_number]}".rjust(8)) if no_option || options[:w]
+    text.push("#{file_data[:bytesize]}".rjust(8)) if no_option || options[:c]
     text.push(" #{file_data[:file_name]}")
     text.join
-  end.join('\n')
+  end
+end
+
+def calculate_total(files_data, options)
+  no_option = options.values.count(true).zero?
+  text = []
+  text.push("#{files_data.sum { |file_data| file_data[:row_number] }}".rjust(8)) if no_option || options[:l]
+  text.push("#{files_data.sum { |file_data| file_data[:word_number] }}".rjust(8)) if no_option || options[:w]
+  text.push("#{files_data.sum { |file_data| file_data[:bytesize] }}".rjust(8)) if no_option || options[:c]
+  text.push(" total").join
 end
