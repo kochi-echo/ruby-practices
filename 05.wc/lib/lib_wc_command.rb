@@ -4,11 +4,16 @@
 require 'pathname'
 
 def run_wc(path_name, options)
-  files_name = Dir.glob(path_name.join('*'))
-  files_name.map do |file_name|
-    io = File.open(file_name)
+  files_path = Dir.glob(path_name.join('*'))
+  files_path.map do |file_path|
+    io = File.open(file_path)
     content = io.read
-    rows = content.lines
-    rows.count
+
+    {
+      row_number: content.lines.count,
+      word_number: content.split.size,
+      bytesize: content.bytesize,
+      file_name: File.basename(file_path)
+    }
   end
 end
