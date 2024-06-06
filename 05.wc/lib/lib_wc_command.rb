@@ -8,7 +8,7 @@ def run_wc(inputs, options)
   files_data = build_data(targets_path)
   text = align_data(files_data, options)
   text.push(calculate_total(files_data, options)) if files_data.size > 1
-  text.join('\n')
+  text.join("\n")
 end
 
 def build_data(targets_path)

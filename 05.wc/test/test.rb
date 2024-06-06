@@ -19,7 +19,7 @@ class WCTest < Minitest::Test
       '       1       3       6 ./05.wc/test/test_target/one_line.txt',
       '       3       3       9 ./05.wc/test/test_target/three_lines.txt',
       '       4       6      15 total'
-    ].join('\n')
+    ].join("\n")
     assert_equal expected, run_wc(['./05.wc/test/test_target/*.txt'], {})
   end
 
@@ -28,7 +28,7 @@ class WCTest < Minitest::Test
       '       1       3       6 ./05.wc/test/test_target/one_line.txt',
       '       2       3      19 ./05.wc/test/test_target/two_lines.md',
       '       3       6      25 total'
-    ].join('\n')
+    ].join("\n")
     assert_equal expected, run_wc(['./05.wc/test/test_target/one_line.txt', './05.wc/test/test_target/two_lines.md'], {})
   end
 
@@ -38,7 +38,7 @@ class WCTest < Minitest::Test
       '       3       3       9 ./05.wc/test/test_target/three_lines.txt',
       '       2       3      19 ./05.wc/test/test_target/two_lines.md',
       '       6       9      34 total'
-    ].join('\n')
+    ].join("\n")
     assert_equal expected, run_wc(['./05.wc/test/test_target/*'], {})
   end
 
