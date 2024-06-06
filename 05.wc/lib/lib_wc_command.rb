@@ -3,8 +3,8 @@
 
 require 'pathname'
 
-def run_wc(path, options)
-  targets_path = Dir.glob(path)
+def run_wc(inputs, options)
+  targets_path = inputs.map { |input| Dir.glob(input) }.flatten
   files_data = build_data(targets_path)
   text = align_data(files_data, options)
   text.push(calculate_total(files_data, options)) if files_data.size > 1

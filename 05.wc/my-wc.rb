@@ -12,6 +12,8 @@ opt.on('-l') { options[:l] = true }
 opt.on('-w') { options[:w] = true }
 opt.on('-c') { options[:c] = true }
 opt.parse!(ARGV) # オプション除いて残った引数
-input = ARGV[0]
+inputs = [*ARGV]
 
-puts run_wc(input || '.', options)
+p inputs
+
+puts run_wc(inputs || '.', options)
