@@ -14,4 +14,12 @@ class WCTest < Minitest::Test
   def test_wc_3_lines_file
     assert_equal '       3       3       9 three_lines.txt', run_wc(DIRECTORY_PATHNAME + 'three_lines.txt', {})
   end
+
+  def test_wc_all_txt
+    expected = [
+      '       1       3       6 one_line.txt',
+      '       3       3       9 three_lines.txt'
+    ].join('\n')
+    assert_equal expected, run_wc(DIRECTORY_PATHNAME + '*.txt', {})
+  end
 end
