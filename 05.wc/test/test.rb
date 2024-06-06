@@ -60,4 +60,14 @@ class WCTest < Minitest::Test
     assert_equal '       3       6 ./05.wc/test/test_target/one_line.txt', run_wc(['./05.wc/test/test_target/one_line.txt'], { w: true, c: true })
     assert_equal '       1       6 ./05.wc/test/test_target/one_line.txt', run_wc(['./05.wc/test/test_target/one_line.txt'], { l: true, c: true })
   end
+
+  def test_wc_warning
+    expected = [
+      'wc: 05.wc/lib: read: Is a directory',
+      '      19      51     445 05.wc/my-wc.rb',
+      'wc: 05.wc/test: read: Is a directory',
+      '      19      51     445 total'
+    ].join("\n")
+    assert_equal expected, run_wc(['05.wc/*'], {})
+  end
 end

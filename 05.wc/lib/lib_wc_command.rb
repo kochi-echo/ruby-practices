@@ -13,7 +13,8 @@ end
 
 def build_data(targets_path)
   targets_path.map do |target_path|
-    next if File.directory?(target_path)
+    next { warning: "wc: #{target_path}: read: Is a directory" } if File.directory?(target_path)
+
     io = File.open(target_path)
     content = io.read
 
@@ -28,6 +29,8 @@ end
 
 def align_data(files_data, options)
   files_data.map do |file_data|
+    next file_data[:warning] if file_data.key?(:warning)
+
     no_option = options.values.count(true).zero?
     text = []
     text.push("#{file_data[:row_number]}".rjust(8)) if no_option || options[:l]
@@ -41,8 +44,8 @@ end
 def calculate_total(files_data, options)
   no_option = options.values.count(true).zero?
   text = []
-  text.push("#{files_data.sum { |file_data| file_data[:row_number] }}".rjust(8)) if no_option || options[:l]
-  text.push("#{files_data.sum { |file_data| file_data[:word_number] }}".rjust(8)) if no_option || options[:w]
-  text.push("#{files_data.sum { |file_data| file_data[:bytesize] }}".rjust(8)) if no_option || options[:c]
+  text.push("#{files_data.sum { |file_data| file_data.key?(:row_number) ? file_data[:row_number] : 0 }}".rjust(8)) if no_option || options[:l]
+  text.push("#{files_data.sum { |file_data| file_data.key?(:word_number) ? file_data[:word_number] : 0 }}".rjust(8)) if no_option || options[:w]
+  text.push("#{files_data.sum { |file_data| file_data.key?(:bytesize) ? file_data[:bytesize] : 0 }}".rjust(8)) if no_option || options[:c]
   text.push(" total").join
 end

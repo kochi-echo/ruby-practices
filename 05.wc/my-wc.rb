@@ -14,8 +14,6 @@ opt.on('-c') { options[:c] = true }
 opt.parse!(ARGV) # オプション除いて残った引数
 inputs = [*ARGV]
 
-inputs = $stdin.gets.split(' ') if inputs.empty?
-
-p inputs
+inputs = $stdin.readlines.map(&:chomp) if inputs.empty?
 
 puts run_wc(inputs || '.', options)
