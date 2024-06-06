@@ -14,6 +14,4 @@ opt.on('-c') { options[:c] = true }
 opt.parse!(ARGV) # オプション除いて残った引数
 input = ARGV[0]
 
-path_name = Pathname(input || '.')
-
-puts run_wc(path_name, options)
+puts run_wc(input || '.', options)
