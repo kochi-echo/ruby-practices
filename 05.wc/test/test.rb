@@ -5,7 +5,6 @@ require 'minitest/autorun'
 require_relative '../lib/lib_wc_command'
 
 class WCTest < Minitest::Test
-
   def test_wc_one_line_file
     assert_equal '       1       3       6 ./05.wc/test/test_target/one_line.txt', run_wc(['./05.wc/test/test_target/one_line.txt'], {})
   end
@@ -55,7 +54,8 @@ class WCTest < Minitest::Test
   end
 
   def test_wc_one_line_file_multiple_options
-    assert_equal '       1       3       6 ./05.wc/test/test_target/one_line.txt', run_wc(['./05.wc/test/test_target/one_line.txt'], { l: true, w: true, c: true })
+    assert_equal '       1       3       6 ./05.wc/test/test_target/one_line.txt',
+                 run_wc(['./05.wc/test/test_target/one_line.txt'], { l: true, w: true, c: true })
     assert_equal '       1       3 ./05.wc/test/test_target/one_line.txt', run_wc(['./05.wc/test/test_target/one_line.txt'], { l: true, w: true })
     assert_equal '       3       6 ./05.wc/test/test_target/one_line.txt', run_wc(['./05.wc/test/test_target/one_line.txt'], { w: true, c: true })
     assert_equal '       1       6 ./05.wc/test/test_target/one_line.txt', run_wc(['./05.wc/test/test_target/one_line.txt'], { l: true, c: true })

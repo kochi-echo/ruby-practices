@@ -33,9 +33,9 @@ def align_data(files_data, options)
 
     no_option = options.values.count(true).zero?
     text = []
-    text.push("#{file_data[:row_number]}".rjust(8)) if no_option || options[:l]
-    text.push("#{file_data[:word_number]}".rjust(8)) if no_option || options[:w]
-    text.push("#{file_data[:bytesize]}".rjust(8)) if no_option || options[:c]
+    text.push((file_data[:row_number]).to_s.rjust(8)) if no_option || options[:l]
+    text.push((file_data[:word_number]).to_s.rjust(8)) if no_option || options[:w]
+    text.push((file_data[:bytesize]).to_s.rjust(8)) if no_option || options[:c]
     text.push(" #{file_data[:file_name]}")
     text.join
   end
@@ -44,8 +44,8 @@ end
 def calculate_total(files_data, options)
   no_option = options.values.count(true).zero?
   text = []
-  text.push("#{files_data.sum { |file_data| file_data.key?(:row_number) ? file_data[:row_number] : 0 }}".rjust(8)) if no_option || options[:l]
-  text.push("#{files_data.sum { |file_data| file_data.key?(:word_number) ? file_data[:word_number] : 0 }}".rjust(8)) if no_option || options[:w]
-  text.push("#{files_data.sum { |file_data| file_data.key?(:bytesize) ? file_data[:bytesize] : 0 }}".rjust(8)) if no_option || options[:c]
-  text.push(" total").join
+  text.push((files_data.sum { |file_data| file_data.key?(:row_number) ? file_data[:row_number] : 0 }).to_s.rjust(8)) if no_option || options[:l]
+  text.push((files_data.sum { |file_data| file_data.key?(:word_number) ? file_data[:word_number] : 0 }).to_s.rjust(8)) if no_option || options[:w]
+  text.push((files_data.sum { |file_data| file_data.key?(:bytesize) ? file_data[:bytesize] : 0 }).to_s.rjust(8)) if no_option || options[:c]
+  text.push(' total').join
 end
