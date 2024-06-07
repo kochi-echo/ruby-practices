@@ -2,7 +2,6 @@
 # frozen_string_literal: true
 
 require 'optparse'
-require 'pathname'
 
 require_relative './lib/lib_wc_command'
 

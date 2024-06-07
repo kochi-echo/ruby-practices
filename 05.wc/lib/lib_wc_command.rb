@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'pathname'
-
 def run_wc(inputs, options, input_type_argv)
   files_data = files_data(inputs, input_type_argv)
   display_selection = display_selection(options)
