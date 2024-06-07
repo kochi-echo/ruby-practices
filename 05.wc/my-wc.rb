@@ -16,6 +16,6 @@ inputs = [*ARGV]
 
 inputs.empty? ? input_type_argv = false : input_type_argv = true
 
-inputs = $stdin.readlines.map(&:chomp).join("\n") unless input_type_argv
+inputs = $stdin.readlines.join unless input_type_argv
 
 puts run_wc(inputs || '.', options, input_type_argv)
