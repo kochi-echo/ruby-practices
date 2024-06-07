@@ -63,7 +63,7 @@ def files_detail_info_list(target_directory, all_files_name)
     group_name: align_jp_str_list_to_left(files_status.map { |file_info| Etc.getgrgid(file_info.gid).name.to_s }, 2),
     size: align_str_list_to_right(files_status.map { |file_info| file_info.size.to_s }, 2),
     mtime: files_mtime_to_l_option_format(files_status.map(&:mtime), 1),
-    file_name: align_jp_str_list_to_left(all_files_name, 0)
+    file_name: align_jp_str_list_to_left(all_files_name, 0).rstrip
   }
 end
 
