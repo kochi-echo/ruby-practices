@@ -61,7 +61,7 @@ def files_detail_info_list(target_directory, all_files_name)
     number_of_link: align_str_list_to_right(files_status.map { |file_info| file_info.nlink.to_s }, 1),
     user_name: align_jp_str_list_to_left(files_status.map { |file_info| Etc.getpwuid(file_info.uid).name.to_s }, 2),
     group_name: align_jp_str_list_to_left(files_status.map { |file_info| Etc.getgrgid(file_info.gid).name.to_s }, 2),
-    size: align_str_list_to_right(files_status.map { |file_info| file_info.size.to_s }, 2),
+    size: align_str_list_to_right(files_status.map { |file_info| file_info.size.to_s }, 1),
     mtime: files_mtime_to_l_option_format(files_status.map(&:mtime), 1),
     file_name: align_jp_str_list_to_left(all_files_name, 0).map(&:rstrip)
   }
@@ -109,8 +109,8 @@ end
 
 def files_mtime_to_l_option_format(files_mtime, number_of_space)
   files_each_mtime = {}
-  files_each_mtime['month'] = align_str_list_to_right(files_mtime.map(&:month).map(&:to_s), 1)
-  files_each_mtime['day'] = align_str_list_to_right(files_mtime.map(&:day).map(&:to_s), 1)
+  files_each_mtime['month'] = files_mtime.map(&:month).map(&:to_s).map{ |str| "#{str.rjust(2)} "}
+  files_each_mtime['day'] = files_mtime.map(&:day).map(&:to_s).map{ |str| "#{str.rjust(2)} "}
   files_each_mtime['time'] = align_str_list_to_right(files_mtime.map { |mtime| mtime.strftime('%R') }, number_of_space)
   [files_each_mtime['month'], files_each_mtime['day'], files_each_mtime['time']].transpose.map(&:join)
 end

@@ -139,14 +139,14 @@ class TestGetFilesInfoText < Minitest::Test
   end
 
   def test_files_size_list
-    assert_equal ['38  '], files_detail_info_list('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])[:size]
-    assert_equal [' 0  ', '38  '],
+    assert_equal ['38 '], files_detail_info_list('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])[:size]
+    assert_equal [' 0 ', '38 '],
                  files_detail_info_list('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['a_test.txt', 'b_test.rb'])[:size]
   end
 
   def test_files_mtime_list
-    assert_equal ['4 17 11:23 '], files_detail_info_list('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])[:mtime]
-    assert_equal ['4 17 11:23 ', '4 17 11:23 '],
+    assert_equal [' 4 17 11:23 '], files_detail_info_list('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['b_test.rb'])[:mtime]
+    assert_equal [' 4 17 11:23 ', ' 4 17 11:23 '],
                  files_detail_info_list('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test/test_target', ['a_test.txt', 'b_test.rb'])[:mtime]
   end
 
