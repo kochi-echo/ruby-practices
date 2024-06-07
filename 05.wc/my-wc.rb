@@ -14,7 +14,7 @@ opt.on('-c') { options[:c] = true }
 opt.parse!(ARGV) # オプション除いて残った引数
 inputs = [*ARGV]
 
-inputs.empty? ? input_type_argv = false : input_type_argv = true
+input_type_argv = inputs.empty? ? false : true
 
 inputs = $stdin.readlines.join unless input_type_argv
 

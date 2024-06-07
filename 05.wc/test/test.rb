@@ -10,7 +10,8 @@ class WCTest < Minitest::Test
   end
 
   def test_wc_3_lines_file
-    assert_equal '       3       3       9 ./05.wc/test/test_target/test_dir/three_lines.txt', run_wc(['./05.wc/test/test_target/test_dir/three_lines.txt'], {}, true)
+    assert_equal '       3       3       9 ./05.wc/test/test_target/test_dir/three_lines.txt',
+                 run_wc(['./05.wc/test/test_target/test_dir/three_lines.txt'], {}, true)
   end
 
   def test_wc_all_txt
@@ -56,9 +57,12 @@ class WCTest < Minitest::Test
   def test_wc_one_line_file_multiple_options
     assert_equal '       1       3       6 ./05.wc/test/test_target/test_dir/one_line.txt',
                  run_wc(['./05.wc/test/test_target/test_dir/one_line.txt'], { l: true, w: true, c: true }, true)
-    assert_equal '       1       3 ./05.wc/test/test_target/test_dir/one_line.txt', run_wc(['./05.wc/test/test_target/test_dir/one_line.txt'], { l: true, w: true }, true)
-    assert_equal '       3       6 ./05.wc/test/test_target/test_dir/one_line.txt', run_wc(['./05.wc/test/test_target/test_dir/one_line.txt'], { w: true, c: true }, true)
-    assert_equal '       1       6 ./05.wc/test/test_target/test_dir/one_line.txt', run_wc(['./05.wc/test/test_target/test_dir/one_line.txt'], { l: true, c: true }, true)
+    assert_equal '       1       3 ./05.wc/test/test_target/test_dir/one_line.txt',
+                 run_wc(['./05.wc/test/test_target/test_dir/one_line.txt'], { l: true, w: true }, true)
+    assert_equal '       3       6 ./05.wc/test/test_target/test_dir/one_line.txt',
+                 run_wc(['./05.wc/test/test_target/test_dir/one_line.txt'], { w: true, c: true }, true)
+    assert_equal '       1       6 ./05.wc/test/test_target/test_dir/one_line.txt',
+                 run_wc(['./05.wc/test/test_target/test_dir/one_line.txt'], { l: true, c: true }, true)
   end
 
   def test_wc_warning
