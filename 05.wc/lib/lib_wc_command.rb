@@ -4,23 +4,29 @@
 require 'pathname'
 
 def run_wc(inputs, options, input_type_argv)
+  files_data = files_data(inputs, input_type_argv)
+  display_selection = display_selection(options)
+  text = align_data(files_data, display_selection)
+  text.push(calculate_total(files_data, display_selection)) if files_data.size > 1
+  text.join("\n")
+end
+
+def files_data(inputs, input_type_argv)
   if input_type_argv
     targets_path = inputs.map { |input| Dir.glob(input) }.flatten
-    files_data = build_data(targets_path)
+    build_data(targets_path)
   else
-    files_data = [file_data(inputs, '')]
+    [file_data(inputs, '')]
   end
+end
 
+def display_selection(options)
   no_option = options.values.count(true).zero?
-  disp_selection = {
+  {
     row_number: no_option || options[:l],
     word_number: no_option || options[:w],
     bytesize: no_option || options[:c]
   }.select { |_key, value| value }.keys
-
-  text = align_data(files_data, disp_selection)
-  text.push(calculate_total(files_data, disp_selection)) if files_data.size > 1
-  text.join("\n")
 end
 
 def build_data(targets_path)
@@ -42,18 +48,18 @@ def file_data(content, target_path)
   }
 end
 
-def align_data(files_data, disp_selection)
+def align_data(files_data, display_selection)
   files_data.map do |file_data|
     next file_data[:warning] if file_data.key?(:warning)
 
-    text = disp_selection.map { |key| file_data[key].to_s.rjust(8) }
+    text = display_selection.map { |key| file_data[key].to_s.rjust(8) }
     text.push(" #{file_data[:file_name]}") unless file_data[:file_name].empty?
     text.join
   end
 end
 
-def calculate_total(files_data, disp_selection)
-  text = disp_selection.map do |key|
+def calculate_total(files_data, display_selection)
+  text = display_selection.map do |key|
     files_data.sum { |file_data| file_data.key?(key) ? file_data[key] : 0 }.to_s.rjust(8)
   end
   text.push(' total').join
