@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 def run_wc(argv, stdin, options)
-  contents_numbers = argv.nil? ? [content_numbers(stdin, '')] : collect_numbers([*argv])
+  contents_numbers = argv.nil? ? [content_numbers(stdin, '')] : collect_numbers([*argv]) # [*argv]は一つのファイルと複数ファイル指定した時の両方に対応するため
   display_keys = select_display_keys(options)
-  texts = format_texts(contents_numbers, display_keys)
-  texts.join("\n")
+  format_texts(contents_numbers, display_keys)
 end
 
-def collect_numbers(argv)
-  argv.flat_map { |str| Dir.glob(str) }.map do |path|
+def collect_numbers(argvs)
+  paths = argvs.flat_map { |str| Dir.glob(str) } # 複数ファイルが指定された場合に、入れ子の配列になるのを防ぐ ex. ['*.txt', '*.rb']
+  paths.map do |path|
     next { warning: "wc: #{path}: read: Is a directory" } if File.directory?(path)
 
     file = File.open(path)
@@ -19,7 +19,7 @@ end
 
 def select_display_keys(options)
   numbers_type = { row_number: options[:l], word_number: options[:w], bytesize: options[:c]}
-  options.values.none? ? numbers_type.select { |_key, value| value }.keys : numbers_type.keys
+  options.values.none? ? numbers_type.keys : numbers_type.select { |_key, value| value }.keys
 end
 
 def content_numbers(content, path)
@@ -36,18 +36,14 @@ def format_texts(contents_numbers, display_keys)
   lines_texts = contents_numbers.map do |content_numbers|
     next content_numbers[:warning] if content_numbers.key?(:warning)
 
-    texts_content_numbers(content_numbers, display_keys)
+    texts = display_keys.map do |key|
+      num = content_numbers[key]
+      total_numbers[key] += num
+      num.to_s.rjust(8)
+    end
+    texts.push(" #{content_numbers[:file_name]}") unless content_numbers[:file_name].empty?
+    texts.join
   end
   lines_texts.push("#{total_numbers.values.map{ |value| value.to_s.rjust(8) }.join} total") if contents_numbers.size > 1
-  lines_texts.push("\n")
-end
-
-def texts_content_numbers(content_numbers, display_keys)
-  texts = display_keys.map do |key|
-    num = content_numbers[key]
-    total_numbers[key] += num
-    num.to_s.rjust(8)
-  end
-  texts.push(" #{content_numbers[:file_name]}") unless content_numbers[:file_name].empty?
-  texts.join
+  lines_texts.join("\n")
 end
