@@ -56,13 +56,13 @@ class WCTest < Minitest::Test
 
   def test_wc_one_line_file_multiple_options
     assert_equal '       1       3       6 ./05.wc/test/test_target/test_dir/one_line.txt',
-                 run_wc(['./05.wc/test/test_target/test_dir/one_line.txt'],nil, { l: true, w: true, c: true })
+                 run_wc(['./05.wc/test/test_target/test_dir/one_line.txt'], nil, { l: true, w: true, c: true })
     assert_equal '       1       3 ./05.wc/test/test_target/test_dir/one_line.txt',
-                 run_wc(['./05.wc/test/test_target/test_dir/one_line.txt'],nil, { l: true, w: true })
+                 run_wc(['./05.wc/test/test_target/test_dir/one_line.txt'], nil, { l: true, w: true })
     assert_equal '       3       6 ./05.wc/test/test_target/test_dir/one_line.txt',
-                 run_wc(['./05.wc/test/test_target/test_dir/one_line.txt'],nil, { w: true, c: true })
+                 run_wc(['./05.wc/test/test_target/test_dir/one_line.txt'], nil, { w: true, c: true })
     assert_equal '       1       6 ./05.wc/test/test_target/test_dir/one_line.txt',
-                 run_wc(['./05.wc/test/test_target/test_dir/one_line.txt'],nil, { l: true, c: true })
+                 run_wc(['./05.wc/test/test_target/test_dir/one_line.txt'], nil, { l: true, c: true })
   end
 
   def test_wc_warning

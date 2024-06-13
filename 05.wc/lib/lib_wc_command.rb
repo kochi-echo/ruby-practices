@@ -18,7 +18,7 @@ def collect_numbers(argvs)
 end
 
 def select_display_keys(options)
-  numbers_type = { row_number: options[:l], word_number: options[:w], bytesize: options[:c], file_name: true}
+  numbers_type = { row_number: options[:l], word_number: options[:w], bytesize: options[:c], file_name: true }
   options.values.none? ? numbers_type.keys : numbers_type.select { |_key, value| value }.keys
 end
 
