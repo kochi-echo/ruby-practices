@@ -18,7 +18,7 @@ def collect_numbers(argvs)
 end
 
 def select_display_keys(options)
-  numbers_type = { row_number: options[:l], word_number: options[:w], bytesize: options[:c]}
+  numbers_type = { row_number: options[:l], word_number: options[:w], bytesize: options[:c], file_name: true}
   options.values.none? ? numbers_type.keys : numbers_type.select { |_key, value| value }.keys
 end
 
@@ -32,18 +32,26 @@ def content_numbers(content, path)
 end
 
 def format_texts(contents_numbers, display_keys)
-  total_numbers = display_keys.to_h { |key| [key, 0] }
-  lines_texts = contents_numbers.map do |content_numbers|
+  contents_numbers = add_total_numbers(contents_numbers, display_keys) if contents_numbers.size > 1
+
+  contents_numbers.map do |content_numbers|
     next content_numbers[:warning] if content_numbers.key?(:warning)
 
-    texts = display_keys.map do |key|
-      num = content_numbers[key]
-      total_numbers[key] += num
-      num.to_s.rjust(8)
-    end
-    texts.push(" #{content_numbers[:file_name]}") unless content_numbers[:file_name].empty?
-    texts.join
-  end
-  lines_texts.push("#{total_numbers.values.map{ |value| value.to_s.rjust(8) }.join} total") if contents_numbers.size > 1
-  lines_texts.join("\n")
+    display_keys.map do |key|
+      value = content_numbers[key]
+      if key == :file_name
+        txt = " #{value}"
+      else
+        contents_numbers[-1][key] += value if contents_numbers[-1][:file_name] == 'total'
+        txt = value.to_s.rjust(8)
+      end
+      txt
+    end.join
+  end.join("\n")
+end
+
+def add_total_numbers(contents_numbers, display_keys)
+  total_numbers = display_keys.to_h { |key| [key, 0] }
+  total_numbers[:file_name] = 'total'
+  contents_numbers.push(total_numbers)
 end
