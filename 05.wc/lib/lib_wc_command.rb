@@ -40,7 +40,7 @@ def format_texts(contents_numbers, display_keys)
     display_keys.map do |key|
       value = content_numbers[key]
       if key == :file_name
-        txt = " #{value}"
+        txt = " #{value}" unless value.empty?
       else
         contents_numbers[-1][key] += value if contents_numbers[-1][:file_name] == 'total'
         txt = value.to_s.rjust(8)
