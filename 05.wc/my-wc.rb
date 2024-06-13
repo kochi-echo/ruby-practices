@@ -13,5 +13,4 @@ opt.parse!(ARGV) # オプション除いて残った引数
 
 stdin = $stdin.readlines.join
 
-puts run_wc([*ARGV], stdin, options)
-# puts run_wc(inputs || '.', options, input_type_argv)
+puts run_wc(ARGV, stdin, options)

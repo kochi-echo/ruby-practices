@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-def run_wc(argv, stdin, option)
-  contents_numbers = argv.empty? ? [content_numbers(stdin, '')] : collect_numbers(argv)
+def run_wc(argv, stdin, options)
+  contents_numbers = argv.nil? ? [content_numbers(stdin, '')] : collect_numbers([*argv])
   display_keys = select_display_keys(options)
   texts = format_texts(contents_numbers, display_keys)
   texts.join("\n")
@@ -48,6 +48,6 @@ def texts_content_numbers(content_numbers, display_keys)
     total_numbers[key] += num
     num.to_s.rjust(8)
   end
-  texts.push(" #{content_numbers[:file_name]}") unless file[:file_name].empty?
+  texts.push(" #{content_numbers[:file_name]}") unless content_numbers[:file_name].empty?
   texts.join
 end
