@@ -7,7 +7,7 @@ def run_wc(argv, stdin, options)
     [content_numbers(stdin, '')]
   else
     collected_numbers = collect_numbers([*argv]) # [*argv]は一つのファイルと複数ファイル指定した時の両方に対応するため
-    add_total_numbers(collected_numbers, display_keys) if numbers.size > 1
+    collected_numbers.size > 1 ? add_total_numbers(collected_numbers, display_keys) : collected_numbers
   end
 
   format_texts(contents_numbers, display_keys)
