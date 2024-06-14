@@ -2,19 +2,32 @@
 
 def run_wc(argv, stdin, options)
   display_keys = select_display_keys(options)
-
-  contents_numbers = if argv.nil?
-                       [content_numbers(stdin, '')]
-                     else
-                       collected_numbers = collect_numbers([*argv]) # [*argv]は一つのファイルと複数ファイル指定した時の両方に対応するため
-                       collected_numbers.size > 1 ? add_total_numbers(collected_numbers, display_keys) : collected_numbers
-                     end
-
+  contents_numbers = argv.nil? ? [content_numbers(stdin, '')] : collect_numbers([*argv])
+  # [*argv]はargv入力が一つのファイル指定の時str型で複数ファイル指定の時にarray型になるため
   format_texts(contents_numbers, display_keys)
 end
 
+def argv_to_numbers(argv, display_keys)
+  collected_numbers = collect_numbers([*argv]) # [*argv]は一つのファイルと複数ファイル指定した時の両方に対応するため
+  collected_numbers.size > 1 ? add_total_numbers(collected_numbers, display_keys) : collected_numbers
+end
+
 def collect_numbers(argvs)
-  paths = argvs.flat_map { |str| Dir.glob(str) } # 複数ファイルが指定された場合に、入れ子の配列になるのを防ぐ ex. ['*.txt', '*.rb']
+  paths = argvs.flat_map { |str| Dir.glob(str) }
+  # 複数ファイルが指定された場合に、入れ子の配列になるのを防ぐ ex. ['*.txt', '*.rb'] -> ['a.txt', 'b.txt', 'c.rb']
+  collected_numbers = paths.map do |path|
+    next { warning: "wc: #{path}: read: Is a directory" } if File.directory?(path)
+
+    file = File.open(path)
+    content = file.read
+    content_numbers(content, path)
+  end
+  collected_numbers.size > 1 ? add_total_numbers(collected_numbers, display_keys) : collected_numbers
+end
+
+def collect_numbers(argvs)
+  paths = argvs.flat_map { |str| Dir.glob(str) }
+  # 複数ファイルが指定された場合に、入れ子の配列になるのを防ぐ ex. ['*.txt', '*.rb'] -> ['a.txt', 'b.txt', 'c.rb']
   paths.map do |path|
     next { warning: "wc: #{path}: read: Is a directory" } if File.directory?(path)
 
