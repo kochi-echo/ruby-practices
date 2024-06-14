@@ -1,8 +1,15 @@
 # frozen_string_literal: true
 
 def run_wc(argv, stdin, options)
-  contents_numbers = argv.nil? ? [content_numbers(stdin, '')] : collect_numbers([*argv]) # [*argv]は一つのファイルと複数ファイル指定した時の両方に対応するため
   display_keys = select_display_keys(options)
+
+  contents_numbers = if argv.nil?
+    [content_numbers(stdin, '')]
+  else
+    collected_numbers = collect_numbers([*argv]) # [*argv]は一つのファイルと複数ファイル指定した時の両方に対応するため
+    add_total_numbers(collected_numbers, display_keys) if numbers.size > 1
+  end
+
   format_texts(contents_numbers, display_keys)
 end
 
@@ -32,8 +39,6 @@ def content_numbers(content, path)
 end
 
 def format_texts(contents_numbers, display_keys)
-  contents_numbers = add_total_numbers(contents_numbers, display_keys) if contents_numbers.size > 1
-
   contents_numbers.map do |content_numbers|
     next content_numbers[:warning] if content_numbers.key?(:warning)
 
@@ -43,10 +48,10 @@ def format_texts(contents_numbers, display_keys)
   end.join("\n")
 end
 
-def add_total_numbers(contents_numbers, display_keys)
+def add_total_numbers(collected_numbers, display_keys)
   total_numbers = display_keys.to_h do |key|
-    [key, contents_numbers.sum { |numbers| numbers[key] || 0 }]
+    [key, collected_numbers.sum { |numbers| numbers[key] || 0 }]
   end
   total_numbers[:file_name] = 'total'
-  contents_numbers.push(total_numbers)
+  collected_numbers.push(total_numbers)
 end
