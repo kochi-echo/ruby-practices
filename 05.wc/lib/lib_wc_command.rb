@@ -2,22 +2,22 @@
 
 def run_wc(argv, stdin, options)
   display_keys = select_display_keys(options)
-  contents_numbers = argv.nil? ? [content_numbers(stdin, '')] : collect_numbers([*argv], display_keys)
+  contents_numbers_and_total = argv.nil? ? [content_numbers(stdin, '')] : collect_numbers([*argv], display_keys)
   # [*argv]はargv入力が一つのファイル指定の時str型で複数ファイル指定の時にarray型になるため
-  format_texts(contents_numbers, display_keys)
+  format_texts(contents_numbers_and_total, display_keys)
 end
 
 def collect_numbers(argvs, display_keys)
   paths = argvs.flat_map { |str| Dir.glob(str) }
   # 複数ファイルが指定された場合に、入れ子の配列になるのを防ぐ ex. ['*.txt', '*.rb'] -> ['a.txt', 'b.txt', 'c.rb']
-  numbers = paths.map do |path|
+  content_numbers = paths.map do |path|
     next { warning: "wc: #{path}: read: Is a directory" } if File.directory?(path)
 
     file = File.open(path)
     content = file.read
     content_numbers(content, path)
   end
-  numbers.size > 1 ? add_total_numbers(numbers, display_keys) : numbers
+  content_numbers.size > 1 ? add_total_numbers(content_numbers, display_keys) : content_numbers
 end
 
 def select_display_keys(options)
@@ -34,8 +34,8 @@ def content_numbers(content, path)
   }
 end
 
-def format_texts(contents_numbers, display_keys)
-  contents_numbers.map do |content_numbers|
+def format_texts(contents_numbers_and_total, display_keys)
+  contents_numbers_and_total.map do |content_numbers|
     next content_numbers[:warning] if content_numbers.key?(:warning)
 
     text = content_numbers.values_at(*display_keys).map { |num| num.to_s.rjust(8) }
@@ -44,10 +44,10 @@ def format_texts(contents_numbers, display_keys)
   end.join("\n")
 end
 
-def add_total_numbers(numbers, display_keys)
+def add_total_numbers(content_numbers, display_keys)
   total_numbers = display_keys.to_h do |key|
-    [key, numbers.sum { |numbers| numbers[key] || 0 }]
+    [key, content_numbers.sum { |numbers| numbers[key] || 0 }]
   end
   total_numbers[:file_name] = 'total'
-  numbers.push(total_numbers)
+  content_numbers.push(total_numbers)
 end
