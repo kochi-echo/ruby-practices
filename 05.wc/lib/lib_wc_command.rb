@@ -2,12 +2,12 @@
 
 def run_wc(argv, stdin, options)
   display_keys = select_display_keys(options)
-  contents_numbers = argv.nil? ? [content_numbers(stdin, '')] : collect_numbers([*argv])
+  contents_numbers = argv.nil? ? [content_numbers(stdin, '')] : collect_numbers([*argv], display_keys)
   # [*argv]はargv入力が一つのファイル指定の時str型で複数ファイル指定の時にarray型になるため
   format_texts(contents_numbers, display_keys)
 end
 
-def collect_numbers(argvs)
+def collect_numbers(argvs, display_keys)
   paths = argvs.flat_map { |str| Dir.glob(str) }
   # 複数ファイルが指定された場合に、入れ子の配列になるのを防ぐ ex. ['*.txt', '*.rb'] -> ['a.txt', 'b.txt', 'c.rb']
   numbers = paths.map do |path|
