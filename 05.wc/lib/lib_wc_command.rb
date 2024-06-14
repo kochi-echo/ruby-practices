@@ -38,7 +38,7 @@ def format_texts(contents_numbers, display_keys)
     next content_numbers[:warning] if content_numbers.key?(:warning)
 
     text = content_numbers.values_at(*display_keys).map{ |num| num.to_s.rjust(8) }
-    text = " #{content_numbers[:file_name]}" unless content_numbers[:file_name].empty?
+    text.push(" #{content_numbers[:file_name]}") unless content_numbers[:file_name].empty?
     text.join
   end.join("\n")
 end
