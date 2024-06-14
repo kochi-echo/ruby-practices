@@ -45,7 +45,7 @@ end
 
 def add_total_numbers(contents_numbers, display_keys)
   total_numbers = display_keys.to_h do |key|
-    [key, contents_numbers.sum { |numbers| numbers[key] }]
+    [key, contents_numbers.sum { |numbers| numbers[key] || 0 }]
   end
   total_numbers[:file_name] = 'total'
   contents_numbers.push(total_numbers)
