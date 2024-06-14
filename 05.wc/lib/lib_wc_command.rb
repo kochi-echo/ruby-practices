@@ -4,11 +4,11 @@ def run_wc(argv, stdin, options)
   display_keys = select_display_keys(options)
 
   contents_numbers = if argv.nil?
-    [content_numbers(stdin, '')]
-  else
-    collected_numbers = collect_numbers([*argv]) # [*argv]は一つのファイルと複数ファイル指定した時の両方に対応するため
-    collected_numbers.size > 1 ? add_total_numbers(collected_numbers, display_keys) : collected_numbers
-  end
+                       [content_numbers(stdin, '')]
+                     else
+                       collected_numbers = collect_numbers([*argv]) # [*argv]は一つのファイルと複数ファイル指定した時の両方に対応するため
+                       collected_numbers.size > 1 ? add_total_numbers(collected_numbers, display_keys) : collected_numbers
+                     end
 
   format_texts(contents_numbers, display_keys)
 end
@@ -25,7 +25,7 @@ def collect_numbers(argvs)
 end
 
 def select_display_keys(options)
-  numbers_type = { row_number: options[:l], word_number: options[:w], bytesize: options[:c]}
+  numbers_type = { row_number: options[:l], word_number: options[:w], bytesize: options[:c] }
   options.values.none? ? numbers_type.keys : numbers_type.select { |_key, value| value }.keys
 end
 
@@ -42,7 +42,7 @@ def format_texts(contents_numbers, display_keys)
   contents_numbers.map do |content_numbers|
     next content_numbers[:warning] if content_numbers.key?(:warning)
 
-    text = content_numbers.values_at(*display_keys).map{ |num| num.to_s.rjust(8) }
+    text = content_numbers.values_at(*display_keys).map { |num| num.to_s.rjust(8) }
     text.push(" #{content_numbers[:file_name]}") unless content_numbers[:file_name].empty?
     text.join
   end.join("\n")
