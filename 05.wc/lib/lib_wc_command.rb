@@ -18,7 +18,7 @@ def collect_numbers(argvs)
 end
 
 def select_display_keys(options)
-  numbers_type = { row_number: options[:l], word_number: options[:w], bytesize: options[:c], file_name: true }
+  numbers_type = { row_number: options[:l], word_number: options[:w], bytesize: options[:c]}
   options.values.none? ? numbers_type.keys : numbers_type.select { |_key, value| value }.keys
 end
 
@@ -37,21 +37,16 @@ def format_texts(contents_numbers, display_keys)
   contents_numbers.map do |content_numbers|
     next content_numbers[:warning] if content_numbers.key?(:warning)
 
-    display_keys.map do |key|
-      value = content_numbers[key]
-      if key == :file_name
-        txt = " #{value}" unless value.empty?
-      else
-        contents_numbers[-1][key] += value if contents_numbers[-1][:file_name] == 'total'
-        txt = value.to_s.rjust(8)
-      end
-      txt
-    end.join
+    text = content_numbers.values_at(*display_keys).map{ |num| num.to_s.rjust(8) }
+    text = " #{content_numbers[:file_name]}" unless content_numbers[:file_name].empty?
+    text.join
   end.join("\n")
 end
 
 def add_total_numbers(contents_numbers, display_keys)
-  total_numbers = display_keys.to_h { |key| [key, 0] }
+  total_numbers = display_keys.to_h do |key|
+    [key, contents_numbers.sum { |numbers| numbers[key] }]
+  end
   total_numbers[:file_name] = 'total'
   contents_numbers.push(total_numbers)
 end
