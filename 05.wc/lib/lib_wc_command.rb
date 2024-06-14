@@ -7,34 +7,17 @@ def run_wc(argv, stdin, options)
   format_texts(contents_numbers, display_keys)
 end
 
-def argv_to_numbers(argv, display_keys)
-  collected_numbers = collect_numbers([*argv]) # [*argv]は一つのファイルと複数ファイル指定した時の両方に対応するため
-  collected_numbers.size > 1 ? add_total_numbers(collected_numbers, display_keys) : collected_numbers
-end
-
 def collect_numbers(argvs)
   paths = argvs.flat_map { |str| Dir.glob(str) }
   # 複数ファイルが指定された場合に、入れ子の配列になるのを防ぐ ex. ['*.txt', '*.rb'] -> ['a.txt', 'b.txt', 'c.rb']
-  collected_numbers = paths.map do |path|
+  numbers = paths.map do |path|
     next { warning: "wc: #{path}: read: Is a directory" } if File.directory?(path)
 
     file = File.open(path)
     content = file.read
     content_numbers(content, path)
   end
-  collected_numbers.size > 1 ? add_total_numbers(collected_numbers, display_keys) : collected_numbers
-end
-
-def collect_numbers(argvs)
-  paths = argvs.flat_map { |str| Dir.glob(str) }
-  # 複数ファイルが指定された場合に、入れ子の配列になるのを防ぐ ex. ['*.txt', '*.rb'] -> ['a.txt', 'b.txt', 'c.rb']
-  paths.map do |path|
-    next { warning: "wc: #{path}: read: Is a directory" } if File.directory?(path)
-
-    file = File.open(path)
-    content = file.read
-    content_numbers(content, path)
-  end
+  numbers.size > 1 ? add_total_numbers(numbers, display_keys) : numbers
 end
 
 def select_display_keys(options)
@@ -61,10 +44,10 @@ def format_texts(contents_numbers, display_keys)
   end.join("\n")
 end
 
-def add_total_numbers(collected_numbers, display_keys)
+def add_total_numbers(numbers, display_keys)
   total_numbers = display_keys.to_h do |key|
-    [key, collected_numbers.sum { |numbers| numbers[key] || 0 }]
+    [key, numbers.sum { |numbers| numbers[key] || 0 }]
   end
   total_numbers[:file_name] = 'total'
-  collected_numbers.push(total_numbers)
+  numbers.push(total_numbers)
 end
