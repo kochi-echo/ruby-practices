@@ -13,9 +13,9 @@ def collect_numbers(argvs, display_keys)
   content_numbers = paths.map do |path|
     next { warning: "wc: #{path}: read: Is a directory" } if File.directory?(path)
 
-    file = File.open(path)
-    content = file.read
-    content_numbers(content, path)
+    numbers = {}
+    File.open(path) { |f| numbers = content_numbers(f.read, path) }
+    numbers
   end
   content_numbers.size > 1 ? add_total_numbers(content_numbers, display_keys) : content_numbers
 end
