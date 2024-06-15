@@ -31,12 +31,18 @@ def content_numbers(content, path)
 end
 
 def format_texts(contents_numbers_and_total, options)
+  options = {l: true, w: true, c: true} if options.empty?
+
   contents_numbers_and_total.map do |content_numbers|
     next content_numbers[:warning] if content_numbers.key?(:warning)
 
-    text = ALL_OPTIONS.map { |key| content_numbers[key].to_s.rjust(8) if options.empty? || options[key] }
-    text.push(" #{content_numbers[:file_name]}") unless content_numbers[:file_name].empty?
-    text.join
+    content_numbers.map do |key, value|
+      if key == :file_name && !value.empty?
+        " #{value}"
+      elsif options[key]
+        value.to_s.rjust(8)
+      end
+    end.join
   end.join("\n")
 end
 
