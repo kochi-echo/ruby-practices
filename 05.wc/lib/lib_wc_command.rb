@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-ALL_OPTIONS = %i[l w c].freeze
-
 def run_wc(argv, stdin, options)
   contents_numbers_and_total = argv.nil? ? [content_numbers(stdin, '')] : collect_numbers([*argv])
   # [*argv]はargv入力が一つのファイル指定の時str型で複数ファイル指定の時にarray型になるため
@@ -11,12 +9,12 @@ end
 def collect_numbers(argvs)
   paths = argvs.flat_map { |str| Dir.glob(str) }
   # 複数ファイルが指定された場合に、入れ子の配列になるのを防ぐ ex. ['*.txt', '*.rb'] -> ['a.txt', 'b.txt', 'c.rb']
-  content_numbers = paths.map do |path|
+  contents_numbers = paths.map do |path|
     next { warning: "wc: #{path}: read: Is a directory" } if File.directory?(path)
 
     File.open(path) { |f| content_numbers(f.read, path) }
   end
-  content_numbers.size > 1 ? add_total_numbers(content_numbers) : content_numbers
+  contents_numbers.size > 1 ? add_total_numbers(contents_numbers) : contents_numbers
 end
 
 def content_numbers(content, path)
@@ -44,10 +42,11 @@ def format_texts(contents_numbers_and_total, options)
   end.join("\n")
 end
 
-def add_total_numbers(content_numbers)
-  total_numbers = ALL_OPTIONS.to_h do |key|
-    [key, content_numbers.sum { |numbers| numbers[key] || 0 }]
+def add_total_numbers(contents_numbers)
+  total_numbers = contents_numbers.each_with_object({l: 0, w: 0, c: 0, file_name: 'total'}) do |numbers, total_numbers|
+    numbers.each do |key, value|
+      total_numbers[key] += value || 0 if [:l, :w, :c].include?(key)
+    end
   end
-  total_numbers[:file_name] = 'total'
-  content_numbers.push(total_numbers)
+  contents_numbers.push(total_numbers)
 end
