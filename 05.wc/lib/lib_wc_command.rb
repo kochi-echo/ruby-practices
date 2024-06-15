@@ -3,7 +3,7 @@
 ALL_OPTIONS = %i[l w c].freeze
 
 def run_wc(argv, stdin, options)
-  contents_numbers_and_total = argv.nil? ? [content_numbers(stdin, '')] : collect_numbers([*argv], options)
+  contents_numbers_and_total = argv.nil? ? [content_numbers(stdin, '')] : collect_numbers([*argv])
   # [*argv]はargv入力が一つのファイル指定の時str型で複数ファイル指定の時にarray型になるため
   format_texts(contents_numbers_and_total, options)
 end
@@ -34,13 +34,9 @@ def format_texts(contents_numbers_and_total, options)
   contents_numbers_and_total.map do |content_numbers|
     next content_numbers[:warning] if content_numbers.key?(:warning)
 
-    content_numbers.keys.map do |key|
-      if key == :file_name
-        " #{content_numbers[:file_name]}" unless content_numbers[:file_name].empty?
-      elsif options.empty? || options[key]
-        content_numbers[key].to_s.rjust(8)
-      end
-    end.join
+    text = ALL_OPTIONS.map { |key| content_numbers[key].to_s.rjust(8) if options.empty? || options[key] }
+    text.push(" #{content_numbers[:file_name]}") unless content_numbers[:file_name].empty?
+    text.join
   end.join("\n")
 end
 
