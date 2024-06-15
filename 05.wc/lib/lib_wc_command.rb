@@ -27,7 +27,7 @@ def content_numbers(content, path)
 end
 
 def format_texts(contents_numbers_and_total, options)
-  options = {l: true, w: true, c: true} if options.empty?
+  options = { l: true, w: true, c: true } if options.empty?
 
   contents_numbers_and_total.map do |content_numbers|
     next content_numbers[:warning] if content_numbers.key?(:warning)
@@ -43,9 +43,9 @@ def format_texts(contents_numbers_and_total, options)
 end
 
 def add_total_numbers(contents_numbers)
-  total_numbers = contents_numbers.each_with_object({l: 0, w: 0, c: 0, file_name: 'total'}) do |numbers, total_numbers|
+  total_numbers = contents_numbers.each_with_object({ l: 0, w: 0, c: 0, file_name: 'total' }) do |numbers, total_numbers|
     numbers.each do |key, value|
-      total_numbers[key] += value || 0 if [:l, :w, :c].include?(key)
+      total_numbers[key] += value || 0 if %i[l w c].include?(key)
     end
   end
   contents_numbers.push(total_numbers)
