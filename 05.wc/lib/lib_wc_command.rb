@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-ALL_OPTIONS = [:l, :w, :c]
+ALL_OPTIONS = %i[l w c].freeze
 
 def run_wc(argv, stdin, options)
   contents_numbers_and_total = argv.nil? ? [content_numbers(stdin, '')] : collect_numbers([*argv], options)
@@ -8,7 +8,7 @@ def run_wc(argv, stdin, options)
   format_texts(contents_numbers_and_total, options)
 end
 
-def collect_numbers(argvs, options)
+def collect_numbers(argvs)
   paths = argvs.flat_map { |str| Dir.glob(str) }
   # 複数ファイルが指定された場合に、入れ子の配列になるのを防ぐ ex. ['*.txt', '*.rb'] -> ['a.txt', 'b.txt', 'c.rb']
   content_numbers = paths.map do |path|
@@ -37,8 +37,8 @@ def format_texts(contents_numbers_and_total, options)
     content_numbers.keys.map do |key|
       if key == :file_name
         " #{content_numbers[:file_name]}" unless content_numbers[:file_name].empty?
-      else
-        content_numbers[key].to_s.rjust(8) if options.empty? || options[key]
+      elsif options.empty? || options[key]
+        content_numbers[key].to_s.rjust(8)
       end
     end.join
   end.join("\n")
