@@ -1,52 +1,49 @@
 # frozen_string_literal: true
 
 def run_wc(argv, stdin, options)
-  contents_numbers_and_total = argv.nil? ? [content_numbers(stdin, '')] : collect_numbers([*argv])
+  contents = argv.nil? ? [{numbers: numbers(stdin)}] : collect_contents([*argv])
   # [*argv]はargv入力が一つのファイル指定の時str型で複数ファイル指定の時にarray型になるため
-  format_texts(contents_numbers_and_total, options)
+  format_texts(contents, options)
 end
 
-def collect_numbers(argvs)
+def collect_contents(argvs)
   paths = argvs.flat_map { |str| Dir.glob(str) }
   # 複数ファイルが指定された場合に、入れ子の配列になるのを防ぐ ex. ['*.txt', '*.rb'] -> ['a.txt', 'b.txt', 'c.rb']
-  contents_numbers = paths.map do |path|
+  contents = paths.map do |path|
     next { warning: "wc: #{path}: read: Is a directory" } if File.directory?(path)
 
-    File.open(path) { |f| content_numbers(f.read, path) }
+    File.open(path) { |f| {numbers: numbers(f.read), file_name: path} }
   end
-  contents_numbers.size > 1 ? add_total_numbers(contents_numbers) : contents_numbers
+  contents.size > 1 ? add_total(contents) : contents
 end
 
-def content_numbers(content, path)
+def numbers(str)
   {
-    l: content.lines.count,
-    w: content.split.size,
-    c: content.bytesize,
-    file_name: path
+    l: str.lines.count,
+    w: str.split.size,
+    c: str.bytesize,
   }
 end
 
-def format_texts(contents_numbers_and_total, options)
+def format_texts(contents, options)
   options = { l: true, w: true, c: true } if options.empty?
 
-  contents_numbers_and_total.map do |content_numbers|
-    next content_numbers[:warning] if content_numbers.key?(:warning)
+  contents.map do |content|
+    next content[:warning] if content.key?(:warning)
 
-    content_numbers.map do |key, value|
-      if key == :file_name && !value.empty?
-        " #{value}"
-      elsif options[key]
-        value.to_s.rjust(8)
-      end
-    end.join
+    text = content[:numbers].map{ |key,value| value.to_s.rjust(8) if options[key] }
+    text.push(" #{content[:file_name]}") unless content[:file_name].nil?
+    text.join
   end.join("\n")
 end
 
-def add_total_numbers(contents_numbers)
-  total_numbers = contents_numbers.each_with_object({ l: 0, w: 0, c: 0, file_name: 'total' }) do |numbers, total_numbers|
-    numbers.each do |key, value|
-      total_numbers[key] += value || 0 if %i[l w c].include?(key)
+def add_total(contents)
+  total_numbers = contents.each_with_object(Hash.new(0)) do |content, total|
+    next unless content[:numbers]
+
+    content[:numbers].each do |key, value|
+      total[key] += value
     end
   end
-  contents_numbers.push(total_numbers)
+  contents.push({numbers: total_numbers, file_name: 'total'})
 end
